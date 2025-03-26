@@ -1,0 +1,32 @@
+# Quarto website output directory
+/_site/
+
+# Quarto cache files (keep *.html)
+/.quarto/
+*.quarto_ipynb
+*.pdf
+*_files/
+
+# R/Python environment files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.venv
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# CSV files
+*.csv
+
+# IDE specific files
+.idea/
+.vscode/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/ 

@@ -1,0 +1,307 @@
+---
+title: Issue 6
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.16.4
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+## 6. Cross-Rate Inconsistency
+
+This notebook documents the analysis for **Issue #6: Cross-Rate Inconsistency** in the Autonity Oracle data. It covers:
+
+- **What is this issue about?**  
+- **Why conduct this issue analysis?**  
+- **How to conduct this issue analysis?**  
+- **What have we found?**  
+
+---
+
+### 6.1 What Is This Issue About?
+
+In the Issues Table, **Issue #6** describes **Cross-Rate Inconsistency**:  
+> "NTN-USD * ATN-USD ≠ NTN-ATN (when scaling properly)."  
+
+This implies that if `NTN-ATN = X` and `ATN-USD = Y`, we expect `NTN-USD ≈ X * Y`. Significant mismatches indicate potential errors or data inconsistencies.
+
+---
+
+### 6.2 Why Conduct This Issue Analysis?
+
+- **Data Reliability**: Ensuring consistent data across pairs is critical.
+- **Trust**: Maintaining accuracy and confidence in the Oracle.
+- **Debugging**: Identifying systemic or validator-specific issues.
+
+---
+
+### 6.3 How Did We Conduct the Analysis?
+
+We used Python with the **Polars** library (`v1.24.0`) to:
+
+1. Load and preprocess Oracle submission CSV files.
+2. Convert Wei-based prices to decimal.
+3. Calculate `NTN-USD_estimated = NTN-ATN * ATN-USD`.
+4. Flag rows exceeding a threshold (10%).
+5. Summarize by date and validator.
+
+Below is the Python code for the analysis:
+
+```{python}
+import polars as pl
+import glob
+import math
+from typing import Optional
+```
+
+```{python}
+def load_and_preprocess_submissions(submission_glob: str) -> pl.DataFrame:
+    """
+    Loads Oracle Submission CSVs and returns a Polars DataFrame.
+    """
+    files = sorted(glob.glob(submission_glob))
+    if not files:
+        raise ValueError(f"No CSV files found matching pattern {submission_glob}")
+
+    lf_list = []
+    for f in files:
+        lf_temp = pl.scan_csv(
+            f,
+            dtypes={"Timestamp": pl.Utf8},
+            null_values=[""],
+            ignore_errors=True,
+        )
+        lf_list.append(lf_temp)
+
+    lf = pl.concat(lf_list)
+
+    lf = lf.with_columns(
+        pl.col("Timestamp")
+        .str.strptime(pl.Datetime, strict=False)
+        .alias("Timestamp_dt")
+    )
+
+    lf = lf.with_columns(
+        [
+            pl.col("Timestamp_dt").cast(pl.Date).alias("date_only"),
+            pl.col("Timestamp_dt")
+            .dt.weekday()
+            .alias("weekday_num"),
+        ]
+    )
+
+    df = lf.collect()
+    return df
+
+
+def convert_wei_to_decimal(price_wei: Optional[float]) -> Optional[float]:
+    """
+    Converts a Wei-based price to a normal float decimal.
+    """
+    if price_wei is None or math.isnan(price_wei):
+        return None
+    return price_wei / 1e18
+
+
+def check_cross_rate_inconsistency(
+    df: pl.DataFrame,
+    atn_usd_col: str = "ATN-USD Price",
+    ntn_usd_col: str = "NTN-USD Price",
+    ntn_atn_col: str = "NTN-ATN Price",
+    threshold: float = 0.10,
+) -> pl.DataFrame:
+    """
+    Computes cross-rate mismatch and measures relative differences.
+    """
+    df_local = df.clone()
+    decimal_cols = []
+    for col in [atn_usd_col, ntn_usd_col, ntn_atn_col]:
+        col_decimal = col + " Decimal"
+        df_local = df_local.with_columns(
+            (pl.col(col).cast(pl.Float64) / 1e18).alias(col_decimal)
+        )
+        decimal_cols.append(col_decimal)
+
+    atn_usd_dec = atn_usd_col + " Decimal"
+    ntn_usd_dec = ntn_usd_col + " Decimal"
+    ntn_atn_dec = ntn_atn_col + " Decimal"
+
+    df_local = df_local.with_columns(
+        [(pl.col(ntn_atn_dec) * pl.col(atn_usd_dec)).alias("ntn_usd_estimated")]
+    )
+
+    epsilon = 1e-18
+    df_local = df_local.with_columns(
+        [
+            (
+                (pl.col("ntn_usd_estimated") - pl.col(ntn_usd_dec)).abs()
+                / (pl.col(ntn_usd_dec).abs() + epsilon)
+            ).alias("rel_diff_cross")
+        ]
+    )
+
+    df_local = df_local.with_columns(
+        [
+            pl.when(pl.col("rel_diff_cross") > threshold)
+            .then(pl.lit(f"Cross-rate mismatch > {int(threshold*100)}%"))
+            .otherwise(pl.lit(""))
+            .alias("suspect_reason")
+        ]
+    )
+
+    df_flagged = df_local.filter(pl.col("suspect_reason") != "")
+
+    keep_cols = [
+        "Timestamp_dt",
+        "Validator Address",
+        atn_usd_dec,
+        ntn_usd_dec,
+        ntn_atn_dec,
+        "ntn_usd_estimated",
+        "rel_diff_cross",
+        "suspect_reason",
+    ]
+
+    optional_cols = []
+    for c in ["date_only", "weekday_num"]:
+        if c in df_flagged.columns:
+            optional_cols.append(c)
+
+    df_flagged = df_flagged.select(keep_cols + optional_cols)
+    return df_flagged
+
+
+def summarize_cross_rate_inconsistency(df_flagged: pl.DataFrame) -> pl.DataFrame:
+    """
+    Summarizes the number of cross-rate mismatches.
+    """
+    if df_flagged.is_empty():
+        return pl.DataFrame(
+            {
+                "date_only": [],
+                "Validator Address": [],
+                "mismatch_count": [],
+                "avg_rel_diff": [],
+                "max_rel_diff": [],
+            }
+        )
+
+    lf = df_flagged.lazy()
+    summary_lf = (
+        lf.group_by(["date_only", "Validator Address"])
+        .agg(
+            [
+                pl.count("rel_diff_cross").alias("mismatch_count"),
+                pl.mean("rel_diff_cross").alias("avg_rel_diff"),
+                pl.max("rel_diff_cross").alias("max_rel_diff"),
+            ]
+        )
+        .sort(["date_only", "Validator Address"])
+    )
+    return summary_lf.collect()
+
+
+def analyze_cross_rate_inconsistency(
+    submission_glob: str,
+    atn_usd_col: str = "ATN-USD Price",
+    ntn_usd_col: str = "NTN-USD Price",
+    ntn_atn_col: str = "NTN-ATN Price",
+    threshold: float = 0.10,
+):
+    """
+    Main analysis function.
+    """
+    df_all = load_and_preprocess_submissions(submission_glob)
+
+    df_flagged = check_cross_rate_inconsistency(
+        df_all,
+        atn_usd_col=atn_usd_col,
+        ntn_usd_col=ntn_usd_col,
+        ntn_atn_col=ntn_atn_col,
+        threshold=threshold,
+    )
+
+    df_summary = summarize_cross_rate_inconsistency(df_flagged)
+
+    return {
+        "df_flagged": df_flagged,
+        "df_summary": df_summary,
+    }
+```
+
+```{python}
+results = analyze_cross_rate_inconsistency(
+    submission_glob="../submission-data/Oracle_Submission_*.csv",
+    atn_usd_col="ATN-USD Price",
+    ntn_usd_col="NTN-USD Price",
+    ntn_atn_col="NTN-ATN Price",
+    threshold=0.10,  # 10% mismatch threshold
+)
+```
+
+---
+
+### 6.4 What Have We Found?
+
+Below we present the results from our analysis:
+
+**Flagged Submissions (Cross-rate mismatch > 10%)**
+
+```{python}
+df_flagged = results["df_flagged"]
+if df_flagged.is_empty():
+    print("No cross-rate inconsistencies found beyond 10% threshold.")
+else:
+    print(f"Total flagged cross-rate mismatches: {df_flagged.height}")
+    df_flagged
+```
+
+- `Timestamp_dt` and `Validator Address` indicate problematic submissions.
+- Prices (`ATN-USD`, `NTN-USD`, `NTN-ATN`) and estimated `NTN-USD`.
+- `rel_diff_cross` shows percentage mismatch.
+
+**Daily Validator Summary**
+
+```{python}
+df_summary = results["df_summary"]
+if df_summary.is_empty():
+    print("No daily cross-rate mismatches to summarize.")
+else:
+    print(f"Number of daily mismatch records: {df_summary.height}")
+    df_summary
+```
+
+- `mismatch_count`: Number of daily flagged submissions per validator.
+- `avg_rel_diff` and `max_rel_diff`: Mean and maximum relative mismatch percentages.
+
+---
+
+**Combine both findings**
+
+```{python}
+total_flagged = df_flagged.height
+if total_flagged == 0:
+    print("Data consistency is good. No critical cross-rate mismatches identified.")
+else:
+    num_validators = df_summary.get_column("Validator Address").n_unique()
+    print(f"{total_flagged} total mismatches across {num_validators} validators found. Investigate further:")
+    high_impact = df_summary.filter(pl.col("max_rel_diff") > 0.5)
+    if high_impact.is_empty():
+        print("No extreme mismatches (>50%) identified. Likely minor synchronization issues or rounding errors.")
+    else:
+        print(f"Validators with extreme mismatches (>50%): {high_impact.height}")
+        high_impact
+```
+
+- If no mismatches, system appears healthy.
+- Small mismatches (<50%) often reflect minor timing or rounding discrepancies.
+- Extreme mismatches (>50%) require thorough validator-specific investigation:
+  - Verify decimal conversions.
+  - Confirm synchronized data updates.
+  - Review validator configurations or potential malicious behavior.

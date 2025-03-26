@@ -1,0 +1,39 @@
+---
+title: "Oracle Submission Analysis"
+---
+
+Contains a collection of analyses on Autonity Oracle submissions. These analyses explore various issues affecting the reliability, accuracy, and security of Oracle price data. Navigate through the different notebooks using the sidebar.
+
+## Analysis Overview
+
+Examines critical issues in Oracle submissions from validators, focusing on data quality, reliability, synchronization, and potential security concerns. Each analysis includes detailed explanations, methods, findings, and supporting code.
+
+## Summary Reports
+
+**[December 2024 Summary Report](summary_2024_12.qmd)** - Comprehensive analysis of December 2024 Oracle submissions data with key findings, notable validators, and standardized quality ratings.
+
+**[January 2025 Summary Report](summary_2025_01.qmd)** - Comprehensive analysis of January 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.
+
+**[February 2025 Summary Report](summary_2025_02.qmd)** - Comprehensive analysis of February 2025 Oracle submissions data, showing concerning trends in data quality and security issues compared to January.
+
+## Table of Contents
+
+1. [Issue 1: Missing or Null Submissions](notebooks/issue_1.qmd) - Analysis of validators with missing or null price submissions, including frequency patterns and impact on data aggregation.
+
+2. [Issue 2: Irregular Submission Frequency](notebooks/issue_2.qmd) - Investigation of validators with abnormal submission intervals, including extremely frequent or delayed submissions.
+
+3. [Issue 3: Out-of-Range / Suspicious Values](notebooks/issue_3.qmd) - Detection of abnormally large, zero, negative, or off-market price submissions compared to real FX data.
+
+4. [Issue 4: Stale / Lagging Data](notebooks/issue_4.qmd) - Analysis of validators submitting identical prices for prolonged periods or failing to update prices despite market changes.
+
+5. [Issue 5: Confidence Value Anomalies](notebooks/issue_5.qmd) - Examination of confidence metrics submitted alongside prices, focusing on fixed values and correlation with market volatility.
+
+6. [Issue 6: Cross-Rate Inconsistency](notebooks/issue_6.qmd) - Assessment of mathematical consistency between Autonity token prices (NTN-ATN * ATN-USD ≈ NTN-USD).
+
+7. [Issue 7: Timing / Synchronization Issues](notebooks/issue_7.qmd) - Analysis of timestamp disparities between validators, identifying those consistently submitting early or late.
+
+8. [Issue 8: Weekend / Market Closure Effects](notebooks/issue_8.qmd) - Investigation of validator behavior during weekend FX market closures and comparison with benchmark data.
+
+9. [Issue 9: Vendor Downtime or API Rate-Limits](notebooks/issue_9.qmd) - Detection of abrupt stoppages and zero-value submissions, particularly when occurring across multiple validators.
+
+10. [Issue 10: Possible Security / Malicious Behavior](notebooks/issue_10.qmd) - Investigation of potential collusion, Sybil attacks, or price manipulation patterns among validators. 

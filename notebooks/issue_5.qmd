@@ -1,0 +1,439 @@
+---
+title: Issue 5
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.16.4
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+## 5. Confidence Value Anomalies
+
+This notebook documents the analysis for **Issue #5: Confidence Value Anomalies** in the Autonity Oracle data. It covers:
+
+- **What is this issue about?**  
+- **Why conduct this issue analysis?**  
+- **How to conduct this issue analysis?**  
+- **What have we found?**  
+
+Below, we provide the reasoning, methods, and findings without prescribing next steps or follow-up actions.  
+
+---
+
+### 5.1 What Is This Issue About?
+
+Validators submit a confidence metric alongside their price submissions, representing their certainty in the provided data. Potential anomalies include:
+
+- Validators consistently submitting the same confidence value (e.g., always `50` or `100`).
+- Frequent occurrences of zero or null confidence values.
+- Confidence values that do not vary in response to market volatility or price changes.
+
+This analysis investigates the patterns and consistency of these confidence values.
+
+---
+
+### 5.2 Why Conduct This Issue Analysis?
+
+- **Reliability Check**: Confidence should reflect real uncertainty, not remain fixed or arbitrary.
+- **System Integrity**: Identifying anomalies helps ensure that validators comply with expected behavior prior to Mainnet launch.
+- **Decision-making**: Confidence anomalies can degrade decision quality in downstream applications relying on Oracle data.
+
+---
+
+### 5.3 How Did We Conduct the Analysis?
+
+We used Python with the **Polars** library (`v1.24.0`) to:
+
+1. Load and preprocess Oracle submission CSV files.
+2. Detect all "Confidence" columns automatically.
+3. Calculate basic statistics for confidence values per validator and pair:
+   - Minimum, maximum, mean, standard deviation, number of distinct confidence values.
+   - Frequency distribution of the most common confidence values.
+4. Identify validators that consistently submit fixed or zero variation confidence values.
+5. Calculate correlation between confidence and price changes:
+   - Compute price volatility as absolute price differences between submissions.
+   - Evaluate the correlation to verify if confidence values genuinely reflect market volatility.
+
+Below is the analysis script:
+
+```{python}
+import polars as pl
+import glob
+import statistics
+import math
+from typing import List
+```
+
+```{python}
+def load_and_preprocess_submissions(submission_glob: str) -> pl.DataFrame:
+    """
+    Loads Oracle Submission CSVs and returns a Polars DataFrame.
+    """
+    files = sorted(glob.glob(submission_glob))
+    if not files:
+        raise ValueError(f"No CSV files found matching pattern {submission_glob}")
+
+    lf_list = []
+    for f in files:
+        lf_temp = pl.scan_csv(
+            f,
+            dtypes={"Timestamp": pl.Utf8},
+            null_values=[""],
+            ignore_errors=True,
+        )
+        lf_list.append(lf_temp)
+
+    lf = pl.concat(lf_list)
+    lf = lf.with_columns(
+        pl.col("Timestamp")
+        .str.strptime(pl.Datetime, strict=False)
+        .alias("Timestamp_dt")
+    )
+
+    lf = lf.with_columns(
+        [
+            pl.col("Timestamp_dt").cast(pl.Date).alias("date_only"),
+            pl.col("Timestamp_dt").dt.weekday().alias("weekday_num"),
+        ]
+    )
+
+    df = lf.collect()
+    return df
+
+
+def list_confidence_columns(df: pl.DataFrame) -> List[str]:
+    """
+    Identifies all "Confidence" columns.
+    based on column naming (e.g. 'AUD-USD Confidence', 'NTN-ATN Confidence', etc.).
+    """
+    return [c for c in df.columns if "Confidence" in c]
+
+
+def list_price_columns(df: pl.DataFrame) -> List[str]:
+    """
+    Identifies all "Price" columns.
+    """
+    return [c for c in df.columns if "Price" in c]
+
+
+def confidence_distribution_by_validator_pair(
+    df: pl.DataFrame, confidence_cols: List[str], top_k_freq: int = 3
+) -> pl.DataFrame:
+    """
+    Summarizes the distribution of confidence values for each (validator,
+    confidence_column) pair.
+    """
+    keep_cols = ["Validator Address", "Timestamp_dt"] + confidence_cols
+    df_small = df.select([c for c in keep_cols if c in df.columns])
+
+    df_long = df_small.melt(
+        id_vars=["Validator Address", "Timestamp_dt"],
+        value_vars=confidence_cols,
+        variable_name="confidence_col",
+        value_name="confidence_val",
+    )
+
+    lf_long = df_long.lazy()
+
+    grouped_basic = lf_long.group_by(["Validator Address", "confidence_col"]).agg(
+        [
+            pl.count("confidence_val").alias("count_rows"),
+            pl.min("confidence_val").alias("min_conf"),
+            pl.max("confidence_val").alias("max_conf"),
+            pl.mean("confidence_val").alias("mean_conf"),
+            pl.std("confidence_val").alias("std_conf"),
+            pl.n_unique("confidence_val").alias("distinct_values_count"),
+        ]
+    )
+
+    df_basic = grouped_basic.collect()
+
+    freq_lf = (
+        lf_long.group_by(["Validator Address", "confidence_col", "confidence_val"])
+        .agg(pl.count("confidence_val").alias("value_count"))
+        .sort(
+            ["Validator Address", "confidence_col", "value_count"],
+            descending=[False, False, True],
+        )
+    )
+
+    df_freq = freq_lf.collect()
+
+    def top_k_frequency_str(rows: List[dict]) -> str:
+        """
+        Formats "Confidence values".
+        Handles any None-valued 'confidence_val' by using 'null' instead of int().
+        """
+        parts = []
+        for r in rows:
+            cval = r["confidence_val"]
+            count_ = r["value_count"]
+            if cval is None:
+                val_str = "null"
+            else:
+                val_str = str(int(cval))
+            parts.append(f"{val_str}({count_})")
+        return ", ".join(parts)
+
+    top_freq_map = {}
+    from itertools import groupby
+
+    df_freq_sorted = df_freq.sort(
+        ["Validator Address", "confidence_col", "value_count"],
+        descending=[False, False, True],
+    )
+    freq_dicts = df_freq_sorted.to_dicts()
+
+    for key, group in groupby(
+        freq_dicts, key=lambda d: (d["Validator Address"], d["confidence_col"])
+    ):
+        group_list = list(group)
+        top_slice = group_list[:top_k_freq]
+        freq_str = top_k_frequency_str(top_slice)
+        top_freq_map[key] = freq_str
+
+    df_freq_map = pl.DataFrame(
+        {
+            "Validator Address": [k[0] for k in top_freq_map.keys()],
+            "confidence_col": [k[1] for k in top_freq_map.keys()],
+            "top_freq_values": [v for v in top_freq_map.values()],
+        }
+    )
+
+    df_merged = df_basic.join(
+        df_freq_map, on=["Validator Address", "confidence_col"], how="left"
+    )
+    return df_merged.sort(["Validator Address", "confidence_col"])
+
+
+def check_confidence_vs_price_correlation(
+    df: pl.DataFrame, fx_pairs: List[str], autonity_pairs: List[str]
+) -> pl.DataFrame:
+    """
+    Measures how well Confidence tracks price changes.
+    """
+    df_local = df.clone()
+
+    price_cols = fx_pairs + autonity_pairs
+    new_cols = []
+    for pc in price_cols:
+        decimal_col = pc.replace(" Price", " Price Decimal")
+        new_cols.append((pl.col(pc).cast(pl.Float64) / 1e18).alias(decimal_col))
+    df_local = df_local.with_columns(new_cols)
+
+    results_rows = []
+
+    def base_name(price_col: str) -> str:
+        return price_col.replace(" Price", "")
+
+    for pc in price_cols:
+        conf_col = pc.replace("Price", "Confidence").strip()
+        dec_col = pc.replace(" Price", " Price Decimal")
+        pair_lbl = base_name(pc)
+
+        if conf_col not in df_local.columns or dec_col not in df_local.columns:
+            continue
+
+        df_pair = (
+            df_local.select(["Validator Address", "Timestamp_dt", dec_col, conf_col])
+            .filter(pl.col(dec_col).is_not_null() & pl.col(conf_col).is_not_null())
+            .sort(["Validator Address", "Timestamp_dt"])
+        )
+
+        df_pair = df_pair.with_columns(
+            (pl.col(dec_col) - pl.col(dec_col).shift(1))
+            .over("Validator Address")
+            .abs()
+            .alias("abs_price_change")
+        )
+
+        lf_cor = (
+            df_pair.lazy()
+            .group_by("Validator Address")
+            .agg(
+                [
+                    pl.col("abs_price_change").alias("price_change_list"),
+                    pl.col(conf_col).alias("confidence_list"),
+                ]
+            )
+        )
+        local_rows = lf_cor.collect().to_dicts()
+
+        for row in local_rows:
+            validator = row["Validator Address"]
+            pc_list = row["price_change_list"]
+            conf_list = row["confidence_list"]
+
+            if len(pc_list) < 2:
+                corr_val = None
+            else:
+                corr_val = pearson_correlation(pc_list, conf_list)
+            results_rows.append(
+                {
+                    "Validator Address": validator,
+                    "pair_label": pair_lbl,
+                    "corr_conf_price_change": corr_val,
+                    "num_points": len(pc_list),
+                }
+            )
+
+    df_corr = pl.DataFrame(results_rows)
+    return df_corr.sort(["pair_label", "Validator Address"])
+
+
+def pearson_correlation(xs, ys):
+    """
+    Computes Pearson correlation between two lists of floats.
+    """
+    clean_data = [
+        (x, y)
+        for (x, y) in zip(xs, ys)
+        if (x is not None and y is not None and not math.isnan(x) and not math.isnan(y))
+    ]
+    if len(clean_data) < 2:
+        return None
+
+    xs_clean, ys_clean = zip(*clean_data)
+    mean_x = statistics.mean(xs_clean)
+    mean_y = statistics.mean(ys_clean)
+    num = sum((x - mean_x) * (y - mean_y) for x, y in zip(xs_clean, ys_clean))
+    den_x = math.sqrt(sum((x - mean_x) ** 2 for x in xs_clean))
+    den_y = math.sqrt(sum((y - mean_y) ** 2 for y in ys_clean))
+    if den_x == 0 or den_y == 0:
+        return None
+    return num / (den_x * den_y)
+
+
+def analyze_confidence_value_anomalies(
+    submission_glob: str, fx_pairs: List[str], autonity_pairs: List[str]
+):
+    """
+    Main analysis function.
+    """
+    df_all = load_and_preprocess_submissions(submission_glob)
+
+    conf_cols = list_confidence_columns(df_all)
+
+    df_conf_dist = confidence_distribution_by_validator_pair(
+        df_all, conf_cols, top_k_freq=3
+    )
+
+    df_conf_dist = df_conf_dist.with_columns(
+        [
+            (pl.col("max_conf") == pl.col("min_conf")).alias("zero_variation"),
+            (pl.col("distinct_values_count") == 1).alias("only_one_value"),
+            pl.when(
+                pl.col("top_freq_values").str.contains(" 0(", literal=True)
+                | pl.col("top_freq_values").str.contains("0(", literal=True)
+            )
+            .then(pl.lit(True))
+            .otherwise(pl.lit(False))
+            .alias("has_zero_conf"),
+        ]
+    )
+
+    df_corr = check_confidence_vs_price_correlation(df_all, fx_pairs, autonity_pairs)
+
+    df_anomalies = df_conf_dist.filter(
+        pl.col("zero_variation") | pl.col("only_one_value")
+    )
+
+    return {
+        "df_confidence_distribution": df_conf_dist,
+        "df_confidence_anomalies": df_anomalies,
+        "df_correlation_price_change": df_corr,
+    }
+```
+
+```{python}
+fx_price_cols = [
+    "AUD-USD Price",
+    "CAD-USD Price",
+    "EUR-USD Price",
+    "GBP-USD Price",
+    "JPY-USD Price",
+    "SEK-USD Price",
+]
+autonity_price_cols = [
+    "ATN-USD Price",
+    "NTN-USD Price",
+    "NTN-ATN Price",
+]
+
+results = analyze_confidence_value_anomalies(
+    submission_glob="../submission-data/Oracle_Submission_*.csv",
+    fx_pairs=fx_price_cols,
+    autonity_pairs=autonity_price_cols,
+)
+```
+
+---
+
+### 5.4 What Have We Found?
+
+Below, we directly reference results generated by our analysis.
+
+**Confidence Value Distribution (Top 10 rows)**
+
+```{python}
+results["df_confidence_distribution"]
+```
+
+- Key indicators:
+  - **Mean/std**: Low or zero standard deviation indicates fixed or rarely-changing confidence.
+  - **Distinct values count**: Few distinct values may indicate hard-coded or rarely adjusted confidence.
+
+**Identified Anomalies (Zero or Single-Value Confidence)**
+
+```{python}
+results["df_confidence_anomalies"]
+```
+
+- Rows indicate validators consistently providing identical confidence, suggesting potential misconfiguration or logic errors.
+
+**Correlation Between Confidence and Price Changes**
+
+```{python}
+results["df_correlation_price_change"].filter(pl.col("num_points") > 2)
+```
+
+Note: You may observe many `null` values in the `corr_conf_price_change` column. This can happen if a validator always provides the same confidence (zero variance in confidence values) or the price change for the given pair is often `0` or extremely small (zero variance in price).
+
+- Correlation (`corr_conf_price_change`) near zero implies confidence metrics not aligned with real market volatility. Strong correlation (positive or negative) suggests meaningful responsiveness.
+
+**Interpretation of Results**
+
+```{python}
+import statistics
+
+df_corr_fixed = results["df_correlation_price_change"].with_columns(
+    pl.col("corr_conf_price_change").cast(pl.Float64)
+)
+
+num_anomalies = results["df_confidence_anomalies"].height
+print(f"Validators with fixed confidence values: {num_anomalies}")
+
+low_corr_count = df_corr_fixed.filter(
+    (pl.col("corr_conf_price_change").abs() < 0.1) &
+    (pl.col("corr_conf_price_change").is_not_null())
+).height
+
+print(f"Number of validator-pair combinations with low correlation (<0.1): {low_corr_count}")
+
+if num_anomalies > 0:
+    print("Identified validators with potentially hard-coded or fixed confidence values.")
+else:
+    print("No significant anomalies in confidence values identified.")
+
+if low_corr_count > 0:
+    print("Confidence values for many validators do not adequately reflect market volatility.")
+else:
+    print("Confidence values generally align well with price changes.")
+
+```

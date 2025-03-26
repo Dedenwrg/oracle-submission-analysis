@@ -1,0 +1,23 @@
+/* Custom CSS for Quarto Website */
+
+/* Add some margin to the bottom of each notebook */
+.quarto-notebook {
+  margin-bottom: 2em;
+}
+
+/* Style for the sidebar links */
+.sidebar-item-text {
+  font-weight: 500;
+}
+
+/* Style for code blocks */
+pre.sourceCode {
+  border-radius: 4px;
+}
+
+/* Style for tables */
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: transparent;
+} 

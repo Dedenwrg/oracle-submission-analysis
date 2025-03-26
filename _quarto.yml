@@ -1,0 +1,34 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Oracle Submission Analysis"
+  navbar:
+    left: []
+  sidebar:
+    style: "docked"
+    contents:
+      - section: "Reports"
+        contents:
+          - summary_2024_12.qmd
+          - summary_2025_01.qmd
+          - summary_2025_02.qmd
+      - section: "Notebooks"
+        contents:
+          - notebooks/issue_1.qmd
+          - notebooks/issue_2.qmd
+          - notebooks/issue_3.qmd
+          - notebooks/issue_4.qmd
+          - notebooks/issue_5.qmd
+          - notebooks/issue_6.qmd
+          - notebooks/issue_7.qmd
+          - notebooks/issue_8.qmd
+          - notebooks/issue_9.qmd
+          - notebooks/issue_10.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true 
