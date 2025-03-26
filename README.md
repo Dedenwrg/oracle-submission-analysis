@@ -34,6 +34,6 @@ quarto preview
 
 This will create the website in the `_site` directory.
 
-### Keep .html
+### "Dummay" `*.csv` data
 
-`*.html` are not ignored in `.gitignore` 
+Due to the very large size of Oracle Submission data, only 1 day of Oracle Submission data (`Oracle_Submission_2025-01-01.csv`) and its corresponding Yahoo Finance datasets are stored in this repo for testing.
