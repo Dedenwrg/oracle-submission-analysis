@@ -17,6 +17,7 @@ This repository contains a collection of Quarto notebooks analyzing oracle submi
 ### Prerequisites
 
 - [Quarto](https://quarto.org/docs/get-started/) must be installed on your system
+- [Polars](https://pypi.org/project/polars/1.24.0/) must be installed at version `1.24.0`
 
 ### Building the Website
 
