@@ -14,7 +14,9 @@ Examines critical issues in Oracle submissions from validators, focusing on data
 
 **[January 2025 Summary Report](summary_2025_01.qmd)** - Comprehensive analysis of January 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.
 
-**[February 2025 Summary Report](summary_2025_02.qmd)** - Comprehensive analysis of February 2025 Oracle submissions data, showing concerning trends in data quality and security issues compared to January.
+**[February 2025 Summary Report](summary_2025_02.qmd)** - Comprehensive analysis of February 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.
+
+**[March 2025 Summary Report](summary_2025_03.qmd)** - Comprehensive analysis of March 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.
 
 ## Table of Contents
 

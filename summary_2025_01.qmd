@@ -291,9 +291,3 @@ The table below provides a standardized rating system for each issue area. This 
 - One additional validator became completely inactive in January
 - The number of stale data runs increased significantly
 - Five validators had 100% missing submission rates in January compared to four in December
-
-**Priority Actions:**
-1. Investigation into validators with poor submission rates
-2. Address significant increase in stale data
-3. Investigate increasing security concerns
-4. Apply the weekend handling improvements to other areas of the system 

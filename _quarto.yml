@@ -14,6 +14,7 @@ website:
           - summary_2024_12.qmd
           - summary_2025_01.qmd
           - summary_2025_02.qmd
+          - summary_2025_03.qmd
       - section: "Notebooks"
         contents:
           - notebooks/issue_1.qmd
