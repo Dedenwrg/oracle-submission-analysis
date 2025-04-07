@@ -1,5 +1,5 @@
 ---
-title: "Oracle Submission Trend Analysis (December 2024 - March 2025)"
+title: "Oracle Submission Data Analysis Report (December 2024 - March 2025)"
 format:
   html:
     toc: true
@@ -26,11 +26,11 @@ The analysis covered ten distinct issue areas:
 9. **Vendor Downtime**: Detecting submission stoppages
 10. **Security/Malicious Behavior**: Looking for potential manipulation patterns
 
-The analysis tracked quantitative metrics for each issue area, comparing them month-over-month to identify trends and patterns.
+The analysis presents quantitative metrics for each issue area in a month-over-month format.
 
 # Key Trends Observed
 
-## 1. Validator Submission Completeness
+## Validator Submission Completeness
 
 The number of inactive validators and submission completeness rates changed over the four-month period:
 
@@ -64,7 +64,7 @@ The number of inactive validators and submission completeness rates changed over
 - Weekend coverage declined more severely than weekday coverage
 - The total missing submission count increased by approximately 8.7% month-over-month on average
 
-## 2. Suspicious and Out-of-Range Values
+## Suspicious and Out-of-Range Values
 
 The occurrence of suspicious price submissions, including outliers, zero values, and mathematically inconsistent values, changed over time:
 
@@ -91,7 +91,7 @@ The occurrence of suspicious price submissions, including outliers, zero values,
 - The frequency of submissions outside ±2 standard deviations from the median increased from 3.2% to 5.7%
 - Cross-currency mathematical consistency measurements showed larger deviations appearing more frequently
 
-## 3. Stale Data and Price Lag
+## Stale Data and Price Lag
 
 The prevalence of stale data (unchanging prices over time) changed as follows:
 
@@ -117,7 +117,7 @@ The prevalence of stale data (unchanging prices over time) changed as follows:
 - Lagging data intervals (delayed price updates) exceeding 5% threshold in 60-minute windows increased from 0 to 78
 - The average duration of stale runs increased by 79% over the four-month period
 
-## 4. Submission Pattern Analysis
+## Submission Pattern Analysis
 
 Analysis of submission patterns revealed changes in coordinated behavior among validator groups:
 
@@ -159,7 +159,7 @@ Analysis of submission patterns revealed changes in coordinated behavior among v
 - Similar error patterns and anomalies
 - Submission burst patterns occurring at identical times
 
-## 5. Vendor Downtime and Outages
+## Vendor Downtime and Outages
 
 The frequency, duration, and impact of system outages changed as follows:
 
@@ -176,7 +176,7 @@ The frequency, duration, and impact of system outages changed as follows:
 - The total cumulative downtime across all validators increased by approximately 142% from December to March
 - The correlation between outages strengthened, with more validators experiencing simultaneous failures
 
-## 6. Weekend vs. Weekday Performance
+## Weekend vs. Weekday Performance
 
 Weekend performance compared to weekday performance changed as follows:
 
@@ -199,7 +199,7 @@ Weekend performance compared to weekday performance changed as follows:
 - The frequency of stale data runs on weekends nearly doubled from December to March
 - The percentage of validators operating consistently on weekends declined from 92% to 84%
 
-## 7. Confidence Value Metrics
+## Confidence Value Metrics
 
 The quality and distribution of confidence values changed as follows:
 
@@ -216,7 +216,7 @@ The quality and distribution of confidence values changed as follows:
 - The percentage of FX pair submissions using only two values (90 or 100) increased from 72.1% to 85.4%
 - The number of validators demonstrating truly dynamic confidence values that correlate with market volatility decreased from 10 to 7
 
-## 8. Timing and Synchronization Metrics
+## Timing and Synchronization Metrics
 
 Time synchronization measurements between validators changed as follows:
 
@@ -233,7 +233,7 @@ Time synchronization measurements between validators changed as follows:
 - The size of the largest timing-aligned cluster doubled from 4 to 8 validators
 - The overall variance in submission times increased by 89.5% over the four-month period
 
-## 9. Cross-Rate Consistency Measurements
+## Cross-Rate Consistency Measurements
 
 Mathematical consistency between Autonity token pairs changed as follows:
 
@@ -250,7 +250,7 @@ Mathematical consistency between Autonity token pairs changed as follows:
 - The magnitude of average cross-rate deviations increased by 78.1% over the four-month period
 - The number of validators responsible for the majority of inconsistencies doubled from 3 to 6
 
-## 10. Submission Pattern Metrics
+## Submission Pattern Metrics
 
 Observed patterns in submission behavior changed as follows:
 
