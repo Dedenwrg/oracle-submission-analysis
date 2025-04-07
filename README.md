@@ -10,6 +10,8 @@ This repository contains a collection of Quarto notebooks analyzing oracle submi
 - `summary_2024_12.qmd`: Summary report of December 2024
 - `summary_2025_01.qmd`: Summary report of January 2025
 - `summary_2025_02.qmd`: Summary report of February 2025
+- `summary_2025_03.qmd`: Summary report of March 2025
+- `summary_first_half.qmd`: Aggregated summary report from December 2024 to March 2025
 - `styles.css`: Custom styling for the website
 
 ## Getting Started

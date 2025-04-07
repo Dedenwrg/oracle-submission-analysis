@@ -18,6 +18,8 @@ Examines critical issues in Oracle submissions from validators, focusing on data
 
 **[March 2025 Summary Report](summary_2025_03.qmd)** - Comprehensive analysis of March 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.
 
+**[First Half Summary Report (December 2024 - March 2025)](summary_first_half.qmd)** - Aggregated four-month analysis tracking trends and patterns in Oracle data submissions across ten issue areas, with quantitative metrics, validator performance statistics, and month-to-month comparisons.
+
 ## Table of Contents
 
 1. [Issue 1: Missing or Null Submissions](notebooks/issue_1.qmd) - Analysis of validators with missing or null price submissions, including frequency patterns and impact on data aggregation.
