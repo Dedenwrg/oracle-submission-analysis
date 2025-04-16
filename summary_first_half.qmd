@@ -108,6 +108,18 @@ The progressive decline in validator participation impacts the oracle's ability 
 - Validator inactivity particularly affected weekend FX data coverage, which declined from 24.3% in December to 9.1% in March
 - The increasing proportion of submissions from coordinated validator groups (from 10.8% to 21.4%) reduced the independence of FX data inputs
 
+**Factors Affecting ACU Calculation:**
+- Total submission completeness measurably declined from 76.1% (December) to 67.4% (March)
+- The percentage of timestamps missing at least one validator submission increased from 75% to 91%
+- Cross-rate mathematical consistency measurements, which directly affect ACU calculation accuracy, showed increasing deviations from 3.2% to 5.7% on average
+- Cross-rate violating submissions increased from 7,912 (December) to 13,428 (March)
+- The largest cross-rate inconsistency grew from 34.2% to 57.9%
+- The number of validators responsible for the majority of inconsistencies doubled from 3 to 6
+- Coordinated submission groups increased from 2 to 3 distinct groups
+- Total validators in these coordinated groups increased from 6 to 15
+- The proportion of submissions from these coordinated groups increased from 10.8% to 21.4%
+- Weekend submission coverage showed a steeper decline (from 24.3% to 9.1%) compared to weekday coverage (from 27.9% to 15.3%)
+
 **Oracle Aggregation Method for ACU:**
 - The current median-based aggregation method used for computing ACU prices filters out extreme outlier FX submissions
 - As validator participation decreased, the median calculation was based on a smaller sample size of FX submissions
