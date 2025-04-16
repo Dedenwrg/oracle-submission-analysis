@@ -240,6 +240,34 @@ The frequency, duration, and impact of system outages changed as follows:
 - The total cumulative downtime across all validators increased by approximately 142% from December to March
 - The correlation between outages strengthened, with more validators experiencing simultaneous failures
 
+**Validators with Most Frequent Outages:**
+- 0xf34CD6c09a59d7D3d1a6C3dC231a46CED0b51D4C (23 distinct outage events)
+- 0x6747c02DE7eb2099265e55715Ba2ddE7D0A131dE (19 distinct outage events)
+- 0x5603caFE3313D0cf56Fd4bE4A2f6aDe89D89E58f (18 distinct outage events)
+- 0xf10f56Bf0A28E0737c7e6bB0aF92fe4cfbc87228 (17 distinct outage events)
+- 0x4DCB49b0B42A8F6B3D2c6FC69476A5e93d8f904E (16 distinct outage events)
+- 0x9d28e40E9Ec4789f9A0D17e421F72E1b3accd5F3 (15 distinct outage events)
+
+**Validators with Complete Inactivity:**
+- 0x3fe573552E14a0FC11Da25E43Fef11e16a785068 (100% missing submission rate)
+- 0x100E38f7BCEc53937BDd79ADE46F34362470577B (100% missing submission rate)
+- 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775 (active in early months, 0% submission by March)
+- 0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2 (declining submission rate, 0% by March)
+
+**Validators in Largest Simultaneous Outage (March, 143 minutes):**
+- 0x01F788E4371a70D579C178Ea7F48f9DF4d20eAF3
+- 0x6747c02DE7eb2099265e55715Ba2ddE7D0A131dE
+- 0xf10f56Bf0A28E0737c7e6bB0aF92fe4cfbc87228
+- 0x5603caFE3313D0cf56Fd4bE4A2f6aDe89D89E58f
+- 0x4DCB49b0B42A8F6B3D2c6FC69476A5e93d8f904E
+- 0x00a96aaED75015Bb44cED878D9278a12082cdEf2
+- 0xfD97FB8835d25740A2Da27c69762f7faAF2BFEd9
+- 0xcdEed21b471b0Dc54faF74480A0E15eDdE187642
+- 0x1476A65D7B5739dE1805d5130441c6AF41577fa2
+- 0x9d28e40E9Ec4789f9A0D17e421F72E1b3accd5F3
+- 0x9d5eb234A7F5F445a0a66082Be7236e8719314D9
+- 0xeEdf5eE63CbBe8dBa23541D8E7f4ac920Af9d304
+
 ## Weekend vs. Weekday Performance
 
 Weekend performance compared to weekday performance changed as follows:
