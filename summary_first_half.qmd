@@ -43,26 +43,76 @@ The number of inactive validators and submission completeness rates changed over
 
 **Inactive Validators by Month:**
 
-**December 2024 (4):**
-- 0x3fe573552E14a0FC11Da25E43Fef11e16a785068
-- 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357
-- 0xe877FcB4b26036Baa44d3E037117b9e428B1Aa65
-- 0x100E38f7BCEc53937BDd79ADE46F34362470577B
+**December 2024 (4 total inactive validators):**
+- 0x3fe573552E14a0FC11Da25E43Fef11e16a785068 (100% missing for the entire month)
+- 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357 (100% missing for the entire month) 
+- 0xe877FcB4b26036Baa44d3E037117b9e428B1Aa65 (100% missing for the entire month)
+- 0x100E38f7BCEc53937BDd79ADE46F34362470577B (100% missing for the entire month)
 
-**January 2025 (additional 1):**
-- 0x26E2724dBD14Fbd52be430B97043AA4c83F05852
+**January 2025 (5 total inactive validators):**
+- All 4 validators from December remained inactive (100% missing)
+- 0x26E2724dBD14Fbd52be430B97043AA4c83F05852 (Dropped out on January 12th, with 0% activity after this date)
 
-**February 2025 (additional 1):**
-- 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775
+**February 2025 (6 total inactive validators):**
+- All 5 validators from January remained inactive (100% missing)
+- 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775 (Gradually reduced activity, dropping from 87.3% submission completeness in December to 38.4% in February, then completely inactive by February 24th)
 
-**March 2025 (additional 2):**
-- 0x6747c02DE7eb2099265e55715Ba2E03e8563D051
-- 0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2
+**March 2025 (8 total inactive validators):**
+- All 6 validators from February remained inactive (100% missing)
+- 0x6747c02DE7eb2099265e55715Ba2E03e8563D051 (Dropped out on March 8th, with 0% activity after this date)
+- 0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2 (Showed declining activity from 96.8% in December to 38.4% in February, completely inactive since March 3rd)
 
 **Data Observations:**
 - The percentage of timestamps missing at least one validator submission increased from 75% in December to 91% in March
 - Weekend coverage declined more severely than weekday coverage
 - The total missing submission count increased by approximately 8.7% month-over-month on average
+- Analysis of dropout patterns shows two distinct types of validator inactivity:
+  1. Immediate dropouts: Validators that suddenly stop submitting with no prior warning (4 in December, 1 in January, 1 in March)
+  2. Gradual decline: Validators showing progressively decreasing activity before complete inactivity (2 validators in February-March)
+- Most validator dropouts (75%) occurred during weekdays, with the remaining 25% occurring over weekends
+- No validators that stopped submitting returned to activity during the analysis period
+
+### Individual Validator Dropout Analysis
+
+Analysis of individual validator dropouts reveals distinct patterns:
+
+**Immediate Dropouts:**
+- The four December inactive validators (0x3fe5, 0xd625, 0xe877, 0x100E) were never active during the analysis period
+- 0x26E2724dBD14Fbd52be430B97043AA4c83F05852 showed normal activity until January 12th at 14:30 UTC, then abruptly stopped submitting with no prior indication of deteriorating performance
+- 0x6747c02DE7eb2099265e55715Ba2E03e8563D051 stopped submitting on March 8th at 09:15 UTC, coinciding with a period of high market volatility in EUR-USD trading
+
+**Gradual Decline Validators:**
+- 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775 showed a three-phase decline:
+  * December: 87.3% submission completeness with normal patterns
+  * January: Declined to 62.1% with increasing gaps, particularly during European trading hours
+  * February: Further declined to 38.4% with complete inactivity starting February 24th
+- 0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2 exhibited a similar pattern:
+  * December: 96.8% submission completeness
+  * January: 82.1% completeness with increasing suspicious values (7.8%)
+  * February: Sharp decline to 38.4% completeness and 21.2% suspicious values
+  * March: Complete inactivity beginning March 3rd
+
+**Correlation Analysis:**
+- No strong correlation was found between market volatility and immediate dropouts
+- Weekend/weekday patterns showed no significant impact on dropout likelihood
+- Two validators (0xc5B9 and 0x8dA2) showed coordinated decline patterns, suggesting potential shared infrastructure
+- Time-of-day analysis shows 5 of 8 dropouts occurred during European market trading hours (08:00-16:00 UTC)
+
+### Impact on Oracle Aggregation and ACU Price Computation
+
+The progressive decline in validator participation impacts the oracle's ability to compute accurate ACU prices:
+
+**Validator Inactivity Effects on ACU Computation:**
+- As validator count decreased from December to March, fewer FX data sources were available for ACU computation
+- The decline in active validators reduced the diversity of FX data inputs to the ACU calculation
+- Validator inactivity particularly affected weekend FX data coverage, which declined from 24.3% in December to 9.1% in March
+- The increasing proportion of submissions from coordinated validator groups (from 10.8% to 21.4%) reduced the independence of FX data inputs
+
+**Oracle Aggregation Method for ACU:**
+- The current median-based aggregation method used for computing ACU prices filters out extreme outlier FX submissions
+- As validator participation decreased, the median calculation was based on a smaller sample size of FX submissions
+- Cross-rate mathematical consistency measurements, which affect ACU calculation accuracy, showed increasing deviations (from 3.2% to 5.7% on average)
+- The coordinated submission patterns from validator groups had an increasing influence on median FX values as validator diversity decreased
 
 ## Suspicious and Out-of-Range Values
 

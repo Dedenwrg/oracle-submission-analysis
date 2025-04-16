@@ -105,6 +105,8 @@ The analysis covered ten distinct issue areas:
 - **Submission timing consistency** improved by **38%** during weekends (lower variance in timestamps)
 - Price deviation from benchmark rates was **3.4 times higher** on Mondays compared to other weekdays
 
+*Note: Weekend/weekday classification is based on calendar days (Saturday-Sunday vs Monday-Friday) using UTC timestamps, aligning with the global FX trading calendar rather than with the national time zones of specific fiat currencies.*
+
 ## Vendor Downtime Issues
 
 - **26 distinct major outage events** were identified across all validators
