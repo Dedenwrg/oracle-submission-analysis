@@ -302,6 +302,8 @@ The quality and distribution of confidence values changed as follows:
 | February 2025 | 429 | 48 | 44 | 8 |
 | March 2025 | 452 | 51 | 46 | 7 |
 
+**Note:** "Validator-Pairs with Anomalies" refers to the number of combinations of validators and currency pairs (such as AUD-USD, EUR-USD, etc.) where validators submitted abnormal confidence values. This includes validators consistently submitting the same fixed confidence value, having zero variation in their confidence values over time, or confidence values that don't change in response to market volatility.
+
 **Confidence Value Data:**
 - The percentage of submissions with zero standard deviation in confidence metrics increased from 74.5% to 82.3%
 - The percentage of Autonity token pair submissions with fixed confidence values of 100 increased from 92.8% to 97.8%
