@@ -67,6 +67,7 @@ The analysis covered ten distinct issue areas:
 
 - **110,461 instances of stale data runs** were detected (defined as identical price values submitted for 30 or more consecutive intervals)
 - **Six validators** submitted completely identical price data for the entire month (89,272 consecutive identical submissions)
+  - **Validators with all month identical data**: 0x01F788E4371a70D579C178Ea7F48f9DF4d20eAF3, 0x6747c02DE7eb2099265e55715Ba2ddE7D0A131dE, 0xf10f56Bf0A28E0737c7e6bB0aF92fe4cfbc87228, 0x5603caFE3313D0cf56Fd4bE4A2f6aDe89D89E58f, 0x4DCB49b0B42A8F6B3D2c6FC69476A5e93d8f904E, plus 1 additional validator
 - The median stale data run length was **42 submissions**
 - **17,856 stale runs** lasted longer than 1 hour
 - **2,143 stale runs** persisted through significant market movements (>1% price change)
