@@ -54,6 +54,15 @@ The analysis covered ten distinct issue areas:
 - **9,458 submissions** showed cross-rate inconsistencies exceeding 10% deviation
 - The largest observed price deviation was **842%** above the benchmark rate
 - **9 validators** accounted for over 75% of all suspicious price submissions
+  - 0x6747c02DE7eb2099265e55715Ba2ddE7D0A131dE
+  - 0x01F788E4371a70D579C178Ea7F48f9DF4d20eAF3
+  - 0xf34CD6c09a59d7D3d1a6C3dC231a46CED0b51D4C
+  - 0xf10f56Bf0A28E0737c7e6bB0aF92fe4cfbc87228
+  - 0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2
+  - 0x00a96aaED75015Bb44cED878D9278a12082cdEf2
+  - 0xfD97FB8835d25740A2Da27c69762f7faAF2BFEd9
+  - 0x1476A65D7B5739dE1805d5130441c6AF41577fa2
+  - 0x9d5eb234A7F5F445a0a66082Be7236e8719314D9
 - **GBP-USD** and **AUD-USD** pairs showed the highest rates of suspicious values at **7.8% and 8.2%** respectively
 
 ## Stale/Lagging Data
