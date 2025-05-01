@@ -1,0 +1,393 @@
+---
+title: Issue 10
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.16.4
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+## 10. Possible Security / Malicious Behavior
+
+This notebook documents the analysis for **Issue #10: Possible Security / Malicious Behavior** in the Autonity Oracle data. It covers:
+
+- **What is this issue about?**  
+- **Why conduct this issue analysis?**  
+- **How to conduct this issue analysis?**  
+- **What have we found?**  
+
+---
+
+### 10.1 What Is This Issue About?
+
+Certain validators may be attempting to manipulate or skew prices for malicious purposes, or they may be submitting collusive prices in tandem. Examples include:
+
+- **Collusion / Sybil Attacks**: Multiple validators posting **identical** or **near-identical** prices.
+- **Price Manipulation**: Validators posting extreme prices simultaneously, especially at critical times.
+
+This analysis investigates these suspicious patterns to detect possible malicious behavior.
+
+---
+
+### 10.2 Why Conduct This Issue Analysis?
+
+- **Security**: Malicious validators can undermine Oracle reliability.
+- **Integrity**: Identifying suspicious patterns helps protect on-chain contracts relying on accurate price feeds.
+- **Preparedness**: Detecting vulnerabilities prior to Mainnet launch ensures robust security practices.
+
+---
+
+### 10.3 How Did We Conduct the Analysis?
+
+We used Python with the **Polars** library (`v1.24.0`) to:
+
+1. Load and preprocess Oracle submission CSV files.
+2. Parse timestamps and convert price values from Wei to decimal.
+3. Detect suspicious validator pairs that frequently submit identical prices.
+4. Detect simultaneous extreme outliers, i.e., multiple validators submitting extreme prices at the same timestamps.
+
+Below is the full analysis script:
+
+```{python}
+import polars as pl
+import glob
+```
+
+```{python}
+def load_and_preprocess_submissions(submission_glob: str) -> pl.DataFrame:
+    """
+    Loads Oracle Submission CSVs and returns a Polars DataFrame.
+    """
+    files = sorted(glob.glob(submission_glob))
+    if not files:
+        raise ValueError(f"No CSV files found matching pattern: {submission_glob}")
+
+    lf_list = []
+    for f in files:
+        lf_temp = pl.scan_csv(
+            f,
+            dtypes={"Timestamp": pl.Utf8},
+            null_values=[""],
+            ignore_errors=True,
+        )
+        lf_list.append(lf_temp)
+
+    lf = pl.concat(lf_list)
+
+    lf = lf.with_columns(
+        pl.col("Timestamp")
+        .str.strptime(pl.Datetime, strict=False)
+        .alias("Timestamp_dt")
+    )
+
+    lf = lf.with_columns(
+        [
+            pl.col("Timestamp_dt").cast(pl.Date).alias("date_only"),
+            pl.col("Timestamp_dt").dt.weekday().alias("weekday_num"),
+        ]
+    )
+
+    df = lf.collect()
+
+    price_cols = [c for c in df.columns if c.endswith(" Price")]
+    for pc in price_cols:
+        if df.schema[pc] in (pl.Int64, pl.Float64):
+            df = df.with_columns(
+                (pl.col(pc).cast(pl.Float64) / 1e18).alias(pc + " Decimal")
+            )
+
+    return df
+
+
+def detect_suspicious_collusion(
+    df: pl.DataFrame,
+    price_decimal_suffix: str = "Decimal",
+    identical_threshold: float = 1e-9,
+    min_fraction_threshold: float = 0.8,
+) -> pl.DataFrame:
+    """
+    Identifies pairs of validators that frequently submit the same (or nearly
+    the same) price values—especially.
+    """
+    suspicious_cols = [c for c in df.columns if c.endswith(price_decimal_suffix)]
+
+    if not suspicious_cols:
+        return pl.DataFrame(
+            {
+                "validator_a": [],
+                "validator_b": [],
+                "matching_fraction": [],
+                "matched_count": [],
+                "total_overlap": [],
+                "suspicious_column": [],
+            }
+        )
+
+    results = []
+
+    for col in suspicious_cols:
+        df_col_filtered = (
+            df.lazy()
+            .filter(pl.col(col).is_not_null())
+            .select(["Timestamp_dt", "Validator Address", col])
+            .collect()
+        )
+
+        df_pivot = df_col_filtered.pivot(
+            index="Timestamp_dt",
+            columns="Validator Address",
+            values=col,
+        )
+
+        validator_cols = [c for c in df_pivot.columns if c != "Timestamp_dt"]
+
+        pairs_data = []
+        v_cols_sorted = sorted(validator_cols)
+        for i in range(len(v_cols_sorted)):
+            for j in range(i + 1, len(v_cols_sorted)):
+                va = v_cols_sorted[i]
+                vb = v_cols_sorted[j]
+                if va == "Timestamp_dt" or vb == "Timestamp_dt":
+                    continue
+
+                df_check = df_pivot.select(
+                    [
+                        (pl.col(va).is_not_null() & pl.col(vb).is_not_null()).alias(
+                            "overlap_flag"
+                        ),
+                        (
+                            (pl.col(va) - pl.col(vb)).abs().lt(identical_threshold)
+                            & pl.col(va).is_not_null()
+                            & pl.col(vb).is_not_null()
+                        ).alias("match_flag"),
+                    ]
+                )
+
+                overlap_count = df_check["overlap_flag"].sum()
+                match_count = df_check["match_flag"].sum()
+
+                if overlap_count == 0:
+                    fraction = 0.0
+                else:
+                    fraction = match_count / overlap_count
+
+                pairs_data.append(
+                    {
+                        "validator_a": va,
+                        "validator_b": vb,
+                        "matched_count": match_count,
+                        "total_overlap": overlap_count,
+                        "matching_fraction": fraction,
+                        "suspicious_column": col,
+                    }
+                )
+
+        df_col_result = pl.DataFrame(pairs_data)
+
+        df_col_result = df_col_result.filter(
+            pl.col("matching_fraction") >= min_fraction_threshold
+        )
+
+        if df_col_result.height > 0:
+            results.append(df_col_result)
+
+    if results:
+        return pl.concat(results, how="vertical").sort(
+            "matching_fraction", descending=True
+        )
+    else:
+        return pl.DataFrame(
+            {
+                "validator_a": [],
+                "validator_b": [],
+                "matching_fraction": [],
+                "matched_count": [],
+                "total_overlap": [],
+                "suspicious_column": [],
+            }
+        )
+
+
+def detect_simultaneous_extreme_outliers(
+    df: pl.DataFrame,
+    price_decimal_suffix: str = "Decimal",
+    outlier_threshold: float = 2.0,
+    min_group_size: int = 2,
+) -> pl.DataFrame:
+    """
+    Flags timestamps where multiple validators (>= min_group_size) post an
+    extremely high or low (relative to some baseline) price simultaneously.
+    """
+    suspicious_cols = [c for c in df.columns if c.endswith(price_decimal_suffix)]
+
+    if not suspicious_cols:
+        return pl.DataFrame(
+            {
+                "Timestamp_dt": [],
+                "outlier_count": [],
+                "outlier_validators": [],
+                "suspicious_column": [],
+            }
+        )
+
+    results = []
+
+    for col in suspicious_cols:
+        median_val = df.select(pl.col(col)).median().item()
+        if median_val is None or median_val <= 0:
+            continue
+
+        df_extreme = (
+            df.lazy().select(
+                [
+                    "Timestamp_dt",
+                    "Validator Address",
+                    pl.col(col).alias("price_val"),
+                    pl.when(
+                        (pl.col(col) > (median_val * outlier_threshold))
+                        | (pl.col(col) < (median_val / outlier_threshold))
+                    )
+                    .then(pl.lit(True))
+                    .otherwise(pl.lit(False))
+                    .alias("is_extreme"),
+                ]
+            )
+        ).collect()
+
+        grouped_lf = (
+            df_extreme.lazy()
+            .group_by("Timestamp_dt")
+            .agg(
+                [
+                    pl.sum("is_extreme").alias("outlier_count"),
+                    pl.col("Validator Address")
+                    .filter(pl.col("is_extreme"))
+                    .alias("outlier_validators"),
+                ]
+            )
+        )
+
+        df_grouped = grouped_lf.collect().filter(
+            pl.col("outlier_count") >= min_group_size
+        )
+
+        if df_grouped.height > 0:
+            df_col_sus = df_grouped.with_columns(pl.lit(col).alias("suspicious_column"))
+            results.append(df_col_sus)
+
+    if results:
+        return pl.concat(results, how="vertical").sort(
+            ["Timestamp_dt", "suspicious_column"]
+        )
+    else:
+        return pl.DataFrame(
+            {
+                "Timestamp_dt": [],
+                "outlier_count": [],
+                "outlier_validators": [],
+                "suspicious_column": [],
+            }
+        )
+
+
+def analyze_possible_security_malicious_behavior(
+    submission_glob: str,
+    identical_match_threshold: float = 1e-9,
+    min_fraction_collusion: float = 0.75,
+    outlier_threshold: float = 2.0,
+    min_outlier_group_size: int = 2,
+):
+    """
+    Main analysis function.
+    """
+    df_all = load_and_preprocess_submissions(submission_glob)
+
+    df_suspicious_pairs = detect_suspicious_collusion(
+        df_all,
+        price_decimal_suffix="Decimal",
+        identical_threshold=identical_match_threshold,
+        min_fraction_threshold=min_fraction_collusion,
+    )
+
+    df_extreme_groups = detect_simultaneous_extreme_outliers(
+        df_all,
+        price_decimal_suffix="Decimal",
+        outlier_threshold=outlier_threshold,
+        min_group_size=min_outlier_group_size,
+    )
+
+    return {
+        "df_all_submissions": df_all,
+        "df_suspicious_pairs": df_suspicious_pairs,
+        "df_extreme_outliers": df_extreme_groups,
+    }
+```
+
+```{python}
+results = analyze_possible_security_malicious_behavior(
+    submission_glob="../submission-data/Oracle_Submission_*.csv",
+    identical_match_threshold=1e-9,
+    min_fraction_collusion=0.75,
+    outlier_threshold=2.0,
+    min_outlier_group_size=2,
+)
+```
+
+---
+
+### 10.4 What Have We Found?
+
+Below, we display the results extracted from the analysis.
+
+#### Suspicious Validator Pairs (Collusion)
+
+```{python}
+df_pairs = results["df_suspicious_pairs"]
+
+print(f"Total suspicious validator pairs found: {df_pairs.height}")
+
+if df_pairs.is_empty():
+    print("No suspicious validator pairs were found.")
+else:
+    display(df_pairs)
+
+    # Display top 20 suspicious pairs
+    for row in df_pairs.head(20).iter_rows(named=True):
+        va = row["validator_a"]
+        vb = row["validator_b"]
+        frac = row["matching_fraction"] * 100
+        col = row["suspicious_column"]
+        print(f"Pair ({va[:10]}..., {vb[:10]}...) in {col}: {frac:.1f}% identical submissions.")
+```
+
+**Interpretation**  
+- High matching fractions suggest validators may be operating together or using identical sources, raising concerns of collusion or Sybil attacks.
+
+#### Simultaneous Extreme Outliers
+
+```{python}
+df_outliers = results["df_extreme_outliers"]
+
+print(f"Total timestamps with simultaneous extreme outliers: {df_outliers.height}")
+
+if df_outliers.is_empty():
+    print("No simultaneous extreme outliers detected.")
+else:
+    display(df_outliers)
+
+    # Display top 20 outlier events
+    for row in df_outliers.head(20).iter_rows(named=True):
+        ts = row["Timestamp_dt"]
+        count = row["outlier_count"]
+        validators = row["outlier_validators"]
+        col = row["suspicious_column"]
+        print(f"Timestamp {ts}: {count} validators posted outliers in {col}. Validators: {validators}")
+```
+
+- Multiple validators simultaneously posting extreme prices may indicate coordinated manipulation attempts, especially if this coincides with critical network events.
