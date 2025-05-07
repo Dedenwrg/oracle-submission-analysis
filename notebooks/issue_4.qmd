@@ -20,7 +20,7 @@ This notebook documents the analysis for **Issue #4: Stale / Lagging Data** in t
 - **What is this issue about?**  
 - **Why conduct this issue analysis?**  
 - **How to conduct this issue analysis?**  
-- **What have we found?**  
+- **What are the results?**  
 
 ---
 
@@ -43,9 +43,9 @@ These indicate problems such as disconnected feeds or outdated caches.
 
 ---
 
-### 4.3 How Did We Conduct the Analysis?
+### 4.3 How to Conduct the Analysis?
 
-We used Python with the **Polars** library (`v1.24.0`) to:
+Use Python with the **Polars** library (`v1.24.0`) to:
 
 - Loading Oracle submission data and Yahoo Finance benchmarks.
 - Detecting stale data (repeated identical submissions ≥30 consecutive intervals).
@@ -57,6 +57,9 @@ Below is the Python script to perform the analysis:
 import polars as pl
 import glob
 from typing import List, Dict
+import warnings
+
+warnings.filterwarnings("ignore")
 ```
 
 ```{python}
@@ -141,18 +144,28 @@ def load_all_fx_benchmarks() -> Dict[str, pl.DataFrame]:
 def detect_stale_data(
     df: pl.DataFrame,
     price_cols: List[str],
-    max_consecutive_threshold: int = 30
+    max_consecutive_threshold: int = 30,
+    stale_tolerance: float = 1e-9  # Tolerance for float comparison
 ) -> pl.DataFrame:
     """
-    Identifies potential stale data.
+    Identifies potential stale data when the same price is repeated for
+    at least max_consecutive_threshold intervals, allowing small float tolerance.
+    Skips any rows with None in the relevant price columns to avoid TypeError.
     """
     suspicious_frames = []
     df_local = df.clone()
+    
     new_cols = []
     for pc in price_cols:
         dec_col = pc.replace(" Price", " Price Decimal")
         new_cols.append((pl.col(pc).cast(pl.Float64) / 1e18).alias(dec_col))
     df_local = df_local.with_columns(new_cols)
+    
+    for pc in price_cols:
+        dec_col = pc.replace(" Price", " Price Decimal")
+        if dec_col in df_local.columns:
+            df_local = df_local.filter(pl.col(dec_col).is_not_null())
+
     for pc in price_cols:
         dec_col = pc.replace(" Price", " Price Decimal")
         if dec_col not in df_local.columns:
@@ -166,7 +179,7 @@ def detect_stale_data(
 
         df_list = df_sub.to_dicts()
         suspicious_records = []
-
+        
         if not df_list:
             continue
 
@@ -191,6 +204,7 @@ def detect_stale_data(
         for i, row in enumerate(df_list):
             vaddr = row["Validator Address"]
             price_val = row[dec_col]
+            
             if (current_validator is not None) and (vaddr != current_validator):
                 if current_run_len >= max_consecutive_threshold:
                     rec = finalize_run(current_run_price, current_run_start_idx, i - 1, current_run_len)
@@ -200,12 +214,17 @@ def detect_stale_data(
                 current_run_len = 0
                 current_validator = vaddr
 
-            if price_val == current_run_price and vaddr == current_validator:
+            if (
+                current_run_price is not None
+                and vaddr == current_validator
+                and abs(price_val - current_run_price) < stale_tolerance
+            ):
                 current_run_len += 1
             else:
                 if current_run_len >= max_consecutive_threshold:
                     rec = finalize_run(current_run_price, current_run_start_idx, i - 1, current_run_len)
                     suspicious_records.append(rec)
+                
                 current_run_price = price_val
                 current_run_start_idx = i
                 current_run_len = 1
@@ -243,6 +262,7 @@ def detect_lagging_data(
 ) -> pl.DataFrame:
     """
     Compare each validator's reported FX price vs. Yahoo's benchmark.
+    Now uses a forward as-of join to find the price 'at or after' (T + time_window_minutes).
     """
     df_local = df_oracle.clone()
     for pc in fx_pairs:
@@ -275,12 +295,13 @@ def detect_lagging_data(
         )
         df_val_prices = lf_sub.collect().sort(["Validator Address", "ts_minute"])
 
-        df_val_prices_sorted = df_val_prices.clone().with_columns(
-            (pl.col("ts_minute") + pl.duration(minutes=time_window_minutes)).alias("ts_target")
+        df_val_prices_future = df_val_prices.with_columns(
+            (pl.col("ts_minute") + pl.duration(minutes=time_window_minutes)).alias("ts_future")
         )
 
+        left_lf = df_val_prices_future.lazy().sort(["Validator Address", "ts_minute"])
         right_lf = (
-            df_val_prices_sorted.lazy()
+            df_val_prices_future.lazy()
             .select([
                 pl.col("Validator Address"),
                 pl.col("ts_minute").alias("ts_minute_future"),
@@ -289,22 +310,19 @@ def detect_lagging_data(
             .sort(["Validator Address", "ts_minute_future"])
         )
 
-        left_lf = df_val_prices_sorted.lazy().sort(["Validator Address", "ts_minute"])
-
         joined_lf = left_lf.join_asof(
             right_lf,
-            left_on="ts_target",
+            left_on="ts_future",
             right_on="ts_minute_future",
             on="Validator Address",
-            strategy="backward",
+            strategy="forward",
             suffix="_r"
         )
-        df_joined = joined_lf.collect()
 
-        df_joined = df_joined.with_columns(
+        df_joined = joined_lf.collect().with_columns(
             pl.col("price_decimal").alias("price_now")
         )
-        
+
         df_joined = df_joined.with_columns(
             pl.when(
                 (pl.col("price_decimal_future").is_not_null())
@@ -328,7 +346,7 @@ def detect_lagging_data(
             .sort("ts_minute_bench")
         )
         df_bench_now = lf_bench_now.collect().with_columns(
-            (pl.col("ts_minute_bench") + pl.duration(minutes=time_window_minutes)).alias("ts_target_bench")
+            (pl.col("ts_minute_bench") + pl.duration(minutes=time_window_minutes)).alias("ts_future_bench")
         )
 
         df_bench_future = df_bench_now.select([
@@ -336,16 +354,17 @@ def detect_lagging_data(
             pl.col("bench_price").alias("bench_price_future"),
         ]).sort("ts_minute_bench_future")
 
-        ldf_bench_now = df_bench_now.lazy()
+        ldf_bench_now = df_bench_now.lazy().sort("ts_minute_bench")
         ldf_bench_future = df_bench_future.lazy()
 
         ldf_bench_joined = ldf_bench_now.join_asof(
             ldf_bench_future,
-            left_on="ts_target_bench",
+            left_on="ts_future_bench",
             right_on="ts_minute_bench_future",
-            strategy="backward",
+            strategy="forward",
             suffix="_r"
         )
+
         df_bench_joined = ldf_bench_joined.collect().with_columns([
             pl.when(
                 (pl.col("bench_price_future").is_not_null())
@@ -440,7 +459,6 @@ def analyze_stale_lagging_data(
         "df_stale": df_stale,
         "df_lagging": df_lagging,
     }
-
 ```
 
 ```{python}
@@ -474,13 +492,13 @@ results = analyze_stale_lagging_data(
 
 ---
 
-### 4.4 What Have We Found?
+### 4.4 What are the results?
 
 The following cells summarize the results obtained dynamically from the analysis above.
 
 #### 4.4.1 Stale Data Analysis
 
-We identify validators that repeatedly submit the same price data beyond the threshold.
+Identify validators that repeatedly submit the same price data beyond the threshold.
 
 ```{python}
 df_stale = results["df_stale"]
@@ -501,7 +519,7 @@ Interpretation:
 
 #### 4.4.2 Lagging Data Analysis
 
-We detect intervals where the validator's price fails to reflect significant market movements (≥5% within 60 minutes):
+Detect intervals where the validator's price fails to reflect significant market movements (≥5% within 60 minutes):
 
 ```{python}
 df_lagging = results["df_lagging"]
@@ -510,9 +528,17 @@ num_lagging = df_lagging.height
 print(f"Total lagging data intervals detected: {num_lagging}")
 
 if num_lagging > 0:
-    df_top_lagging = df_lagging.with_columns(
-        ((pl.col("bench_pct_change") - pl.col("validator_pct_change")).abs()).alias("abs_diff")
-    ).sort("abs_diff", descending=True)
+    df_top_lagging = (
+        df_lagging
+        .with_columns([
+            pl.col("bench_pct_change").cast(pl.Float64),
+            pl.col("validator_pct_change").cast(pl.Float64),
+        ])
+        .with_columns([
+            (pl.col("bench_pct_change") - pl.col("validator_pct_change")).abs().alias("abs_diff")
+        ])
+        .sort("abs_diff", descending=True)
+    )
     display(df_top_lagging)
 else:
     print("No lagging data intervals exceeding threshold were detected.")
@@ -531,7 +557,6 @@ The tables and statistics above directly highlight:
 - **Affected currency pairs**: Useful for pinpointing feed-related problems.
 
 ```{python}
-# Quick validator-level summary
 if num_stale > 0:
     top_stale_validators = df_stale.group_by("Validator Address").agg(
         pl.sum("run_length").alias("total_stale_intervals"),
@@ -549,3 +574,43 @@ if num_lagging > 0:
 else:
     print("No lagging data to summarize.")
 ```
+
+**List of all Validators and their Stale Scores**
+
+```{python}
+df_all = results["df_all_data"]
+df_stale = results["df_stale"]
+
+df_totals = (
+    df_all
+    .group_by("Validator Address")
+    .agg(pl.count().alias("total_submissions"))
+    .filter(pl.col("Validator Address").is_not_null())
+)
+
+df_stale_sum = (
+    df_stale
+    .group_by("Validator Address")
+    .agg(pl.col("run_length").sum().alias("sum_stale_intervals"))
+)
+
+df_scores = (
+    df_totals
+    .join(df_stale_sum, on="Validator Address", how="left")
+    .fill_null(0)
+    .with_columns(
+        (pl.col("sum_stale_intervals") / pl.col("total_submissions")).alias("stale_score")
+    )
+    .sort("stale_score", descending=True)
+)
+
+for row in df_scores.to_dicts():
+    print(
+        f"Validator {row['Validator Address']}: "
+        f"total={row['total_submissions']}, "
+        f"sum_stale_intervals={row['sum_stale_intervals']}, "
+        f"stale_score={row['stale_score']:.1f}"
+    )
+```
+
+Please note, `total` represents the total number of submissions for this validator. `sum_stale_intervals` sums all “stale” runs across each price column. For instance, if a validator has several columns remain identical for 30+ consecutive intervals, each column’s run is added. `stale_score` = `sum_stale_intervals` / `total`, which can exceed 1 because a single row (submission) may contribute to multiple stale runs (one per column).
