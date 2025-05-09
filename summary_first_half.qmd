@@ -28,6 +28,190 @@ The analysis covered ten distinct issue areas:
 
 The analysis presents quantitative metrics for each issue area in a month-over-month format.
 
+# ACU Index Comparison – Oracle vs Yahoo Finance
+
+The Autonity Oracle's ACU quote should track a benchmark computed from public FX prices.
+The following chunk recreates the ACU series from:
+
+* **Oracle on-chain submissions**
+* **Yahoo Finance minute bars**
+
+```{python}
+#| label: fig-acu-oracle-vs-yahoo
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: >
+#|   ACU derived from Oracle submissions (blue) versus ACU computed from Yahoo
+#|   Finance FX quotes (grey).
+#| cache: true
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import glob
+import polars as pl
+
+
+# Compute ACU from Oracle data
+csv_path = "oracle-price-data/oracle_fx_prices.csv"
+df = pd.read_csv(csv_path, parse_dates=['timestamp'])
+mask = (
+    (df['timestamp'] >= '2024-12-18 00:00:00+00:00')
+    & (df['timestamp'] <= '2025-03-31 23:59:00+00:00')
+)
+df = df.loc[mask].copy()
+
+quantities = {
+    'AUD-USD': 1.744583,
+    'CAD-USD': 1.598986,
+    'EUR-USD': 1.058522,
+    'GBP-USD': 0.86097,
+    'JPY-USD': 175.605573,
+    'SEK-USD': 12.318802,
+}
+
+for col, q in quantities.items():
+    df[col] = pd.to_numeric(df[col], errors='coerce') * q
+
+USD_QUOTE = 1e18
+df['ACU_Oracle'] = df[list(quantities.keys())].sum(axis=1) + USD_QUOTE * 1.148285
+df['ACU_Oracle'] *= 10e-19
+
+acu_from_oracle = df[["timestamp", "ACU_Oracle"]]
+
+# Compute ACU from Yahoo Finance data
+def load_yahoo_finance_data(directory_pattern: str, pair_label: str) -> pl.DataFrame:
+    """
+    Loads Yahoo Finance CSVs and returns a Polars DataFrame.
+    """
+    files = sorted(glob.glob(directory_pattern))
+    if not files:
+        raise ValueError(f"No Yahoo Finance CSV files found: {directory_pattern}")
+
+    lf_list = []
+    for f in files:
+        lf_temp = pl.scan_csv(
+            f,
+            has_header=False,
+            skip_rows=3,
+            new_columns=["Datetime", "Close", "High", "Low", "Open", "Volume"],
+            try_parse_dates=True,
+        )
+        lf_list.append(lf_temp)
+
+    lf = pl.concat(lf_list)
+    df = (
+        lf.select(
+            [
+                pl.col("Datetime").alias("timestamp_benchmark"),
+                pl.col("Close").alias("benchmark_close"),
+            ]
+        )
+        .sort("timestamp_benchmark")
+        .collect()
+        .with_columns(
+            [
+                pl.lit(pair_label).alias("symbol"),
+            ]
+        )
+    )
+    return df
+
+
+def load_all_fx_benchmarks() -> dict[str, pl.DataFrame]:
+    """
+    Loads FX data from Yahoo Finance.
+    """
+    mapping = {
+        "AUD-USD": "yahoo-finance/data/AUDUSD/AUDUSD=X_1m_*.csv",
+        "CAD-USD": "yahoo-finance/data/CADUSD/CADUSD=X_1m_*.csv",
+        "EUR-USD": "yahoo-finance/data/EURUSD/EURUSD=X_1m_*.csv",
+        "GBP-USD": "yahoo-finance/data/GBPUSD/GBPUSD=X_1m_*.csv",
+        "JPY-USD": "yahoo-finance/data/JPYUSD/JPYUSD=X_1m_*.csv",
+        "SEK-USD": "yahoo-finance/data/SEKUSD/SEKUSD=X_1m_*.csv",
+    }
+
+    result = {}
+    for pair_label, pattern in mapping.items():
+        df_pair = load_yahoo_finance_data(pattern, pair_label)
+        result[pair_label] = df_pair
+    return result
+
+fx_data = load_all_fx_benchmarks()
+acu_from_yahoo = None
+for pair, df_pair in fx_data.items():
+    col_name = pair.replace("-", "_")  # safe column names
+    df_pair_renamed = df_pair.rename({"benchmark_close": col_name}).select(["timestamp_benchmark", col_name])
+    if acu_from_yahoo is None:
+        acu_from_yahoo = df_pair_renamed
+    else:
+        acu_from_yahoo = acu_from_yahoo.join(df_pair_renamed, on="timestamp_benchmark", how="inner")
+
+weights = {
+    "AUD_USD": 1.744583,
+    "CAD_USD": 1.598986,
+    "EUR_USD": 1.058522,
+    "GBP_USD": 0.86097,
+    "JPY_USD": 175.605573,
+    "SEK_USD": 12.318802,
+}
+exprs = [
+    pl.col(pair).alias(pair) * weight for pair, weight in weights.items()
+]
+acu_expr = sum(exprs) + pl.lit(1.148285)  # USD-USD weight (pair value == 1)
+acu_from_yahoo = acu_from_yahoo.with_columns(acu_expr.alias("ACU")).to_pandas()
+
+# Merge the 2 DataFrames
+df1 = acu_from_yahoo.rename(columns={'timestamp_benchmark': 'timestamp'})
+acu_merged = pd.merge(
+    left=acu_from_oracle, 
+    right=df1[['timestamp', 'ACU']], 
+    on='timestamp', 
+    how='inner'
+)
+acu_merged = acu_merged.rename(columns={'ACU': 'ACU_Yahoo'})
+
+# Plot the 2 ACU time series
+acu_merged['timestamp'] = pd.to_datetime(acu_merged['timestamp'])
+acu_merged = (
+    acu_merged
+    .sort_values('timestamp')
+    .set_index('timestamp')
+)
+max_gap = pd.Timedelta('1 hour')
+time_diffs = acu_merged.index.to_series().diff()
+breaks = time_diffs > max_gap
+fig, ax = plt.subplots(figsize=(12, 6))
+start_idx = 0
+for i, is_break in enumerate(breaks):
+    if is_break or i == len(breaks) - 1:
+        # end of a segment: plot from start_idx up to i
+        segment = acu_merged.iloc[start_idx:i]
+        ax.plot(segment.index, segment['ACU_Oracle'], color='blue',   label='ACU_Oracle' if start_idx==0 else "")
+        ax.plot(segment.index, segment['ACU_Yahoo'],  color='grey',   label='ACU_Yahoo'  if start_idx==0 else "")
+        start_idx = i
+ax.set_title('ACU Oracle vs ACU Yahoo Over Time')
+ax.set_xlabel('Timestamp')
+ax.set_ylabel('ACU Value')
+ax.legend()
+plt.tight_layout()
+plt.show()
+
+# Calculate Pearson correlations during weekdays
+weekday_data = acu_merged[acu_merged.index.weekday < 5]
+pearson_corr = weekday_data['ACU_Oracle'].corr(weekday_data['ACU_Yahoo'])
+print(f"Pearson correlation between ACU_Oracle and ACU_Yahoo (weekdays): {pearson_corr:.6f}")
+
+weekday_returns = weekday_data[['ACU_Oracle', 'ACU_Yahoo']].pct_change().dropna()
+
+corr_returns = weekday_returns['ACU_Oracle'].corr(weekday_returns['ACU_Yahoo'])
+print(f"Pearson correlation of simple returns (weekdays): {corr_returns:.6f}")
+
+log_returns = np.log(weekday_data[['ACU_Oracle', 'ACU_Yahoo']]).diff().dropna()
+corr_log = log_returns['ACU_Oracle'].corr(log_returns['ACU_Yahoo'])
+print(f"Pearson correlation of log returns (weekdays):    {corr_log:.6f}")
+```
+
 # Key Trends Observed
 
 ## Validator Submission Completeness
