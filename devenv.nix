@@ -12,6 +12,9 @@
     venv.requirements = ''
     ipython
     ipykernel
+    pandas
+    numpy
+    matplotlib
     polars==1.24.0
     '';
   };
