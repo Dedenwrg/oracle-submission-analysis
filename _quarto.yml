@@ -5,7 +5,10 @@ project:
 website:
   title: "Oracle Submission Analysis"
   navbar:
-    left: []
+    right:
+      - icon: github
+        href: https://github.com/autonity/oracle-submission-analysis
+        aria-label: GitHub
   sidebar:
     style: "docked"
     contents:
@@ -33,4 +36,9 @@ format:
   html:
     theme: cosmo
     css: styles.css
-    toc: true 
+    toc: true
+
+execute:
+  jupyter: python3
+  kernel: devenv
+    

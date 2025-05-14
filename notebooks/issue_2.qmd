@@ -8,9 +8,9 @@ jupyter:
       format_version: '1.0'
       jupytext_version: 1.16.4
   kernelspec:
-    display_name: Python 3 (ipykernel)
+    name: devenv
     language: python
-    name: python3
+    display_name: Python (devenv)
 ---
 
 ## 2. Irregular Submission Frequency
