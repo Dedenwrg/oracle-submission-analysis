@@ -210,6 +210,13 @@ print(f"Pearson correlation of simple returns (weekdays): {corr_returns:.6f}")
 log_returns = np.log(weekday_data[['ACU_Oracle', 'ACU_Yahoo']]).diff().dropna()
 corr_log = log_returns['ACU_Oracle'].corr(log_returns['ACU_Yahoo'])
 print(f"Pearson correlation of log returns (weekdays):    {corr_log:.6f}")
+
+diff_std = (weekday_data['ACU_Oracle'] - weekday_data['ACU_Yahoo']).std()
+yahoo_std = weekday_data['ACU_Yahoo'].std()
+percent_of_vol = 100.0 * diff_std / yahoo_std
+print(f"Std Dev of (Oracle - Yahoo) ACU differences:   {diff_std:.6f}")
+print(f"Std Dev of Yahoo ACU:                          {yahoo_std:.6f}")
+print(f"Difference as % of Yahoo ACU's volatility:     {percent_of_vol:.2f}%")
 ```
 
 # Key Trends Observed
@@ -302,10 +309,11 @@ The progressive decline in validator participation impacts the oracle's ability 
 - Weekend submission coverage worsened across the period (e.g. **57.8 %** full-coverage on weekends in January versus **29.4 %** in March).
 
 **Oracle Aggregation Method for ACU:**
-- The current median-based aggregation method used for computing ACU prices filters out extreme outlier FX submissions
-- As validator participation decreased, the median calculation was based on a smaller sample size of FX submissions
+- The Oracle server first uses the median index to determine outliers, then computes the aggregated price as a weighted average of the valid submissions
+- As validator participation decreased, this aggregation method was based on a smaller sample size of FX submissions
 - Cross-rate mathematical consistency measurements, which affect ACU calculation accuracy, showed increasing deviations (from 3.2% to 5.7% on average)
-- The coordinated submission patterns from validator groups had an increasing influence on median FX values as validator diversity decreased
+- The coordinated submission patterns from validator groups had an increasing influence on the aggregated FX values as validator diversity decreased
+- There is an ongoing investigation into the aggregation method to ensure that it accurately reflects the true market prices across diverse data sources and maintains resilience on changes in validator participation.
 
 ## Suspicious and Out-of-Range Values
 
@@ -328,6 +336,8 @@ Only the December 2024 notebook recorded any submissions that failed the ± 20 %
 | March 2025    | 59 121 | 8 648 |
 
 The January notebook highlighted the 6 000-submission run (≈ 48 hours); March reported an 8 648-submission run (≈ 2.4 h).
+
+Based on the prevalence of stale data runs across all months, validators are recommended to use higher frequency sources to improve data freshness and reduce extended periods of unchanging submissions.
 
 ## Submission Pattern Analysis
 

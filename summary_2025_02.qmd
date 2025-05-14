@@ -9,81 +9,89 @@ format:
 
 # Executive Summary
 
-This document provides a straightforward summary of the key findings from an analysis of Autonity Oracle submissions data from February 2025. The analysis examined multiple issues affecting the reliability, accuracy, and security of the price data submitted by validators.
+This document provides a straightforward summary of the key findings from an analysis of Autonity Oracle submissions data from February 2025. The analysis examined various issues affecting the reliability, accuracy, and security of Oracle price data submitted by validators.
 
 ## Overview of Issues Analyzed
 
 The investigation covered ten distinct issue areas:
 
-1. **Missing or Null Submissions** – validators failing to send price values
-2. **Irregular Submission Frequency** – abnormal timing patterns in submissions
-3. **Out-of-Range Values** – suspicious price values compared with benchmarks
-4. **Stale / Lagging Data** – unchanged prices when markets move
-5. **Confidence-Value Anomalies** – non-informative confidence metrics
-6. **Cross-Rate Inconsistency** – arithmetic violations across related pairs
-7. **Timing / Synchronisation Issues** – timestamp disparities between validators
-8. **Weekend Effects** – behaviour differences during market closures
-9. **Vendor Downtime** – submission stoppages
-10. **Security / Malicious Behaviour** – potential manipulation patterns
+1. **Missing or Null Submissions**: Examining validators that failed to submit price data
+2. **Irregular Submission Frequency**: Analyzing abnormal timing patterns in submissions
+3. **Out-of-Range Values**: Detecting suspicious price values compared to benchmarks
+4. **Stale/Lagging Data**: Identifying validators that fail to update prices when markets move
+5. **Confidence Value Anomalies**: Examining issues with confidence metrics
+6. **Cross-Rate Inconsistency**: Assessing mathematical consistency across token prices
+7. **Timing/Synchronization Issues**: Analyzing timestamp disparities between validators
+8. **Weekend/Market-Closure Effects**: Investigating behavior during market closures
+9. **Vendor Downtime**: Detecting submission stoppages
+10. **Security/Malicious Behavior**: Looking for potential manipulation patterns
 
 # Key Findings
 
 ## Missing or Null Submissions
 
-- **Six validators** recorded a **100 % missing-submission rate** (0x100E38f7BCEc53937BDd79ADE46F34362470577B, 0x3fe573552E14a0FC11Da25E43Fef11e16a785068, 0x26E2724dBD14Fbd52be430B97043AA4c83F05852, 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775, 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357, 0x6747c02DE7eb2099265e55715Ba2E03e8563D051)
-- **Weekend coverage 11.9 %** vs **weekday 17.9 %**, indicating poorer weekend participation
-- **≈ 85 % of timestamps** had at least one missing validator
-- **≈ 92 000 submission slots** analysed; overall completeness **≈ 70.2 %**
+- **Six validators** had 100% missing-submission rates:
+  - 0x100E38f7BCEc53937BDd79ADE46F34362470577B
+  - 0x3fe573552E14a0FC11Da25E43Fef11e16a785068
+  - 0x26E2724dBD14Fbd52be430B97043AA4c83F05852
+  - 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775
+  - 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357
+  - 0x6747c02DE7eb2099265e55715Ba2E03e8563D051
+- **Weekend coverage 11.9%** vs **weekday 17.9%**, indicating poorer weekend participation
+- **≈ 85% of timestamps** had at least one missing validator
+- **≈ 92,000 submission slots** analyzed; overall completeness **≈ 70.2%**
 
 ## Irregular Submission Frequency
 
-- Daily counts ranged **0 – 2 880** (target 2 880)
-- **11 validators** matched cadence all month; **7** had gaps > 2 h
-- Two displayed burst patterns (≥ 12 submissions / min) followed by long gaps
-- Median daily count per active validator: **2 714**
-- **≈ 9.3 % of submissions** fell outside the 30 s cadence
+- Daily counts ranged **0 – 2,880** (target 2,880)
+- **11 validators** matched cadence all month; **7** had gaps > 2h
+- Two displayed burst patterns (≥ 12 submissions/min) followed by long gaps
+- Median daily count per active validator: **2,714**
+- **≈ 9.3% of submissions** fell outside the 30-second cadence
+- Intervals within a **±5% tolerance band** around the 30-second target (0.475–0.525 min) were counted as **on-schedule**
 
-## Out-of-Range / Suspicious Values
+## Out-of-Range Values
 
-- No suspicious price submissions were detected within the ± 20 % threshold  
+- No suspicious price submissions were detected within the ± 20% threshold  
   - No non-positive (zero/null) price values were observed  
-  - No cross-rate inconsistencies above the 10 % threshold were found
+  - No cross-rate inconsistencies above the 10% threshold were found
 
-## Stale / Lagging Data
+## Stale/Lagging Data
 
-- **57 984 stale-data runs** (≥ 30 identical prices) were detected  
-- Several validators reached the maximum stale-score **6.0**, indicating extensive repeated values
+- **57,984 stale-data runs** were detected. Each run is defined as **≥ 30 identical consecutive submissions** for a given price pair
+- Several validators reached the maximum stale-score **6.0**, meaning they posted identical prices in **all six tracked pairs** for at least one timestamp
 
-## Confidence-Value Anomalies
+## Confidence Value Anomalies
 
 - **428 validator-pair combinations** anomalous
 - **47 validators** fixed confidence = 100 for Autonity pairs; **42** fixed (90/100) for FX
-- **316 combinations** zero variance; only **9 validators** showed dynamic confidence values
-- Autonity pairs: **96.3 %** fixed at 100; FX pairs: **81.7 %** fixed at 90 or 100
+- **316 combinations** exhibited **zero variance**, indicating completely fixed confidence
+- An *anomalous* combination here refers to either **zero variance** or a **correlation < 0.1** between confidence and price change
+- Autonity pairs: **96.3%** fixed at 100; FX pairs: **81.7%** fixed at 90 or 100
 
 ## Cross-Rate Inconsistency
 
-- No cross-rate inconsistencies exceeding the 10 % threshold were detected in February 2025
+- No cross-rate inconsistencies exceeding the 10% threshold were detected in February 2025
 
-## Timing / Synchronisation Issues
+## Timing/Synchronization Issues
 
-- Drift range **0.3 s … 178 s**
-- **9 validators** > 10 s early; **6** > 20 s late
-- Fleet median absolute offset **5.8 s**
-- **27 timestamp clusters** inferred; largest cluster = 6 validators
+- Drift ranged from **0.3s** (best) to **178s** (worst)
+- **9 validators** averaged **> 10s early**, while **6** averaged **> 20s late** relative to the round median
+- The fleet-wide **median absolute offset** was **5.8s**
+- **27 timestamp clusters** were inferred, suggesting shared infrastructure; the largest contained **6 validators**
 
-## Weekend / Market-Closure Effects
+## Weekend/Market-Closure Effects
 
-- Weekend vs weekday coverage –6 pp (11.9 % vs 17.9 %)
-- FX variance **71 % lower** on weekends; stale runs **53 % higher**
-- Participation –6.7 % weekends; timing variance improved **32 %**
+- Weekend vs weekday coverage –6 pp (11.9% vs 17.9%)
+- FX variance **71% lower** on weekends; stale runs **53% higher**
+- Participation –6.7% weekends; timing variance improved **32%**
 - Monday benchmark deviation **2.8×** higher than other weekdays
 
 ## Vendor Downtime
 
 - **19 major outages**; largest hit **9 validators** for **≈ 104 min**
-- **4 validators** > 8 h cumulative downtime
-- **73 %** outages during EU/US market hours; **57** zero/null events
+- **4 validators** > 8h cumulative downtime
+- **73%** outages during EU/US market hours; **57** zero/null events
 - Most-affected:
   1. 0xf34CD6c09a59d7D3d1a6C3dC231a46CED0b51D4C – 17 outages
   2. 0x6747c02DE7eb2099265e55715Ba2ddE7D0A131dE – 15
@@ -94,31 +102,31 @@ The investigation covered ten distinct issue areas:
 Inactive all month:
 0x3fe573552E14a0FC11Da25E43Fef11e16a785068, 0x100E38f7BCEc53937BDd79ADE46F34362470577B
 
-## Security / Malicious Behaviour Indicators
+## Security/Malicious Behavior Indicators
 
 - **4 manipulation patterns** detected
 - **Two groups** (4 & 5 validators) showed coordinated submissions
 - **23 strategic price events** around market moves
-- Two validators **≈ 1.2 % lower** than benchmarks during volatility
-- Evidence of Sybil-like behaviour; coordinated groups **≈ 16.7 %** of submissions
+- Two validators **≈ 1.2% lower** than benchmarks during volatility
+- Evidence of Sybil-like behavior; coordinated groups **≈ 16.7%** of submissions
 
 # Notable Validators
 
-## Highest-Performing Validators
+## Highest Performing Validators
 
-1. **0x197B2c44b887c4aC01243BDE7E4b7E7b98A8d35A** – 99.7 % completeness • 0.2 % suspicious • 0.12 % deviation • dynamic confidence
-2. **0xcdEed21b471b0Dc54faF74480A0E15eDdE187642** – 99.4 % completeness • max 28-run stale • 0.37 % cross-rate dev • 0.9 s timing offset
-3. **0xdF239e0D5b4E6e820B0cFEF6972A7c1aB7c6a4be** – 99.1 % completeness • 0.18 % deviation • 0.1 % suspicious • dynamic confidence
+1. **0x197B2c44b887c4aC01243BDE7E4b7E7b98A8d35A** – 99.7% completeness • 0.2% suspicious • 0.12% deviation • dynamic confidence
+2. **0xcdEed21b471b0Dc54faF74480A0E15eDdE187642** – 99.4% completeness • max 28-run stale • 0.37% cross-rate dev • 0.9s timing offset
+3. **0xdF239e0D5b4E6e820B0cFEF6972A7c1aB7c6a4be** – 99.1% completeness • 0.18% deviation • 0.1% suspicious • dynamic confidence
 
 ## Most Problematic Validators
 
-1. **0x100E38f7BCEc53937BDd79ADE46F34362470577B** – 100 % missing submissions
-2. **0x3fe573552E14a0FC11Da25E43Fef11e16a785068** – 100 % missing submissions
-3. **0x01F788E4371a70D579C178Ea7F48f9DF4d20eAF3** – 92 160-run stale • fixed confidence • coordinated group
-4. **0x6747c02DE7eb2099265e55715Ba2ddE7D0A131dE** – bursty cadence • 38.4 % suspicious • coordinated group
-5. **0xf34CD6c09a59d7D3d1a6C3dC231a46CED0b51D4C** – 17 outages • 42.6 % cross-rate dev • 21 487 stale
+1. **0x100E38f7BCEc53937BDd79ADE46F34362470577B** – 100% missing submissions
+2. **0x3fe573552E14a0FC11Da25E43Fef11e16a785068** – 100% missing submissions
+3. **0x01F788E4371a70D579C178Ea7F48f9DF4d20eAF3** – 92,160-run stale • fixed confidence • coordinated group
+4. **0x6747c02DE7eb2099265e55715Ba2ddE7D0A131dE** – bursty cadence • 38.4% suspicious • coordinated group
+5. **0xf34CD6c09a59d7D3d1a6C3dC231a46CED0b51D4C** – 17 outages • 42.6% cross-rate dev • 21,487 stale
 
-## Validators with Coordinated Behaviour
+## Validators with Coordinated Behavior
 
 **Group 1** – 0x01F788E4371a70D579C178Ea7F48f9DF4d20eAF3, 0x6747c02DE7eb2099265e55715Ba2ddE7D0A131dE, 0xf10f56Bf0A28E0737c7e6bB0aF92fe4cfbc87228, 0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2  
 **Group 2** – 0x00a96aaED75015Bb44cED878D9278a12082cdEf2, 0xfD97FB8835d25740A2Da27c69762f7faAF2BFEd9, 0xcdEed21b471b0Dc54faF74480A0E15eDdE187642, 0x1476A65D7B5739dE1805d5130441c6AF41577fa2, 0x9d5eb234A7F5F445a0a66082Be7236e8719314D9
@@ -127,21 +135,21 @@ Inactive all month:
 
 ## Data Quality Concerns
 
-- ≈ 27 % of submissions held ≥ 1 quality issue; +48 % during high volatility
+- ≈ 27% of submissions held ≥ 1 quality issue; +48% during high volatility
 
 ## Validator Performance
 
-- Top-10 validators: **1.5 %** problematic submissions
-- Bottom-10 validators: **37.8 %** problematic submissions
+- Top-10 validators: **1.5%** problematic submissions
+- Bottom-10 validators: **37.8%** problematic submissions
 
 ## Recommendations
 
-1. **Stronger automatic checks** – reject ± 20 % deviations & > 5 % cross-rate errors
-2. **Minimum 95 % uptime**; three-strike rule for > 20 % missing data
-3. **Dynamic confidence requirements** – ≥ 3 distinct values correlated with volatility
-4. **Public validator score** – 40 % uptime • 30 % accuracy • 30 % consistency
-5. **Real-time alerts & dashboards** – deviations > 10 % median
-6. **Investigate problematic & coordinated validators**
+1. **Stricter value-range checks** – automatically reject submissions deviating > 20% from the rolling median and enforce cross-rate consistency within 5%
+2. **Minimum uptime requirements** – target ≥ 95% submission completeness (≥ 2,736 submissions per day) with penalties for chronic under-performance
+3. **Dynamic confidence guidelines** – require validators to use at least three distinct confidence values that correlate with market volatility
+4. **Validator quality score** – weight **40% uptime**, **30% accuracy to benchmark**, **30% consistency** and publish scores to incentivize improvements
+5. **Real-time monitoring** – deploy alerts for deviations > 10% from the median and dashboard views of hourly data-quality metrics
+6. **Focused reviews** – prioritize investigation of problematic & coordinated validators
 
 # Conclusion
 
@@ -151,17 +159,17 @@ Overall data quality deteriorated in February 2025, with notable declines in tim
 
 | Issue Area | Rating | Scale Description |
 |------------|:------:|-------------------|
-| Missing/Null Submissions | 🟠 | ⚫ Critical (> 60 %) 🔴 Poor (30–60 %) 🟠 Fair (15–30 %) 🟡 Good (5–15 %) 🟢 Excellent (< 5 %) |
-| Irregular Submission Frequency | 🟡 | ⚫ Critical (> 25 % irregular) 🔴 Poor (15–25 %) 🟠 Fair (8–15 %) 🟡 Good (2–8 %) 🟢 Excellent (< 2 %) |
-| Out-of-Range Values | 🟢 | ⚫ Critical (> 8 %) 🔴 Poor (3–8 %) 🟠 Fair (1–3 %) 🟡 Good (0.3–1 %) 🟢 Excellent (< 0.3 %) |
-| Stale/Lagging Data | 🔴 | ⚫ Critical (> 15 % runs) 🔴 Poor (7–15 %) 🟠 Fair (3–7 %) 🟡 Good (0.5–3 %) 🟢 Excellent (< 0.5 %) |
-| Confidence Value Anomalies | 🔴 | ⚫ Critical (> 85 % fixed) 🔴 Poor (60–85 %) 🟠 Fair (35–60 %) 🟡 Good (15–35 %) 🟢 Excellent (< 15 %) |
-| Cross-Rate Inconsistency | 🟢 | ⚫ Critical (> 12 %) 🔴 Poor (6–12 %) 🟠 Fair (3–6 %) 🟡 Good (1–3 %) 🟢 Excellent (< 1 %) |
-| Timing/Synchronisation | 🟠 | ⚫ Critical (> 60 s) 🔴 Poor (30–60 s) 🟠 Fair (10–30 s) 🟡 Good (3–10 s) 🟢 Excellent (< 3 s) |
-| Weekend Effect Severity | 🟠 | ⚫ Critical (> 30 %) 🔴 Poor (15–30 %) 🟠 Fair (7–15 %) 🟡 Good (2–7 %) 🟢 Excellent (< 2 %) |
-| Vendor Downtime Impact | 🟠 | ⚫ Critical (> 10 % time) 🔴 Poor (4–10 %) 🟠 Fair (2–4 %) 🟡 Good (0.5–2 %) 🟢 Excellent (< 0.5 %) |
+| Missing/Null Submissions | 🟠 | ⚫ Critical (> 60%) 🔴 Poor (30–60%) 🟠 Fair (15–30%) 🟡 Good (5–15%) 🟢 Excellent (< 5%) |
+| Irregular Submission Frequency | 🟡 | ⚫ Critical (> 25% irregular) 🔴 Poor (15–25%) 🟠 Fair (8–15%) 🟡 Good (2–8%) 🟢 Excellent (< 2%) |
+| Out-of-Range Values | 🟢 | ⚫ Critical (> 8%) 🔴 Poor (3–8%) 🟠 Fair (1–3%) 🟡 Good (0.3–1%) 🟢 Excellent (< 0.3%) |
+| Stale/Lagging Data | 🔴 | ⚫ Critical (> 15% runs) 🔴 Poor (7–15%) 🟠 Fair (3–7%) 🟡 Good (0.5–3%) 🟢 Excellent (< 0.5%) |
+| Confidence Value Anomalies | 🔴 | ⚫ Critical (> 85% fixed) 🔴 Poor (60–85%) 🟠 Fair (35–60%) 🟡 Good (15–35%) 🟢 Excellent (< 15%) |
+| Cross-Rate Inconsistency | 🟢 | ⚫ Critical (> 12%) 🔴 Poor (6–12%) 🟠 Fair (3–6%) 🟡 Good (1–3%) 🟢 Excellent (< 1%) |
+| Timing/Synchronization | 🟠 | ⚫ Critical (> 60s) 🔴 Poor (30–60s) 🟠 Fair (10–30s) 🟡 Good (3–10s) 🟢 Excellent (< 3s) |
+| Weekend/Market-Closure Effects | 🟠 | ⚫ Critical (> 30%) 🔴 Poor (15–30%) 🟠 Fair (7–15%) 🟡 Good (2–7%) 🟢 Excellent (< 2%) |
+| Vendor Downtime Impact | 🟠 | ⚫ Critical (> 10% time) 🔴 Poor (4–10%) 🟠 Fair (2–4%) 🟡 Good (0.5–2%) 🟢 Excellent (< 0.5%) |
 | Security Concern Level | 🔴 | ⚫ Critical (confirmed) 🔴 Poor (strong evidence) 🟠 Fair (some evidence) 🟡 Good (minimal) 🟢 Excellent (none) |
-| **Overall Rating** | 🔴 | ⚫ Critical 🔴 Poor 🟠 Fair 🟡 Good 🟢 Excellent |
+| **Overall Rating** | 🟠 | ⚫ Critical 🔴 Poor 🟠 Fair 🟡 Good 🟢 Excellent |
 
 # Month-to-Month Comparison
 
@@ -171,10 +179,10 @@ Overall data quality deteriorated in February 2025, with notable declines in tim
 | Irregular Submission Frequency | 🟢 | 🟡 | 🟡 | ↔️ |
 | Out-of-Range Values | 🟢 | 🟢 | 🟢 | ↔️ |
 | Stale/Lagging Data | 🟠 | 🔴 | 🔴 | ⬇️ |
-| Confidence-Value Anomalies | 🔴 | 🔴 | 🔴 | ↔️ |
+| Confidence Value Anomalies | 🔴 | 🔴 | 🔴 | ↔️ |
 | Cross-Rate Inconsistency | 🟢 | 🟢 | 🟢 | ↔️ |
-| Timing/Synchronisation | 🟢 | 🟢 | 🟠 | ⬇️ |
-| Weekend Effect Severity | 🟢 | 🟢 | 🟠 | ⬇️ |
+| Timing/Synchronization | 🟢 | 🟢 | 🟠 | ⬇️ |
+| Weekend/Market-Closure Effects | 🟢 | 🟢 | 🟠 | ⬇️ |
 | Vendor Downtime Impact | 🟢 | 🟡 | 🟠 | ⬇️ |
 | Security Concern Level | 🟡 | 🟠 | 🔴 | ⬇️ |
 | **Overall Rating** | 🟢 | 🟡 | 🟠 | ⬇️ |
@@ -185,4 +193,4 @@ Overall data quality deteriorated in February 2025, with notable declines in tim
 - Sharpest deterioration was observed in Timing, Weekend Effects, Vendor Downtime and Security, while Out-of-Range Values and Cross-Rate Consistency improved relative to January
 - Missing/Null and Stale/Lagging Data remained severe but did not worsen further
 - Two additional validators became completely inactive since December (total now six)
-- Coordinated validator behaviour intensified, with five-member and four-member groups submitting near-identical data
+- Coordinated validator behavior intensified, with five-member and four-member groups submitting near-identical data
