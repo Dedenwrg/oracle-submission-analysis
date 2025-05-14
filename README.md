@@ -42,7 +42,3 @@ This will create the website in the `_site` directory.
 ### "Dummy" `*.csv` data
 
 Due to the very large size of Oracle Submission data, only 1 day of Oracle Submission data (`Oracle_Submission_2025-01-01.csv`) and its corresponding Yahoo Finance datasets are stored in this repo for testing.
-
-The Oracle Submission data can be queried using scripts [here](https://github.com/autonity/tibernet-infra/tree/master/sdp).
-
-The Yahoo Finance data can be downloaded from [here](https://github.com/autonity/tibernet-infra/tree/master/benchmark-data).

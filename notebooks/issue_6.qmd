@@ -20,7 +20,7 @@ This notebook documents the analysis for **Issue #6: Cross-Rate Inconsistency** 
 - **What is this issue about?**  
 - **Why conduct this issue analysis?**  
 - **How to conduct this issue analysis?**  
-- **What have we found?**  
+- **What are the results?**  
 
 ---
 
@@ -29,7 +29,7 @@ This notebook documents the analysis for **Issue #6: Cross-Rate Inconsistency** 
 In the Issues Table, **Issue #6** describes **Cross-Rate Inconsistency**:  
 > "NTN-USD * ATN-USD ≠ NTN-ATN (when scaling properly)."  
 
-This implies that if `NTN-ATN = X` and `ATN-USD = Y`, we expect `NTN-USD ≈ X * Y`. Significant mismatches indicate potential errors or data inconsistencies.
+This implies that if `NTN-ATN = X` and `ATN-USD = Y`, expect `NTN-USD ≈ X * Y`. Significant mismatches indicate potential errors or data inconsistencies.
 
 ---
 
@@ -41,9 +41,9 @@ This implies that if `NTN-ATN = X` and `ATN-USD = Y`, we expect `NTN-USD ≈ X *
 
 ---
 
-### 6.3 How Did We Conduct the Analysis?
+### 6.3 How to Conduct the Analysis?
 
-We used Python with the **Polars** library (`v1.24.0`) to:
+Use Python with the **Polars** library (`v1.24.0`) to:
 
 1. Load and preprocess Oracle submission CSV files.
 2. Convert Wei-based prices to decimal.
@@ -58,6 +58,9 @@ import polars as pl
 import glob
 import math
 from typing import Optional
+import warnings
+
+warnings.filterwarnings("ignore")
 ```
 
 ```{python}
@@ -114,7 +117,7 @@ def check_cross_rate_inconsistency(
     atn_usd_col: str = "ATN-USD Price",
     ntn_usd_col: str = "NTN-USD Price",
     ntn_atn_col: str = "NTN-ATN Price",
-    threshold: float = 0.10,
+    threshold: float = 0.01,
 ) -> pl.DataFrame:
     """
     Computes cross-rate mismatch and measures relative differences.
@@ -212,7 +215,7 @@ def analyze_cross_rate_inconsistency(
     atn_usd_col: str = "ATN-USD Price",
     ntn_usd_col: str = "NTN-USD Price",
     ntn_atn_col: str = "NTN-ATN Price",
-    threshold: float = 0.10,
+    threshold: float = 0.01,
 ):
     """
     Main analysis function.
@@ -241,15 +244,15 @@ results = analyze_cross_rate_inconsistency(
     atn_usd_col="ATN-USD Price",
     ntn_usd_col="NTN-USD Price",
     ntn_atn_col="NTN-ATN Price",
-    threshold=0.10,  # 10% mismatch threshold
+    threshold=0.01,  # 1% mismatch threshold
 )
 ```
 
 ---
 
-### 6.4 What Have We Found?
+### 6.4 What are the resuults?
 
-Below we present the results from our analysis:
+Below presents the results from the analysis:
 
 **Flagged Submissions (Cross-rate mismatch > 10%)**
 
@@ -305,3 +308,59 @@ else:
   - Verify decimal conversions.
   - Confirm synchronized data updates.
   - Review validator configurations or potential malicious behavior.
+
+**List of all Validators and their Consistency Indices**
+
+```{python}
+df_all = load_and_preprocess_submissions("../submission-data/Oracle_Submission_*.csv")
+
+total_stats = (
+    df_all.lazy()
+    .group_by("Validator Address")
+    .agg(pl.count().alias("total_submissions"))
+    .collect()
+)
+
+flagged_stats = (
+    df_flagged.lazy()
+    .group_by("Validator Address")
+    .agg(
+        pl.count().alias("flagged_count"),
+        pl.mean("rel_diff_cross").alias("mean_rel_diff"),
+        pl.max("rel_diff_cross").alias("max_rel_diff"),
+    )
+    .collect()
+)
+
+validator_stats = (
+    total_stats
+    .join(flagged_stats, on="Validator Address", how="left")
+    .fill_null(0)
+)
+
+validator_stats = (
+    validator_stats
+    .with_columns(
+        (
+            (pl.col("flagged_count") / pl.col("total_submissions")) *
+            (pl.col("mean_rel_diff") + pl.col("max_rel_diff"))
+        ).alias("mismatch_penalty_rate")
+    )
+    .with_columns(
+        (1 / (1 + pl.col("mismatch_penalty_rate")))
+        .alias("consistency_index")
+    )
+    .sort("consistency_index", descending=False)
+)
+
+print("Validator Consistency Ranking (higher index = better)\n")
+for row in validator_stats.to_dicts():
+    print(
+        f"Validator {row['Validator Address']}: "
+        f"subs={row['total_submissions']:5d}, "
+        f"flags={row['flagged_count']:3d}, "
+        f"index={row['consistency_index']:.4f}"
+    )
+```
+
+Please note, `total_submissions` represents the total number of submissions for this validator. `flagged_count` is how many of those were caught by the 1 % cross-rate check. `consistency_index` is a 0-to-1 reliability score (1 = no mismatches; lower values indicate more frequent or larger inconsistencies).

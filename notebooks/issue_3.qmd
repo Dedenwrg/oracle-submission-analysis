@@ -20,7 +20,7 @@ This notebook documents the analysis for **Issue #3: Out-of-Range / Suspicious V
 - **What is this issue about?**  
 - **Why conduct this issue analysis?**  
 - **How to conduct this issue analysis?**  
-- **What have we found?**  
+- **What are the results?**  
 
 ---
 
@@ -44,9 +44,9 @@ Additionally, cross-rates for Autonity tokens (ATN, NTN) may be inconsistent (`N
 
 ---
 
-### 3.3 How Did We Conduct the Analysis?
+### 3.3 How to Conduct the Analysis?
 
-We used Python with the **Polars** library (`v1.24.0`) to:
+Use Python with the **Polars** library (`v1.24.0`) to:
 
 1. Load and preprocess Oracle submission CSV files.
 2. Converted price submissions from Wei to decimals (dividing by `1e18`).
@@ -61,6 +61,9 @@ Below is the analysis script:
 import polars as pl
 import glob
 import math
+import warnings
+
+warnings.filterwarnings("ignore")
 ```
 
 ```{python}
@@ -117,18 +120,21 @@ def load_yahoo_finance_data(directory_pattern: str, pair_label: str) -> pl.DataF
         )
         lf_list.append(lf_temp)
 
-    lf = pl.concat(lf_list).sort("Datetime")
-    lf = lf.select(
-        [
-            pl.col("Datetime").alias("timestamp_benchmark"),
-            pl.col("Close").alias("benchmark_close"),
-        ]
-    )
-
-    df = lf.collect().with_columns(
-        [
-            pl.lit(pair_label).alias("symbol"),
-        ]
+    lf = pl.concat(lf_list)
+    df = (
+        lf.select(
+            [
+                pl.col("Datetime").alias("timestamp_benchmark"),
+                pl.col("Close").alias("benchmark_close"),
+            ]
+        )
+        .sort("timestamp_benchmark")
+        .collect()
+        .with_columns(
+            [
+                pl.lit(pair_label).alias("symbol"),
+            ]
+        )
     )
     return df
 
@@ -168,9 +174,12 @@ def flag_suspicious_values(
     autonity_pairs: list[str],
     fx_benchmarks: dict[str, pl.DataFrame],
     percent_threshold: float = 0.20,
+    join_tolerance: str = "30s",
+    dynamic_thresholds: dict[str, float] | None = None,
 ):
     """
-    Detect suspicious or out-of-range values in Oracle data.
+    Detect suspicious or out-of-range values in Oracle data using as-of joins for time alignment
+    and dynamic thresholds for 'excessively large' values.
     """
     new_cols = []
     for c in fx_pairs + autonity_pairs:
@@ -200,7 +209,7 @@ def flag_suspicious_values(
         if not pair_label.endswith(" Price"):
             continue
 
-        base_name = pair_label.replace(" Price", "")
+        base_name = pair_label.replace(" Price", "")  # e.g. "AUD-USD"
         decimal_col = f"{base_name} Price Decimal"
 
         if base_name not in fx_benchmarks:
@@ -208,60 +217,67 @@ def flag_suspicious_values(
 
         df_bench = fx_benchmarks[base_name]
 
-        df_local = df_submissions.select(
-            [
-                pl.col("Timestamp_dt"),
-                pl.col("Validator Address"),
-                pl.col(decimal_col).alias("oracle_price_decimal"),
-            ]
-        ).with_columns([pl.col("Timestamp_dt").dt.truncate("1m").alias("ts_minute")])
-
-        df_bench_trunc = df_bench.with_columns(
-            [pl.col("timestamp_benchmark").dt.truncate("1m").alias("ts_minute_bench")]
-        ).select(["ts_minute_bench", "benchmark_close"])
-
-        df_joined = df_local.join(
-            df_bench_trunc,
-            left_on="ts_minute",
-            right_on="ts_minute_bench",
-            how="inner",
-        ).with_columns(
-            [
-                (
-                    (pl.col("oracle_price_decimal") - pl.col("benchmark_close")).abs()
-                    / pl.col("benchmark_close").abs()
-                ).alias("rel_diff_from_bench")
-            ]
+        df_local = (
+            df_submissions
+            .select(["Timestamp_dt", "Validator Address", decimal_col])
+            .sort("Timestamp_dt")
         )
 
-        threshold_big = 5.0
+        df_bench_sorted = df_bench.sort("timestamp_benchmark")
+
+        df_joined = df_local.join_asof(
+            df_bench_sorted,
+            left_on="Timestamp_dt",
+            right_on="timestamp_benchmark",
+            strategy="nearest",    # or "backward"/"forward"
+            tolerance=join_tolerance
+        ).with_columns(
+            (
+                (pl.col(decimal_col) - pl.col("benchmark_close")).abs()
+                / pl.col("benchmark_close").abs()
+            )
+            .alias("rel_diff_from_bench")
+        )
+
+        if dynamic_thresholds and base_name in dynamic_thresholds:
+            max_threshold = dynamic_thresholds[base_name]
+        else:
+            max_threshold = 5.0  # fallback
+
         df_flagged_fx = (
-            df_joined.select(
+            df_joined
+            .select(
                 [
                     "Timestamp_dt",
                     "Validator Address",
-                    "oracle_price_decimal",
+                    pl.col(decimal_col).alias("oracle_price_decimal"),
                     "benchmark_close",
                     "rel_diff_from_bench",
                 ]
             )
             .with_columns(
                 [
-                    # cond1
                     pl.when(
-                        (pl.col("oracle_price_decimal").is_null())
-                        | (pl.col("oracle_price_decimal") <= 0)
+                        (pl.col("oracle_price_decimal").is_not_null()) &
+                        (pl.col("oracle_price_decimal") <= 0)
                     )
                     .then(pl.lit("Non-positive price; "))
                     .otherwise(pl.lit(""))
                     .alias("cond1"),
-                    # cond2
-                    pl.when(pl.col("oracle_price_decimal") >= threshold_big)
+
+                    pl.when(
+                        (pl.col("oracle_price_decimal").is_not_null()) &
+                        (pl.col("oracle_price_decimal") >= max_threshold)
+                    )
                     .then(pl.lit("Excessively large price; "))
                     .otherwise(pl.lit(""))
                     .alias("cond2"),
-                    # cond3
-                    pl.when(pl.col("rel_diff_from_bench") > percent_threshold)
+
+                    pl.when(
+                        (pl.col("oracle_price_decimal").is_not_null()) &
+                        (pl.col("benchmark_close").is_not_null()) &
+                        (pl.col("rel_diff_from_bench") > percent_threshold)
+                    )
                     .then(pl.lit(f"Deviation > {int(percent_threshold*100)}%; "))
                     .otherwise(pl.lit(""))
                     .alias("cond3"),
@@ -269,9 +285,7 @@ def flag_suspicious_values(
             )
             .with_columns(
                 [
-                    (pl.col("cond1") + pl.col("cond2") + pl.col("cond3")).alias(
-                        "suspect_reason"
-                    )
+                    (pl.col("cond1") + pl.col("cond2") + pl.col("cond3")).alias("suspect_reason")
                 ]
             )
             .filter(pl.col("suspect_reason") != "")
@@ -306,33 +320,32 @@ def flag_suspicious_values(
                 "NTN-ATN Price Decimal",
             ]
         )
+
         df_autonity = df_autonity.with_columns(
-            [
-                (
-                    pl.col("NTN-ATN Price Decimal") * pl.col("ATN-USD Price Decimal")
-                ).alias("ntn_usd_estimated")
-            ]
-        )
-        df_autonity = df_autonity.with_columns(
-            [
-                (
-                    (
-                        pl.col("ntn_usd_estimated") - pl.col("NTN-USD Price Decimal")
-                    ).abs()
-                    / (pl.col("NTN-USD Price Decimal").abs() + 1e-18)
-                ).alias("rel_diff_cross")
-            ]
+            (pl.col("NTN-ATN Price Decimal") * pl.col("ATN-USD Price Decimal"))
+            .alias("ntn_usd_estimated")
         )
 
-        cross_tolerance = 0.10
-        df_autonity_suspect = df_autonity.with_columns(
-            [
+        df_autonity = df_autonity.with_columns(
+            (
+                (
+                    (pl.col("ntn_usd_estimated") - pl.col("NTN-USD Price Decimal")).abs()
+                    / (pl.col("NTN-USD Price Decimal").abs() + 1e-18)
+                ).alias("rel_diff_cross")
+            )
+        )
+
+        cross_tolerance = 0.10  # 10%
+        df_autonity_suspect = (
+            df_autonity
+            .with_columns(
                 pl.when(pl.col("rel_diff_cross") > cross_tolerance)
                 .then(pl.lit("Cross-rate mismatch > 10%; "))
                 .otherwise(pl.lit(""))
-                .alias("suspect_reason"),
-            ]
-        ).filter(pl.col("suspect_reason") != "")
+                .alias("suspect_reason")
+            )
+            .filter(pl.col("suspect_reason") != "")
+        )
 
         df_autonity_suspect = df_autonity_suspect.with_columns(
             [
@@ -361,6 +374,8 @@ def analyze_out_of_range_values(
     autonity_pairs: list[str],
     yahoo_data_dict: dict[str, pl.DataFrame],
     deviation_threshold: float = 0.20,
+    join_tolerance: str = "30s",
+    dynamic_thresholds: dict[str, float] | None = None,
 ):
     """
     Main analysis function.
@@ -374,6 +389,8 @@ def analyze_out_of_range_values(
         autonity_pairs=autonity_pairs,
         fx_benchmarks=yahoo_data_dict,
         percent_threshold=deviation_threshold,
+        join_tolerance=join_tolerance,
+        dynamic_thresholds=dynamic_thresholds,
     )
 
     if not df_suspicious.is_empty():
@@ -418,13 +435,25 @@ df_outliers = analyze_out_of_range_values(
     fx_pairs=fx_cols,
     autonity_pairs=autonity_cols,
     yahoo_data_dict=yahoo_data,
-    deviation_threshold=0.20,  # 20% threshold
+    deviation_threshold=0.20,
+    join_tolerance="30s",
+    dynamic_thresholds={
+        "AUD-USD": 2.0,
+        "CAD-USD": 2.0,
+        "EUR-USD": 3.0,
+        "GBP-USD": 3.0,
+        "JPY-USD": 200.0,
+        "SEK-USD": 20.0,
+        "ATN-USD": 1.0,
+        "NTN-USD": 1.0,
+        "NTN-ATN": 1.0,        
+    },
 )
 ```
 
 ---
 
-### 3.4 What Have We Found?
+### 3.4 What are the results?
 
 The following results summarize the suspicious submissions detected:
 
@@ -446,3 +475,63 @@ Note: You may see many `null` in the `df_outliers` table. This is expected behav
 - **Cross-rate mismatches (>10%)**: Highlight misconfigurations or inconsistencies between token price feeds.
 
 Validators frequently flagged with suspicious data require further investigation, particularly if patterns or correlations emerge.
+
+**List of all Validators and their Fraction Suspecious Submissions**
+
+```{python}
+lf_sub = load_and_preprocess_oracle_submissions("../submission-data/Oracle_Submission_*.csv")
+df_all_submissions = lf_sub.collect()
+
+df_validator_submissions = (
+    df_all_submissions
+    .group_by("Validator Address")
+    .agg([
+        pl.count().alias("total_submissions"),
+    ])
+)
+
+df_validator_outliers = (
+    df_outliers
+    .group_by("Validator Address")
+    .agg([
+        pl.count().alias("suspicious_submissions"),
+    ])
+)
+
+df_validator_stats = (
+    df_validator_submissions
+    .join(df_validator_outliers, on="Validator Address", how="left")
+    .with_columns([
+        pl.col("suspicious_submissions").fill_null(0),  # if a validator never appears in df_outliers
+        (
+            pl.col("suspicious_submissions") / pl.col("total_submissions")
+        ).alias("suspicious_ratio")
+    ])
+)
+
+df_validator_stats = (
+    df_validator_stats
+    .select([
+        "Validator Address",
+        "total_submissions",
+        "suspicious_submissions",
+        (pl.col("suspicious_ratio") * 100).round(2).alias("suspicious_ratio_pct"),
+    ])
+    .sort("suspicious_submissions", descending=True)
+)
+
+for row in df_validator_stats.to_dicts():
+    fraction_suspicious_submissions = row['suspicious_ratio_pct']
+    if fraction_suspicious_submissions is None:
+        fraction_suspicious_submissions = "0%"
+    else:
+        fraction_suspicious_submissions = f"{fraction_suspicious_submissions}%"
+    print(
+        f"Validator {row['Validator Address']}: "
+        f"total={row['total_submissions']}, "
+        f"suspicious_submissions={row['suspicious_submissions']}, "
+        f"fraction_suspicious_submissions={fraction_suspicious_submissions}"
+    )
+```
+
+Please note, `total` indicates the total number of submissions recorded for this validator. `suspicious_submissions` shows how many of those submissions were flagged as suspicious (e.g. out of range or zero/negative values). `fraction_suspicious_submissions` reports the percentage of the validator’s submissions that fell into the suspicious category.

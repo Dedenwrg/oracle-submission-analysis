@@ -20,7 +20,7 @@ This notebook documents the analysis for **Issue #9: Vendor Downtime or API Rate
 - **What is this issue about?**  
 - **Why conduct this issue analysis?**  
 - **How to conduct this issue analysis?**  
-- **What have we found?**  
+- **What are the results?**  
 
 ---
 
@@ -31,7 +31,7 @@ Validators occasionally experience data interruptions due to:
 - **Vendor downtime** (temporary outages)
 - **API rate-limits** (causing zero or placeholder values)
 
-We analyze abrupt stoppages and zero-value submissions, especially simultaneous occurrences, indicating a shared vendor or API issue.
+Analyze abrupt stoppages and zero-value submissions, especially simultaneous occurrences, indicating a shared vendor or API issue.
 
 ---
 
@@ -43,9 +43,9 @@ We analyze abrupt stoppages and zero-value submissions, especially simultaneous 
 
 ---
 
-### 9.3 How Did We Conduct the Analysis?
+### 9.3 How to Conduct the Analysis?
 
-We used Python with the **Polars** library (`v1.24.0`) to:
+Use Python with the **Polars** library (`v1.24.0`) to:
 
 1. Load and preprocess Oracle submission CSV files.
 2. Detecting validator submission stoppages exceeding 120-minute gaps.
@@ -58,6 +58,9 @@ Here's the Python code used:
 import polars as pl
 import glob
 from typing import List
+import warnings
+
+warnings.filterwarnings("ignore")
 ```
 
 ```{python}
@@ -311,7 +314,7 @@ results = analyze_vendor_downtime_api_ratelimits(
 
 ---
 
-### 9.4 What Have We Found?
+### 9.4 What are the results?
 
 The following sections present analysis findings dynamically from `results_issue9`.
 
@@ -374,3 +377,48 @@ else:
 
 - High concurrency strongly implies a vendor or API outage affecting multiple validators simultaneously.
 - Low or no concurrency indicates validator-specific configuration or connectivity issues.
+
+**List of all Validators and their Zero Placeholder Ratios**
+
+```{python}
+df_all = results["df_all"]  # all submissions
+df_zero = results["df_zero_placeholders"]  # all-zero submissions
+
+df_sub_count = (
+    df_all.lazy()
+    .group_by("Validator Address")
+    .agg(
+        pl.count().alias("num_submissions")
+    )
+)
+
+df_zero_count = (
+    df_zero.lazy()
+    .group_by("Validator Address")
+    .agg(
+        pl.count().alias("num_zero_submissions")
+    )
+)
+
+df_ratio = (
+    df_sub_count.join(df_zero_count, on="Validator Address", how="left")
+    .with_columns(
+        (pl.col("num_zero_submissions") / pl.col("num_submissions"))
+        .fill_null(0)
+        .alias("zero_placeholder_ratio")
+    )
+    .select(["Validator Address", "num_submissions", "num_zero_submissions", "zero_placeholder_ratio"])
+    .sort("num_submissions", descending=True)
+    .collect()
+)
+
+for row in df_ratio.to_dicts():
+    print(
+        f"Validator {row['Validator Address']}: "
+        f"total_submissions={row['num_submissions']}, "
+        f"zero_submissions={row['num_zero_submissions']}, "
+        f"zero_placeholder_ratio={row['zero_placeholder_ratio']:.2f}"
+    )
+```
+
+Please note, `total_submissions` is the count of all submission rows for a validator. `zero_submissions` counts those rows where every tracked price column is effectively `0` (`≤ 1 × 10‑5` after the Wei‑to‑unit conversion); if the validator never produced a full all‑zero row this value shows up as `null`. `zero_placeholder_ratio` is `zero_submissions` / `total_submissions`, producing a value from 0 to 1 that indicates the fraction of a validator’s submissions that were complete zero‑placeholders.

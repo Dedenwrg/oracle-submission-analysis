@@ -20,7 +20,7 @@ This notebook documents the analysis for **Issue #2: Irregular Submission Freque
 - **What is this issue about?**  
 - **Why conduct this issue analysis?**  
 - **How to conduct this issue analysis?**  
-- **What have we found?**  
+- **What are the results?**  
 
 ---
 
@@ -42,9 +42,9 @@ Irregularities could degrade reliability, create stale data issues, or indicate 
 
 ---
 
-### 2.3 How Did We Conduct the Analysis?
+### 2.3 How to Conduct the Analysis?
 
-We used Python with the **Polars** library (`v1.24.0`) to:
+Use Python with the **Polars** library (`v1.24.0`) to:
 
 1. Load and preprocess Oracle submission CSV files.
 2. Calculate intervals between submissions for each validator (in minutes).
@@ -193,9 +193,9 @@ results = analyze_irregular_submission_frequency(
 
 ---
 
-### 2.4 What Have We Found?
+### 2.4 What are the results?
 
-Below, we explore findings from the `results` dictionary to interpret the analysis. Results dynamically update upon notebook re-execution.
+Below are findings from the `results` dictionary to interpret the analysis. Results dynamically update upon notebook re-execution.
 
 **Validator Interval Statistics**
 
@@ -214,3 +214,56 @@ results["df_daily_submission_counts"]
 ```
 
 The `count_submissions_that_day` column highlights how submission frequency varies by day. Large variations may indicate operational issues such as outages or configuration problems.
+
+**List of all Validators and their Fraction Out of Range**
+
+```{python}
+def fraction_out_of_range(
+    df: pl.DataFrame, 
+    expected_interval: float = 0.5, 
+    tolerance_factor: float = 0.05
+) -> pl.DataFrame:
+    """
+    Compute the fraction of intervals that are outside the acceptable range
+    [expected_interval * (1 - tolerance_factor), expected_interval * (1 + tolerance_factor)]
+    per validator.
+    """
+    low_bound = expected_interval * (1 - tolerance_factor)
+    high_bound = expected_interval * (1 + tolerance_factor)
+
+    df_out_of_range = (
+        df.lazy()
+        .with_columns(
+            pl.when(
+                (pl.col("submission_interval_min") < low_bound) | 
+                (pl.col("submission_interval_min") > high_bound)
+            )
+            .then(pl.lit(1))
+            .otherwise(pl.lit(0))
+            .alias("out_of_range_flag")
+        )
+        .group_by("Validator Address")
+        .agg([
+            pl.count("submission_interval_min").alias("n_intervals"),
+            pl.sum("out_of_range_flag").alias("n_out_of_range")
+        ])
+        .with_columns(
+            (pl.col("n_out_of_range") / pl.col("n_intervals")).alias("fraction_out_of_range")
+        )
+        .collect()
+    )
+    return df_out_of_range
+
+df_out_of_range_metric = fraction_out_of_range(results["df_with_intervals"])
+df_out_of_range_metric = df_out_of_range_metric.sort("fraction_out_of_range", descending=True)
+
+for row in df_out_of_range_metric.to_dicts():
+    print(
+        f"Validator {row['Validator Address']}: "
+        f"total={row['n_intervals']}, "
+        f"out_of_range={row['n_out_of_range']}, "
+        f"fraction_out_of_range={100*row['fraction_out_of_range']:.1f}%"
+    )
+```
+
+Please note, `total` represents the total number of consecutive submission intervals recorded for this validator (i.e. how many times we measured the time gap between one submission and the next). `out_of_range` indicates how many of those intervals fell outside the acceptable submission timeframe (e.g. 0.475–0.525 minutes for a 0.5-minute target). `fraction_out_of_range` shows what percentage of the validator’s intervals deviated from the acceptable range.

@@ -20,7 +20,7 @@ This notebook documents the analysis for **Issue #1: Missing or Null Submissions
 - **What is this issue about?**  
 - **Why conduct this issue analysis?**  
 - **How to conduct this issue analysis?**  
-- **What have we found?**  
+- **What are the results?**  
 
 ---
 
@@ -44,20 +44,20 @@ This analysis investigates the frequency and patterns of these missing or null s
 
 ---
 
-### 1.3 How Did We Conduct the Analysis?
+### 1.3 How to Conduct the Analysis?
 
-We used Python with the **Polars** library (`v1.24.0`) to:
+Use Python with the **Polars** library (`v1.24.0`) to:
 
 1. Load and preprocess Oracle submission CSV files.
 2. Parse the timestamps from strings to actual datetimes (and derive day-of-week).  
 3. Define coverage modes:
-   - **ALL-FX mode**: A row is considered valid if *all* FX and Autonity columns are non-null.  
-   - **ANY-FX mode**: A row is considered valid if *at least one* FX or Autonity column is non-null.
+   - **ALL-FX mode**: A row is considered valid if *all* FX and token columns are non-null.  
+   - **ANY-FX mode**: A row is considered valid if *at least one* FX or token column is non-null.
 4. Compute coverage metrics:
-   - Per-timestamp coverage across all validators.  
-   - Daily coverage (how many timestamps had full coverage vs. partial coverage).  
-   - Per-validator missing rates.  
-5. Check weekend vs. weekday differences by labeling days Monday=0 through Sunday=6.
+   - For each timestamp, calculate how many validators are “present” in the CSV (i.e. have a row for that timestamp) and how many actually submit valid data (per the ALL-FX or ANY-FX definition).
+   - Define a timestamp as “fully covered” if at least 90% of the present validators submitted valid data.
+   - At the daily level, count how many timestamps met that 90% threshold (“full coverage”) versus those that did not (“incomplete coverage”).
+5. Check weekend vs. weekday patterns by labeling days Monday=0 through Sunday=6, then aggregating coverage differences over weekends (Saturday=5, Sunday=6) vs. weekdays.
 
 Below is the script to perform the analysis:
 
@@ -65,6 +65,9 @@ Below is the script to perform the analysis:
 import polars as pl
 import glob
 import statistics
+import warnings
+
+warnings.filterwarnings("ignore")
 ```
 
 ```{python}
@@ -109,10 +112,14 @@ def compute_coverage_metrics(
     fx_cols: list[str],
     autonity_cols: list[str],
     use_all_fx_required: bool = True,
+    coverage_threshold: float = 0.9,  # 90% coverage default
 ):
     """
-    Compute coverage metrics for either ALL-FX or ANY-FX mode.
+    Compute coverage metrics, but treat a timestamp as "fully covered" only if
+    at least `coverage_threshold` fraction of validators present at that
+    timestamp provide valid data (ALL-FX or ANY-FX).
     """
+
     if use_all_fx_required:
         fx_expr = pl.fold(
             acc=pl.lit(True),
@@ -140,17 +147,18 @@ def compute_coverage_metrics(
 
     lf = df.lazy().with_columns([fx_expr, autonity_expr])
 
-    lf = lf.with_columns(
-        (pl.col("submitted_fx_data") | pl.col("submitted_autonity_data")).alias(
-            "submitted_any_data"
-        )
-    )
+    if use_all_fx_required:
+        condition_expr = pl.col("submitted_fx_data") & pl.col("submitted_autonity_data")
+    else:
+        condition_expr = pl.col("submitted_fx_data") | pl.col("submitted_autonity_data")
+
+    lf = lf.with_columns(condition_expr.alias("any_submitted"))
 
     lf_per_addr = (
         lf.group_by(["Timestamp_dt", "Validator Address"])
         .agg(
             [
-                pl.any("submitted_any_data").alias("any_submitted"),
+                pl.any("any_submitted").alias("any_submitted"),
                 pl.any("submitted_fx_data").alias("fx_submitted"),
                 pl.any("submitted_autonity_data").alias("autonity_submitted"),
             ]
@@ -173,11 +181,14 @@ def compute_coverage_metrics(
             ]
         )
         .with_columns(
-            [
-                (pl.col("validators_seen") - pl.col("num_submitted_any")).alias(
-                    "num_missing_any"
-                )
-            ]
+            (pl.col("num_submitted_any") / pl.col("validators_seen"))
+            .fill_null(0.0)
+            .alias("coverage_ratio")
+        )
+        .with_columns(
+            (
+                (pl.col("coverage_ratio") < coverage_threshold).cast(pl.Int8)
+            ).alias("num_missing_any")
         )
     )
 
@@ -196,7 +207,6 @@ def compute_coverage_metrics(
                 (pl.col("num_missing_any").gt(0).cast(pl.Int64))
                 .sum()
                 .alias("num_timestamps_incomplete_coverage"),
-                pl.max("validators_seen").alias("max_validators_in_day"),
             ]
         )
         .with_columns(
@@ -216,9 +226,7 @@ def compute_coverage_metrics(
     df_day_coverage = lf_day_coverage.collect().sort("date_only")
 
     lf_missing_by_val = lf_per_addr.with_columns(
-        [
-            (pl.col("any_submitted") == False).alias("is_missing"),
-        ]
+        (pl.col("any_submitted") == False).alias("is_missing")
     )
 
     lf_validator_missing_stats = (
@@ -230,11 +238,9 @@ def compute_coverage_metrics(
             ]
         )
         .with_columns(
-            [
-                (
-                    pl.col("missing_count") / pl.col("total_timestamps_encountered")
-                ).alias("fraction_missing")
-            ]
+            (
+                pl.col("missing_count") / pl.col("total_timestamps_encountered")
+            ).alias("fraction_missing")
         )
     )
 
@@ -278,9 +284,9 @@ def check_weekend_patterns(df_timestamp_coverage: pl.DataFrame, df_source: pl.Da
         )
         .with_columns(
             [
-                (pl.col("num_ts_full_coverage") / pl.col("num_timestamps")).alias(
-                    "fraction_full_cov"
-                ),
+                (
+                    pl.col("num_ts_full_coverage") / pl.col("num_timestamps")
+                ).alias("fraction_full_cov"),
             ]
         )
         .collect()
@@ -371,9 +377,9 @@ results = analyze_missing_submissions_both_modes(
 
 ---
 
-### 1.4 What Have We Found?
+### 1.4 What are the results?
 
-Below we directly reference outcomes from the `results` dictionary obtained by executing the analysis. The results shown will automatically update when re-running this notebook with new or updated datasets.
+Below are directly reference outcomes from the `results` dictionary obtained by executing the analysis. The results shown will automatically update when re-running this notebook with new or updated datasets.
 
 **Daily Coverage Analysis**
 
@@ -382,8 +388,6 @@ Below we directly reference outcomes from the `results` dictionary obtained by e
 ```{python}
 # Display daily coverage for ALL-FX mode
 results["ALL"]["df_day_coverage"]
-
-import statistics
 
 all_day_cov = results["ALL"]["df_day_coverage"]["fraction_full_coverage"]
 avg_all_cov = statistics.mean(all_day_cov) * 100
@@ -417,28 +421,6 @@ else:
 
 This comparison highlights the impact of submission requirements (complete vs. partial) on coverage.
 
-**Validators with Significant Missing Rates (≥50%)**
-
-```{python}
-top_missing = results["ALL"]["df_validator_missing"].filter(
-    pl.col("fraction_missing") >= 0.5
-)
-
-num_high_missing = top_missing.height
-print(f"Number of validators missing ≥50% submissions: {num_high_missing}")
-
-if num_high_missing > 0:
-    for row in top_missing.iter_rows(named=True):
-        addr = row["Validator Address"]
-        frac_missing = row["fraction_missing"] * 100
-        print(f"Validator {addr} missing rate: {frac_missing:.1f}%")
-    print("These validators have significant reliability issues and require attention.")
-else:
-    print("No validators have a missing rate ≥50%; validator submissions are generally reliable.")
-```
-
-Validators listed here consistently miss submissions, signaling potential systemic issues.
-
 **Weekend vs. Weekday Coverage**
 
 ```{python}
@@ -453,3 +435,20 @@ elif weekday_cov > weekend_cov + 5:
 else:
     print("No major difference in coverage between weekends and weekdays; submission patterns appear relatively uniform.")
 ```
+
+**List of all Validators and their Missing Rates**
+
+```{python}
+df_all_missing = results["ALL"]["df_validator_missing"]
+
+for row in df_all_missing.iter_rows(named=True):
+    addr = row["Validator Address"]
+    total = row["total_timestamps_encountered"]
+    missing = row["missing_count"]
+    fraction = row["fraction_missing"] * 100
+    print(
+        f"Validator {addr}: total={total}, missing={missing}, fraction_missing={fraction:.1f}%"
+    )
+```
+
+Please note, `total` is the number of timestamp slots at which this validator was expected to submit. `missing` indicates how many of those slots were unfilled (i.e. the validator did not provide the required data for that timestamp). `fraction_missing` is the percentage of timestamps that were missing out of the total encountered.
