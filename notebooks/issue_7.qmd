@@ -20,7 +20,7 @@ This notebook documents the analysis for **Issue #7: Timing / Synchronization Is
 - **What is this issue about?**  
 - **Why conduct this issue analysis?**  
 - **How to conduct this issue analysis?**  
-- **What have we found?**  
+- **What are the results?**  
 
 ---
 
@@ -44,13 +44,13 @@ This analysis examines how synchronized each validator's submission timestamps a
 
 ---
 
-### 7.3 How Did We Conduct the Analysis?
+### 7.3 How to Conduct the Analysis?
 
-We used Python with the **Polars** library (`v1.24.0`) to:
+Use Python with the **Polars** library (`v1.24.0`) to:
 
 1. Load and preprocess Oracle submission CSV files.
 2. Parse timestamps from strings to actual datetimes.
-3. Compute each validator's submission offset (in seconds) relative to the median timestamp within each minute.
+3. Compute each validator’s submission offset (in seconds) relative to the median timestamp within each 30-second bin (re-anchored every 6 hours).
 4. Summarize timing offsets per validator:
    - Mean, median, max offsets
    - Fraction of submissions exceeding thresholds (e.g., 30s, 60s)
@@ -60,12 +60,16 @@ Below is the script:
 ```{python}
 import polars as pl
 import glob
+import warnings
+
+warnings.filterwarnings("ignore")
 ```
 
 ```{python}
 def load_and_preprocess_submissions(submission_glob: str) -> pl.DataFrame:
     """
-    Loads Oracle Submission CSVs and returns a Polars DataFrame.
+    Loads Oracle Submission CSVs into a Polars DataFrame,
+    parsing timestamps into datetime.
     """
     files = sorted(glob.glob(submission_glob))
     if not files:
@@ -82,6 +86,7 @@ def load_and_preprocess_submissions(submission_glob: str) -> pl.DataFrame:
         lf_list.append(lf_temp)
 
     lf = pl.concat(lf_list)
+
     lf = lf.with_columns(
         pl.col("Timestamp")
         .str.strptime(pl.Datetime, strict=False)
@@ -94,42 +99,77 @@ def load_and_preprocess_submissions(submission_glob: str) -> pl.DataFrame:
             pl.col("Timestamp_dt").dt.weekday().alias("weekday_num"),
         ]
     )
+
     df = lf.collect()
+
     return df
 
-def compute_timing_offsets(df: pl.DataFrame) -> pl.DataFrame:
+
+def compute_timing_offsets_30s_reanchor_6h(
+    df: pl.DataFrame,
+    chunk_hours: int = 6,
+    period_seconds: int = 30
+) -> pl.DataFrame:
     """
-    Computes offsets in timings.
+    Computes offsets by grouping submissions into ~30s bins,
+    re-anchoring every 'chunk_hours' hours.
     """
     df_local = df.with_columns(
-        pl.col("Timestamp_dt").dt.truncate("1m").alias("ts_minute")
-    )
-    df_local = df_local.with_columns(
         (pl.col("Timestamp_dt").cast(pl.Int64) // 1_000_000_000).alias("epoch_seconds")
+    )
+
+    anchor_epoch = df_local.select(pl.min("epoch_seconds")).item()
+    chunk_length_sec = chunk_hours * 3600
+
+    df_local = df_local.with_columns(
+        (
+            (pl.col("epoch_seconds") - anchor_epoch) // chunk_length_sec
+        ).alias("chunk_id")
+    )
+
+    df_local = df_local.with_columns(
+        (
+            pl.col("epoch_seconds")
+            - (anchor_epoch + pl.col("chunk_id") * chunk_length_sec)
+        ).alias("local_elapsed")
+    )
+
+    df_local = df_local.with_columns(
+        (pl.col("local_elapsed") // period_seconds).alias("round_in_chunk")
+    )
+
+    df_local = df_local.with_columns(
+        (
+            pl.col("chunk_id").cast(pl.Utf8)
+            + "-"
+            + pl.col("round_in_chunk").cast(pl.Utf8)
+        ).alias("round_label")
     )
 
     median_lf = (
         df_local.lazy()
-        .group_by("ts_minute")
+        .group_by("round_label")
         .agg(pl.median("epoch_seconds").alias("median_epoch_seconds"))
     )
 
     df_with_median = (
         df_local.lazy()
-        .join(median_lf, on="ts_minute", how="left")
+        .join(median_lf, on="round_label", how="left")
         .with_columns(
-            (pl.col("epoch_seconds") - pl.col("median_epoch_seconds")).alias("offset_seconds")
+            (pl.col("epoch_seconds") - pl.col("median_epoch_seconds"))
+            .alias("offset_seconds")
+        )
+        .with_columns(
+            pl.col("offset_seconds").abs().alias("abs_offset_seconds")
         )
     )
 
-    df_with_median = df_with_median.with_columns(
-        pl.col("offset_seconds").abs().alias("abs_offset_seconds")
-    )
     return df_with_median.collect().sort(["Timestamp_dt", "Validator Address"])
+
 
 def summarize_timing_offsets(df_offsets: pl.DataFrame) -> pl.DataFrame:
     """
-    Summarizes computed offsets in timings.
+    Summarizes computed offsets in timings per validator.
     """
     thresholds = [10, 30, 60, 300]
 
@@ -154,21 +194,27 @@ def summarize_timing_offsets(df_offsets: pl.DataFrame) -> pl.DataFrame:
         .agg(agg_exprs)
         .with_columns(
             [
-                (pl.col(f"exceed_{t}s_count") / pl.col("total_submissions")).alias(
-                    f"fraction_exceed_{t}s"
-                )
+                (pl.col(f"exceed_{t}s_count") / pl.col("total_submissions"))
+                .alias(f"fraction_exceed_{t}s")
                 for t in thresholds
             ]
         )
     )
     return lf_summary.collect().sort("mean_offset_seconds")
 
-def analyze_timing_synchronization_issues(submission_glob: str):
+
+def analyze_timing_synchronization_issues_30s_6h(
+    submission_glob: str
+) -> dict:
     """
-    Main analysis function.
+    Main analysis function with 30s-based grouping and 6-hour re-anchoring.
+    Returns a dict of DataFrames:
+      - df_all_data:   The raw submission data
+      - df_with_offsets:  The data with computed offsets
+      - df_validator_offsets: Summaries per validator
     """
     df_all = load_and_preprocess_submissions(submission_glob)
-    df_with_offsets = compute_timing_offsets(df_all)
+    df_with_offsets = compute_timing_offsets_30s_reanchor_6h(df_all)
     df_validator_offsets = summarize_timing_offsets(df_with_offsets)
 
     return {
@@ -179,16 +225,16 @@ def analyze_timing_synchronization_issues(submission_glob: str):
 ```
 
 ```{python}
-results = analyze_timing_synchronization_issues(
+results = analyze_timing_synchronization_issues_30s_6h(
     submission_glob="../submission-data/Oracle_Submission_*.csv"
 )
 ```
 
 ---
 
-### 7.4 What Have We Found?
+### 7.4 What are the results?
 
-Below we provide summaries and interpretation based on the computed `results`.
+Below are summaries and interpretation based on the computed `results`.
 
 **Per-Submission Timing Offsets**
 
@@ -211,7 +257,7 @@ results["df_validator_offsets"]
 
 **Interpretation of Validator Timing Offsets**
 
-We interpret validator-level offsets using the metrics above:
+Interpretation of validator-level offsets using the metrics above:
 
 - **Mean Offset**: Validators with high positive mean offsets (>20s) consistently submit late, suggesting potential clock or scheduling issues.
 - **Median Offset**: Confirms the consistency of early or late submissions.
@@ -239,3 +285,25 @@ df_weekday_offset
 ```
 
 The above table reveals whether average absolute timing offsets differ substantially by day-of-week. Higher offsets on weekends could indicate decreased validator attention or configuration issues specific to weekends.
+
+**List of all Validators and their Mean of Abs Offset Seconds**
+
+```{python}
+df_offsets = results["df_with_offsets"]
+df_mean_abs_offset = (
+    df_offsets
+    .group_by("Validator Address")
+    .agg(
+        pl.mean("abs_offset_seconds").alias("mean_abs_offset_seconds")
+    )
+    .sort("mean_abs_offset_seconds", descending=True)
+)
+
+for row in df_mean_abs_offset.to_dicts():
+    print(
+        f"Validator {row['Validator Address']}: "
+        f"mean_abs_offset_seconds={row['mean_abs_offset_seconds']:.2f}"
+    )
+```
+
+Please note, a low `mean_abs_offset_seconds` indicates the validator typically submits very close to the group median, while a high value indicates they often drift too far from the typical submission time.

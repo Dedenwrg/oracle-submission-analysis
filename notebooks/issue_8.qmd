@@ -20,7 +20,7 @@ This notebook documents the analysis for **Issue #8: Weekend / Market Closure Ef
 - **What is this issue about?**  
 - **Why conduct this issue analysis?**  
 - **How to conduct this issue analysis?**  
-- **What have we found?**  
+- **What are the results?**  
 
 ---
 
@@ -41,9 +41,9 @@ In traditional FX markets, trading usually pauses during weekends, leading to fl
 
 ---
 
-### 8.3 How Did We Conduct the Analysis?
+### 8.3 How to Conduct the Analysis?
 
-We used Python with the **Polars** library (`v1.24.0`) to:
+Use Python with the **Polars** library (`v1.24.0`) to:
 
 1. Load and preprocess Oracle submission CSV files.
 2. Aggregate submission counts by day, distinguishing weekends (Saturday=5, Sunday=6) from weekdays.
@@ -54,6 +54,9 @@ Below is the script performing this analysis:
 ```{python}
 import polars as pl
 import glob
+import warnings
+
+warnings.filterwarnings("ignore")
 ```
 
 ```{python}
@@ -125,7 +128,7 @@ def analyze_weekend_market_closure_issues(
     )
 
     df_agg_day = df_sub.group_by(["date_only","weekday_num"]).agg([
-        pl.count("Validator Address").alias("num_submissions"),
+        pl.col("any_fx_submitted").sum().alias("num_submissions"),
         pl.col("any_fx_submitted").sum().alias("num_fx_submissions")
     ]).sort("date_only")
 
@@ -144,6 +147,7 @@ def analyze_weekend_market_closure_issues(
     weekday_rows = df_agg_day.filter(pl.col("weekday_num") < 5)
 
     results = {
+        "df_submissions_raw": df_sub,
         "df_submissions_day_agg": df_agg_day,
         "weekend_total_submissions": weekend_rows["num_submissions"].sum(),
         "weekday_total_submissions": weekday_rows["num_submissions"].sum(),
@@ -161,7 +165,7 @@ fx_cols = [
 
 yahoo_data = load_all_fx_benchmarks()
 
-results_issue8 = analyze_weekend_market_closure_issues(
+results = analyze_weekend_market_closure_issues(
     "../submission-data/Oracle_Submission_*.csv",
     fx_cols,
     yahoo_data
@@ -170,20 +174,20 @@ results_issue8 = analyze_weekend_market_closure_issues(
 
 ---
 
-### 8.4 What Have We Found?
+### 8.4 What are the results?
 
-Below are the results, interpretation, and key insights from the analysis.
+Below are the results, interpretation and key insights from the analysis.
 
 **Daily Submission Patterns (Weekend vs. Weekday)**
 
 ```{python}
-df_daily = results_issue8["df_submissions_day_agg"]
+df_daily = results["df_submissions_day_agg"]
 df_daily
 ```
 
 ```{python}
-weekend_total = results_issue8["weekend_total_submissions"]
-weekday_total = results_issue8["weekday_total_submissions"]
+weekend_total = results["weekend_total_submissions"]
+weekday_total = results["weekday_total_submissions"]
 
 print(f"Total weekend submissions: {weekend_total}")
 print(f"Total weekday submissions: {weekday_total}")
@@ -202,7 +206,7 @@ else:
 Yahoo Finance Weekend Patterns (FX benchmarks)
 
 ```{python}
-yahoo_info = results_issue8["yahoo_weekend_info"]
+yahoo_info = results["yahoo_weekend_info"]
 for pair, df_y in yahoo_info.items():
     print(f"\nFX Pair: {pair}")
     display(df_y)
@@ -214,3 +218,36 @@ for pair, df_y in yahoo_info.items():
     else:
         print(f"Yahoo data shows unexpected weekend activity for {pair}.")
 ```
+
+**List of all Validators and their Weekend Submission Ratios**
+
+```{python}
+df_sub_raw = results["df_submissions_raw"]
+
+df_validator_weekend = (
+    df_sub_raw
+    .with_columns(
+        (pl.col("weekday_num") >= 5).cast(pl.Int8).alias("is_weekend")
+    )
+    .group_by("Validator Address")
+    .agg([
+        pl.count().alias("total_submissions"),
+        pl.col("is_weekend").sum().alias("weekend_submissions")
+    ])
+    .with_columns(
+        (pl.col("weekend_submissions") / pl.col("total_submissions"))
+        .alias("weekend_submission_ratio")
+    )
+    .sort("weekend_submission_ratio", descending=True)
+)
+
+for row in df_validator_weekend.to_dicts():
+    print(
+        f"Validator {row['Validator Address']}: "
+        f"total_submissions={row['total_submissions']}, "
+        f"weekend_submissions={row['weekend_submissions']}, "
+        f"weekend_submission_ratio={row['weekend_submission_ratio']:.2f}"
+    )
+```
+
+Please note, `total_submissions` represents the total number of individual price-update rows this validator sent during the study period. `weekend_submissions` is how many of those rows were posted on Saturdays or Sundays. `weekend_submission_ratio` is the proportion of weekend submissions (0 – 1 scale); higher values indicate the validator updates more frequently on weekends relative to weekdays.

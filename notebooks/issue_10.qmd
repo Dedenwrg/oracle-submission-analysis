@@ -20,7 +20,7 @@ This notebook documents the analysis for **Issue #10: Possible Security / Malici
 - **What is this issue about?**  
 - **Why conduct this issue analysis?**  
 - **How to conduct this issue analysis?**  
-- **What have we found?**  
+- **What are the results?**  
 
 ---
 
@@ -43,20 +43,23 @@ This analysis investigates these suspicious patterns to detect possible maliciou
 
 ---
 
-### 10.3 How Did We Conduct the Analysis?
+### 10.3 How to Conduct the Analysis?
 
-We used Python with the **Polars** library (`v1.24.0`) to:
+Use Python with the **Polars** library (`v1.24.0`) to:
 
 1. Load and preprocess Oracle submission CSV files.
 2. Parse timestamps and convert price values from Wei to decimal.
 3. Detect suspicious validator pairs that frequently submit identical prices.
-4. Detect simultaneous extreme outliers, i.e., multiple validators submitting extreme prices at the same timestamps.
+4. Detect simultaneous extreme outliers, i.e. multiple validators submitting extreme prices at the same timestamps.
 
 Below is the full analysis script:
 
 ```{python}
 import polars as pl
 import glob
+import warnings
+
+warnings.filterwarnings("ignore")
 ```
 
 ```{python}
@@ -341,9 +344,9 @@ results = analyze_possible_security_malicious_behavior(
 
 ---
 
-### 10.4 What Have We Found?
+### 10.4 What are the results?
 
-Below, we display the results extracted from the analysis.
+Below are the results extracted from the analysis.
 
 #### Suspicious Validator Pairs (Collusion)
 
@@ -391,3 +394,91 @@ else:
 ```
 
 - Multiple validators simultaneously posting extreme prices may indicate coordinated manipulation attempts, especially if this coincides with critical network events.
+
+**List of all Validators and their Collusion and Extreme Event Counts**
+
+```{python}
+all_validators = (
+    results["df_all_submissions"]
+    .select(pl.col("Validator Address"))
+    .unique()
+    .rename({"Validator Address": "validator"})
+)
+
+df_pairs = results["df_suspicious_pairs"]
+
+if not df_pairs.is_empty():
+    collusion_a = (
+        df_pairs
+        .select(["validator_a", "matched_count"])
+        .group_by("validator_a")
+        .agg(pl.sum("matched_count").alias("collusion_score_a"))
+        .rename({"validator_a": "validator"})
+    )
+
+    collusion_b = (
+        df_pairs
+        .select(["validator_b", "matched_count"])
+        .group_by("validator_b")
+        .agg(pl.sum("matched_count").alias("collusion_score_b"))
+        .rename({"validator_b": "validator"})
+    )
+
+    collusion_counts = (
+        collusion_a
+        .join(collusion_b, on="validator", how="outer")
+        .with_columns(
+            (
+                pl.col("collusion_score_a").fill_null(0) 
+                + pl.col("collusion_score_b").fill_null(0)
+            ).alias("collusion_score")
+        )
+        .select(["validator", "collusion_score"])
+    )
+else:
+    collusion_counts = pl.DataFrame(
+        schema={"validator": pl.Utf8, "collusion_score": pl.Int64}
+    )
+
+df_outliers = results["df_extreme_outliers"]
+
+if not df_outliers.is_empty():
+    df_outliers_exploded = df_outliers.explode("outlier_validators")
+
+    outlier_counts = (
+        df_outliers_exploded
+        .group_by("outlier_validators")
+        .agg(pl.count().alias("extreme_event_count"))
+        .rename({"outlier_validators": "validator"})
+    )
+else:
+    outlier_counts = pl.DataFrame(
+        schema={"validator": pl.Utf8, "extreme_event_count": pl.Int64}
+    )
+
+df_validator_summary = (
+    all_validators
+    .join(collusion_counts, on="validator", how="left")
+    .join(outlier_counts, on="validator", how="left")
+    .with_columns(
+        [
+            pl.col("collusion_score").fill_null(0),
+            pl.col("extreme_event_count").fill_null(0),
+        ]
+    )
+    .with_columns(
+        (pl.col("collusion_score") + pl.col("extreme_event_count"))
+        .alias("aggregated_score")
+    )
+    .sort(by="extreme_event_count", descending=True)
+)
+
+for row in df_validator_summary.to_dicts():
+    print(
+        f"Validator {row['validator']}: "
+        f"collusion_score={row['collusion_score']}, "
+        f"extreme_event_count={row['extreme_event_count']}, "
+    )
+```
+
+Please note, `collusion_score` is the sum of times a validator appears in “high-matching” submissions (i.e. near-identical prices) with another validator (high `collusion_score` doesn't necessarily mean malicious behaviour). `extreme_event_count` counts the number of times a validator posts an extreme outlier price (compared to the median price) at the same timestamp as other outliers.
