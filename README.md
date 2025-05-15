@@ -39,7 +39,6 @@ In the meantime, validators can influence confidence and reporting accuracy by:
 
 Engineering teams are encouraged to explore more flexible confidence scoring mechanisms that account for factors like variance, volume, latency, and data source trust levels.
 
-For more context on the Oracle Accountability and Fault Detection (OAFD) model, see: [Autonity OAFD documentation](https://docs.autonity.org/concepts/oafd/#confidence-score).
 
 ---
 
