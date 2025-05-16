@@ -15,6 +15,7 @@
     pandas
     numpy
     matplotlib
+    pyarrow
     polars==1.24.0
     '';
   };
