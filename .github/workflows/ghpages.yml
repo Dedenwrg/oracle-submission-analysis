@@ -2,7 +2,7 @@ name: Build and Deploy Quarto Site
 
 on:
   push:
-    branches: [master]  
+    branches: [master]
 
 jobs:
   build-deploy:
@@ -18,9 +18,11 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@v22
 
-      - name: Render Quarto site inside devenv
-        run: |
-          nix develop . --impure --command quarto render .
+      - name: Install devenv
+        run: nix profile install tarball+https://install.devenv.sh/latest
+
+      - name: Render Quarto site using devenv
+        run: devenv shell --command "quarto render ."
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
