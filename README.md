@@ -35,7 +35,7 @@ In the meantime, validators can influence confidence and reporting accuracy by:
 
 •	Dynamically enabling or disabling plugins based on data freshness and reliability
 •	Developing new plugins that aggregate from more trusted or higher-frequency sources
-•	Monitoring update intervals and market variance to ensure the submitted data reflects the most recent market state
+•	Monitoring update intervals and market variance to ensure the submitted data reflects the most recent market state.
 
 Engineering teams are encouraged to explore more flexible confidence scoring mechanisms that account for factors like variance, volume, latency, and data source trust levels.
 
