@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Issue 5 – Oracle Submission Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-283d813e9a11428b00dc78d5a810a4dc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Oracle Submission Analysis</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/autonity/oracle-submission-analysis"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/issue_1.html">Notebooks</a></li><li class="breadcrumb-item"><a href="../notebooks/issue_5.html">Issue 5</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2024_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (December 2024)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (January 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (February 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (March 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_first_half.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Data Analysis Report (December 2024 - March 2025)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Notebooks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/issue_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/issue_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/issue_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/issue_4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 4</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/issue_5.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Issue 5</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/issue_6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 6</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/issue_7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 7</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/issue_8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 8</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/issue_9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 9</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/issue_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 10</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#confidence-value-anomalies" id="toc-confidence-value-anomalies" class="nav-link active" data-scroll-target="#confidence-value-anomalies">5. Confidence Value Anomalies</a>
+  <ul class="collapse">
+  <li><a href="#what-is-this-issue-about" id="toc-what-is-this-issue-about" class="nav-link" data-scroll-target="#what-is-this-issue-about">5.1 What Is This Issue About?</a></li>
+  <li><a href="#why-conduct-this-issue-analysis" id="toc-why-conduct-this-issue-analysis" class="nav-link" data-scroll-target="#why-conduct-this-issue-analysis">5.2 Why Conduct This Issue Analysis?</a></li>
+  <li><a href="#how-to-conduct-the-analysis" id="toc-how-to-conduct-the-analysis" class="nav-link" data-scroll-target="#how-to-conduct-the-analysis">5.3 How to Conduct the Analysis?</a></li>
+  <li><a href="#what-are-the-result" id="toc-what-are-the-result" class="nav-link" data-scroll-target="#what-are-the-result">5.4 What are the result?</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/issue_1.html">Notebooks</a></li><li class="breadcrumb-item"><a href="../notebooks/issue_5.html">Issue 5</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Issue 5</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="confidence-value-anomalies" class="level2">
+<h2 class="anchored" data-anchor-id="confidence-value-anomalies">5. Confidence Value Anomalies</h2>
+<p>This notebook documents the analysis for <strong>Issue #5: Confidence Value Anomalies</strong> in the Autonity Oracle data. It covers:</p>
+<ul>
+<li><strong>What is this issue about?</strong><br>
+</li>
+<li><strong>Why conduct this issue analysis?</strong><br>
+</li>
+<li><strong>How to conduct this issue analysis?</strong><br>
+</li>
+<li><strong>What are the results?</strong></li>
+</ul>
+<hr>
+<section id="what-is-this-issue-about" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-this-issue-about">5.1 What Is This Issue About?</h3>
+<p>Validators submit a confidence metric alongside their price submissions, representing their certainty in the provided data. Potential anomalies include:</p>
+<ul>
+<li>Validators consistently submitting the same confidence value (e.g.&nbsp;always <code>50</code> or <code>100</code>).</li>
+<li>Frequent occurrences of zero or null confidence values.</li>
+<li>Confidence values that do not vary in response to market volatility or price changes.</li>
+</ul>
+<p>This analysis investigates the patterns and consistency of these confidence values.</p>
+<hr>
+</section>
+<section id="why-conduct-this-issue-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="why-conduct-this-issue-analysis">5.2 Why Conduct This Issue Analysis?</h3>
+<ul>
+<li><strong>Reliability Check</strong>: Confidence should reflect real uncertainty, not remain fixed or arbitrary.</li>
+<li><strong>System Integrity</strong>: Identifying anomalies helps ensure that validators comply with expected behavior prior to Mainnet launch.</li>
+<li><strong>Decision-making</strong>: Confidence anomalies can degrade decision quality in downstream applications relying on Oracle data.</li>
+</ul>
+<hr>
+</section>
+<section id="how-to-conduct-the-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-conduct-the-analysis">5.3 How to Conduct the Analysis?</h3>
+<p>Use Python with the <strong>Polars</strong> library (<code>v1.24.0</code>) to:</p>
+<ol type="1">
+<li>Load and preprocess Oracle submission CSV files.</li>
+<li>Detect all “Confidence” columns automatically.</li>
+<li>Calculate basic statistics for confidence values per validator and pair:
+<ul>
+<li>Minimum, maximum, mean, standard deviation, number of distinct confidence values.</li>
+<li>Frequency distribution of the most common confidence values.</li>
+</ul></li>
+<li>Identify validators that consistently submit fixed or zero variation confidence values.</li>
+<li>Calculate correlation between confidence and price changes:
+<ul>
+<li>Compute price volatility as absolute price differences between submissions.</li>
+<li>Evaluate the correlation to verify if confidence values genuinely reflect market volatility.</li>
+</ul></li>
+</ol>
+<p>Below is the analysis script:</p>
+<div id="98eb6331" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statistics</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> groupby</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> List</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="3d36817b" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_and_preprocess_submissions(submission_glob: <span class="bu">str</span>) <span class="op">-&gt;</span> pl.DataFrame:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads Oracle Submission CSVs and returns a Polars DataFrame.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    files <span class="op">=</span> <span class="bu">sorted</span>(glob.glob(submission_glob))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> files:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"No CSV files found matching pattern </span><span class="sc">{</span>submission_glob<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    lf_list <span class="op">=</span> []</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> f <span class="kw">in</span> files:</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        lf_temp <span class="op">=</span> pl.scan_csv(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            f,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            dtypes<span class="op">=</span>{<span class="st">"Timestamp"</span>: pl.Utf8},</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            null_values<span class="op">=</span>[<span class="st">""</span>],</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            ignore_errors<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        lf_list.append(lf_temp)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    lf <span class="op">=</span> pl.concat(lf_list)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    lf <span class="op">=</span> lf.with_columns(</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"Timestamp"</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">str</span>.strptime(pl.Datetime, strict<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        .alias(<span class="st">"Timestamp_dt"</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    lf <span class="op">=</span> lf.with_columns(</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        [</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"Timestamp_dt"</span>).cast(pl.Date).alias(<span class="st">"date_only"</span>),</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"Timestamp_dt"</span>).dt.weekday().alias(<span class="st">"weekday_num"</span>),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> lf.collect()</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> list_confidence_columns(df: pl.DataFrame) <span class="op">-&gt;</span> List[<span class="bu">str</span>]:</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">    Identifies all "Confidence" columns by name.</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [c <span class="cf">for</span> c <span class="kw">in</span> df.columns <span class="cf">if</span> <span class="st">"Confidence"</span> <span class="kw">in</span> c]</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> list_price_columns(df: pl.DataFrame) <span class="op">-&gt;</span> List[<span class="bu">str</span>]:</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="co">    Identifies all "Price" columns by name.</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [c <span class="cf">for</span> c <span class="kw">in</span> df.columns <span class="cf">if</span> <span class="st">"Price"</span> <span class="kw">in</span> c]</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> confidence_distribution_by_validator(</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    df: pl.DataFrame, confidence_cols: List[<span class="bu">str</span>], top_k_freq: <span class="bu">int</span> <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> pl.DataFrame:</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="co">    Summarizes the distribution of ALL confidence values per validator (aggregated over all pairs).</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns min/max/mean/std/distinct count, plus the top frequency values.</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    keep_cols <span class="op">=</span> [<span class="st">"Validator Address"</span>, <span class="st">"Timestamp_dt"</span>] <span class="op">+</span> confidence_cols</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    df_small <span class="op">=</span> df.select([c <span class="cf">for</span> c <span class="kw">in</span> keep_cols <span class="cf">if</span> c <span class="kw">in</span> df.columns])</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    df_long <span class="op">=</span> df_small.melt(</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>        id_vars<span class="op">=</span>[<span class="st">"Validator Address"</span>, <span class="st">"Timestamp_dt"</span>],</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        value_vars<span class="op">=</span>confidence_cols,</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>        variable_name<span class="op">=</span><span class="st">"confidence_col"</span>,</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        value_name<span class="op">=</span><span class="st">"confidence_val"</span>,</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    lf_long <span class="op">=</span> df_long.lazy()</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    grouped_basic <span class="op">=</span> lf_long.group_by([<span class="st">"Validator Address"</span>]).agg(</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        [</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>            pl.count(<span class="st">"confidence_val"</span>).alias(<span class="st">"count_rows"</span>),</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>            pl.<span class="bu">min</span>(<span class="st">"confidence_val"</span>).alias(<span class="st">"min_conf"</span>),</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>            pl.<span class="bu">max</span>(<span class="st">"confidence_val"</span>).alias(<span class="st">"max_conf"</span>),</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>            pl.mean(<span class="st">"confidence_val"</span>).alias(<span class="st">"mean_conf"</span>),</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>            pl.std(<span class="st">"confidence_val"</span>).alias(<span class="st">"std_conf"</span>),</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>            pl.n_unique(<span class="st">"confidence_val"</span>).alias(<span class="st">"distinct_values_count"</span>),</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>    df_basic <span class="op">=</span> grouped_basic.collect()</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>    freq_lf <span class="op">=</span> (</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>        lf_long.group_by([<span class="st">"Validator Address"</span>, <span class="st">"confidence_val"</span>])</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>        .agg(pl.count(<span class="st">"confidence_val"</span>).alias(<span class="st">"value_count"</span>))</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>        .sort(</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>            [<span class="st">"Validator Address"</span>, <span class="st">"value_count"</span>],</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>            descending<span class="op">=</span>[<span class="va">False</span>, <span class="va">True</span>],</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>    df_freq <span class="op">=</span> freq_lf.collect()</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> top_k_values_string(rows: <span class="bu">list</span>, k: <span class="bu">int</span>):</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a><span class="co">        Return a string with format: val(count), val2(count2), ...</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a><span class="co">        e.g. '0(14), 35(5), 100(3)'</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>        parts <span class="op">=</span> []</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> r <span class="kw">in</span> rows[:k]:</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>            cval <span class="op">=</span> r[<span class="st">"confidence_val"</span>]</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>            count_ <span class="op">=</span> r[<span class="st">"value_count"</span>]</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> cval <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>                val_str <span class="op">=</span> <span class="st">"null"</span></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>                val_str <span class="op">=</span> <span class="bu">str</span>(<span class="bu">int</span>(cval))</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>            parts.append(<span class="ss">f"</span><span class="sc">{</span>val_str<span class="sc">}</span><span class="ss">(</span><span class="sc">{</span>count_<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">", "</span>.join(parts)</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> top_k_values_list(rows: <span class="bu">list</span>, k: <span class="bu">int</span>):</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a><span class="co">        Return just the numeric confidence values in the top k, ignoring their counts.</span></span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> []</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> r <span class="kw">in</span> rows[:k]:</span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>            cval <span class="op">=</span> r[<span class="st">"confidence_val"</span>]</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> cval <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>                out.append(<span class="bu">int</span>(cval))</span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> out</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>    validator_map <span class="op">=</span> {}</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>    freq_dicts <span class="op">=</span> df_freq.to_dicts()</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> key, group <span class="kw">in</span> groupby(freq_dicts, key<span class="op">=</span><span class="kw">lambda</span> d: d[<span class="st">"Validator Address"</span>]):</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>        group_list <span class="op">=</span> <span class="bu">list</span>(group)</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>        group_list_sorted <span class="op">=</span> <span class="bu">sorted</span>(</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>            group_list, key<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="st">"value_count"</span>], reverse<span class="op">=</span><span class="va">True</span></span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>        freq_str <span class="op">=</span> top_k_values_string(group_list_sorted, top_k_freq)</span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>        freq_list <span class="op">=</span> top_k_values_list(group_list_sorted, top_k_freq)</span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>        validator_map[key] <span class="op">=</span> {<span class="st">"freq_str"</span>: freq_str, <span class="st">"freq_list"</span>: freq_list}</span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>    df_freq_map <span class="op">=</span> pl.DataFrame(</span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Validator Address"</span>: <span class="bu">list</span>(validator_map.keys()),</span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>            <span class="st">"top_freq_values_str"</span>: [v[<span class="st">"freq_str"</span>] <span class="cf">for</span> v <span class="kw">in</span> validator_map.values()],</span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>            <span class="st">"top_freq_values_list"</span>: [v[<span class="st">"freq_list"</span>] <span class="cf">for</span> v <span class="kw">in</span> validator_map.values()],</span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>    df_merged <span class="op">=</span> df_basic.join(</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>        df_freq_map, on<span class="op">=</span>[<span class="st">"Validator Address"</span>], how<span class="op">=</span><span class="st">"left"</span></span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>    df_merged <span class="op">=</span> df_merged.with_columns(</span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>        [</span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"max_conf"</span>) <span class="op">==</span> pl.col(<span class="st">"min_conf"</span>)).alias(<span class="st">"zero_variation"</span>),</span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"distinct_values_count"</span>) <span class="op">==</span> <span class="dv">1</span>).alias(<span class="st">"only_one_value"</span>),</span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"top_freq_values_list"</span>).<span class="bu">list</span>.contains(<span class="dv">0</span>).alias(<span class="st">"has_zero_conf"</span>),</span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df_merged.sort([<span class="st">"Validator Address"</span>])</span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> check_confidence_vs_price_correlation(</span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>    df: pl.DataFrame, fx_pairs: List[<span class="bu">str</span>], autonity_pairs: List[<span class="bu">str</span>]</span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> pl.DataFrame:</span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a><span class="co">    Measures how well Confidence tracks price changes (absolute difference from previous submission).</span></span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a><span class="co">    Note: This still checks each 'Price' column vs. its corresponding 'Confidence' column.</span></span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>    df_local <span class="op">=</span> df.clone()</span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a>    price_cols <span class="op">=</span> fx_pairs <span class="op">+</span> autonity_pairs</span>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>    new_cols <span class="op">=</span> []</span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> price_cols:</span>
+<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>        decimal_col <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">" Price Decimal"</span>)</span>
+<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a>        new_cols.append((pl.col(pc).cast(pl.Float64) <span class="op">/</span> <span class="fl">1e18</span>).alias(decimal_col))</span>
+<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>    df_local <span class="op">=</span> df_local.with_columns(new_cols)</span>
+<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>    results_rows <span class="op">=</span> []</span>
+<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> base_name(price_col: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> price_col.replace(<span class="st">" Price"</span>, <span class="st">""</span>)</span>
+<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> price_cols:</span>
+<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a>        conf_col <span class="op">=</span> pc.replace(<span class="st">"Price"</span>, <span class="st">"Confidence"</span>).strip()</span>
+<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">" Price Decimal"</span>)</span>
+<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>        pair_lbl <span class="op">=</span> base_name(pc)</span>
+<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> conf_col <span class="kw">not</span> <span class="kw">in</span> df_local.columns <span class="kw">or</span> dec_col <span class="kw">not</span> <span class="kw">in</span> df_local.columns:</span>
+<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a>        df_pair <span class="op">=</span> (</span>
+<span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a>            df_local</span>
+<span id="cb2-185"><a href="#cb2-185" aria-hidden="true" tabindex="-1"></a>            .select([<span class="st">"Validator Address"</span>, <span class="st">"Timestamp_dt"</span>, dec_col, conf_col])</span>
+<span id="cb2-186"><a href="#cb2-186" aria-hidden="true" tabindex="-1"></a>            .<span class="bu">filter</span>(pl.col(dec_col).is_not_null() <span class="op">&amp;</span> pl.col(conf_col).is_not_null())</span>
+<span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a>            .sort([<span class="st">"Validator Address"</span>, <span class="st">"Timestamp_dt"</span>])</span>
+<span id="cb2-188"><a href="#cb2-188" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-189"><a href="#cb2-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-190"><a href="#cb2-190" aria-hidden="true" tabindex="-1"></a>        df_pair <span class="op">=</span> df_pair.with_columns(</span>
+<span id="cb2-191"><a href="#cb2-191" aria-hidden="true" tabindex="-1"></a>            (pl.col(dec_col) <span class="op">-</span> pl.col(dec_col).shift(<span class="dv">1</span>))</span>
+<span id="cb2-192"><a href="#cb2-192" aria-hidden="true" tabindex="-1"></a>            .over(<span class="st">"Validator Address"</span>)</span>
+<span id="cb2-193"><a href="#cb2-193" aria-hidden="true" tabindex="-1"></a>            .<span class="bu">abs</span>()</span>
+<span id="cb2-194"><a href="#cb2-194" aria-hidden="true" tabindex="-1"></a>            .alias(<span class="st">"abs_price_change"</span>)</span>
+<span id="cb2-195"><a href="#cb2-195" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-196"><a href="#cb2-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-197"><a href="#cb2-197" aria-hidden="true" tabindex="-1"></a>        lf_cor <span class="op">=</span> (</span>
+<span id="cb2-198"><a href="#cb2-198" aria-hidden="true" tabindex="-1"></a>            df_pair.lazy()</span>
+<span id="cb2-199"><a href="#cb2-199" aria-hidden="true" tabindex="-1"></a>            .group_by(<span class="st">"Validator Address"</span>)</span>
+<span id="cb2-200"><a href="#cb2-200" aria-hidden="true" tabindex="-1"></a>            .agg(</span>
+<span id="cb2-201"><a href="#cb2-201" aria-hidden="true" tabindex="-1"></a>                [</span>
+<span id="cb2-202"><a href="#cb2-202" aria-hidden="true" tabindex="-1"></a>                    pl.col(<span class="st">"abs_price_change"</span>).alias(<span class="st">"price_change_list"</span>),</span>
+<span id="cb2-203"><a href="#cb2-203" aria-hidden="true" tabindex="-1"></a>                    pl.col(conf_col).alias(<span class="st">"confidence_list"</span>),</span>
+<span id="cb2-204"><a href="#cb2-204" aria-hidden="true" tabindex="-1"></a>                ]</span>
+<span id="cb2-205"><a href="#cb2-205" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-206"><a href="#cb2-206" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-207"><a href="#cb2-207" aria-hidden="true" tabindex="-1"></a>        local_rows <span class="op">=</span> lf_cor.collect().to_dicts()</span>
+<span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> row <span class="kw">in</span> local_rows:</span>
+<span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a>            validator <span class="op">=</span> row[<span class="st">"Validator Address"</span>]</span>
+<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a>            pc_list <span class="op">=</span> row[<span class="st">"price_change_list"</span>]</span>
+<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>            conf_list <span class="op">=</span> row[<span class="st">"confidence_list"</span>]</span>
+<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="bu">len</span>(pc_list) <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a>                corr_val <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a>                corr_val <span class="op">=</span> pearson_correlation(pc_list, conf_list)</span>
+<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a>            results_rows.append(</span>
+<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a>                {</span>
+<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Validator Address"</span>: validator,</span>
+<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"pair_label"</span>: pair_lbl,</span>
+<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"corr_conf_price_change"</span>: corr_val,</span>
+<span id="cb2-223"><a href="#cb2-223" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"num_points"</span>: <span class="bu">len</span>(pc_list),</span>
+<span id="cb2-224"><a href="#cb2-224" aria-hidden="true" tabindex="-1"></a>                }</span>
+<span id="cb2-225"><a href="#cb2-225" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-226"><a href="#cb2-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-227"><a href="#cb2-227" aria-hidden="true" tabindex="-1"></a>    df_corr <span class="op">=</span> pl.DataFrame(results_rows)</span>
+<span id="cb2-228"><a href="#cb2-228" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df_corr.sort([<span class="st">"pair_label"</span>, <span class="st">"Validator Address"</span>])</span>
+<span id="cb2-229"><a href="#cb2-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-230"><a href="#cb2-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-231"><a href="#cb2-231" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pearson_correlation(xs, ys):</span>
+<span id="cb2-232"><a href="#cb2-232" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-233"><a href="#cb2-233" aria-hidden="true" tabindex="-1"></a><span class="co">    Computes Pearson correlation between two lists of floats.</span></span>
+<span id="cb2-234"><a href="#cb2-234" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-235"><a href="#cb2-235" aria-hidden="true" tabindex="-1"></a>    clean_data <span class="op">=</span> [</span>
+<span id="cb2-236"><a href="#cb2-236" aria-hidden="true" tabindex="-1"></a>        (x, y)</span>
+<span id="cb2-237"><a href="#cb2-237" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (x, y) <span class="kw">in</span> <span class="bu">zip</span>(xs, ys)</span>
+<span id="cb2-238"><a href="#cb2-238" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (x <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> y <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="kw">not</span> math.isnan(x) <span class="kw">and</span> <span class="kw">not</span> math.isnan(y))</span>
+<span id="cb2-239"><a href="#cb2-239" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb2-240"><a href="#cb2-240" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(clean_data) <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb2-241"><a href="#cb2-241" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb2-242"><a href="#cb2-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-243"><a href="#cb2-243" aria-hidden="true" tabindex="-1"></a>    xs_clean, ys_clean <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>clean_data)</span>
+<span id="cb2-244"><a href="#cb2-244" aria-hidden="true" tabindex="-1"></a>    mean_x <span class="op">=</span> statistics.mean(xs_clean)</span>
+<span id="cb2-245"><a href="#cb2-245" aria-hidden="true" tabindex="-1"></a>    mean_y <span class="op">=</span> statistics.mean(ys_clean)</span>
+<span id="cb2-246"><a href="#cb2-246" aria-hidden="true" tabindex="-1"></a>    num <span class="op">=</span> <span class="bu">sum</span>((x <span class="op">-</span> mean_x) <span class="op">*</span> (y <span class="op">-</span> mean_y) <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(xs_clean, ys_clean))</span>
+<span id="cb2-247"><a href="#cb2-247" aria-hidden="true" tabindex="-1"></a>    den_x <span class="op">=</span> math.sqrt(<span class="bu">sum</span>((x <span class="op">-</span> mean_x) <span class="op">**</span> <span class="dv">2</span> <span class="cf">for</span> x <span class="kw">in</span> xs_clean))</span>
+<span id="cb2-248"><a href="#cb2-248" aria-hidden="true" tabindex="-1"></a>    den_y <span class="op">=</span> math.sqrt(<span class="bu">sum</span>((y <span class="op">-</span> mean_y) <span class="op">**</span> <span class="dv">2</span> <span class="cf">for</span> y <span class="kw">in</span> ys_clean))</span>
+<span id="cb2-249"><a href="#cb2-249" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> den_x <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> den_y <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb2-250"><a href="#cb2-250" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb2-251"><a href="#cb2-251" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> num <span class="op">/</span> (den_x <span class="op">*</span> den_y)</span>
+<span id="cb2-252"><a href="#cb2-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-253"><a href="#cb2-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-254"><a href="#cb2-254" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> analyze_confidence_value_anomalies(</span>
+<span id="cb2-255"><a href="#cb2-255" aria-hidden="true" tabindex="-1"></a>    submission_glob: <span class="bu">str</span>, fx_pairs: List[<span class="bu">str</span>], autonity_pairs: List[<span class="bu">str</span>]</span>
+<span id="cb2-256"><a href="#cb2-256" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb2-257"><a href="#cb2-257" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-258"><a href="#cb2-258" aria-hidden="true" tabindex="-1"></a><span class="co">    Main analysis function.</span></span>
+<span id="cb2-259"><a href="#cb2-259" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-260"><a href="#cb2-260" aria-hidden="true" tabindex="-1"></a>    df_all <span class="op">=</span> load_and_preprocess_submissions(submission_glob)</span>
+<span id="cb2-261"><a href="#cb2-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-262"><a href="#cb2-262" aria-hidden="true" tabindex="-1"></a>    conf_cols <span class="op">=</span> list_confidence_columns(df_all)</span>
+<span id="cb2-263"><a href="#cb2-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-264"><a href="#cb2-264" aria-hidden="true" tabindex="-1"></a>    df_conf_dist <span class="op">=</span> confidence_distribution_by_validator(</span>
+<span id="cb2-265"><a href="#cb2-265" aria-hidden="true" tabindex="-1"></a>        df_all, conf_cols, top_k_freq<span class="op">=</span><span class="dv">3</span></span>
+<span id="cb2-266"><a href="#cb2-266" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-267"><a href="#cb2-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-268"><a href="#cb2-268" aria-hidden="true" tabindex="-1"></a>    df_anomalies <span class="op">=</span> df_conf_dist.<span class="bu">filter</span>(</span>
+<span id="cb2-269"><a href="#cb2-269" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"zero_variation"</span>) <span class="op">|</span> pl.col(<span class="st">"only_one_value"</span>)</span>
+<span id="cb2-270"><a href="#cb2-270" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-271"><a href="#cb2-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-272"><a href="#cb2-272" aria-hidden="true" tabindex="-1"></a>    df_corr <span class="op">=</span> check_confidence_vs_price_correlation(df_all, fx_pairs, autonity_pairs)</span>
+<span id="cb2-273"><a href="#cb2-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-274"><a href="#cb2-274" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb2-275"><a href="#cb2-275" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_confidence_distribution"</span>: df_conf_dist,</span>
+<span id="cb2-276"><a href="#cb2-276" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_confidence_anomalies"</span>: df_anomalies,</span>
+<span id="cb2-277"><a href="#cb2-277" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_correlation_price_change"</span>: df_corr,</span>
+<span id="cb2-278"><a href="#cb2-278" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="eaf8930b" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fx_price_cols <span class="op">=</span> [</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"AUD-USD Price"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CAD-USD Price"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EUR-USD Price"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"GBP-USD Price"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"JPY-USD Price"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SEK-USD Price"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>autonity_price_cols <span class="op">=</span> [</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ATN-USD Price"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NTN-USD Price"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NTN-ATN Price"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> analyze_confidence_value_anomalies(</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    submission_glob<span class="op">=</span><span class="st">"../submission-data/Oracle_Submission_*.csv"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    fx_pairs<span class="op">=</span>fx_price_cols,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    autonity_pairs<span class="op">=</span>autonity_price_cols,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+<section id="what-are-the-result" class="level3">
+<h3 class="anchored" data-anchor-id="what-are-the-result">5.4 What are the result?</h3>
+<p>Below directly reference results generated by the analysis.</p>
+<p><strong>Confidence Value Distribution</strong></p>
+<div id="51aa4f50" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"df_confidence_distribution"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (60, 12)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Validator Address</th>
+<th data-quarto-table-cell-role="th">count_rows</th>
+<th data-quarto-table-cell-role="th">min_conf</th>
+<th data-quarto-table-cell-role="th">max_conf</th>
+<th data-quarto-table-cell-role="th">mean_conf</th>
+<th data-quarto-table-cell-role="th">std_conf</th>
+<th data-quarto-table-cell-role="th">distinct_values_count</th>
+<th data-quarto-table-cell-role="th">top_freq_values_str</th>
+<th data-quarto-table-cell-role="th">top_freq_values_list</th>
+<th data-quarto-table-cell-role="th">zero_variation</th>
+<th data-quarto-table-cell-role="th">only_one_value</th>
+<th data-quarto-table-cell-role="th">has_zero_conf</th>
+</tr>
+<tr class="odd even">
+<th>str</th>
+<th>u32</th>
+<th>i64</th>
+<th>i64</th>
+<th>f64</th>
+<th>f64</th>
+<th>u32</th>
+<th>str</th>
+<th>list[i64]</th>
+<th>bool</th>
+<th>bool</th>
+<th>bool</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"0x00a96aaED75015Bb44cED878D927…</td>
+<td>25785</td>
+<td>90</td>
+<td>100</td>
+<td>99.902269</td>
+<td>0.983768</td>
+<td>3</td>
+<td>"100(25533), 90(252), null(0)"</td>
+<td>[100, 90]</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>"0x01F788E4371a70D579C178Ea7F48…</td>
+<td>25146</td>
+<td>90</td>
+<td>100</td>
+<td>99.904557</td>
+<td>0.972293</td>
+<td>3</td>
+<td>"100(24906), 90(240), null(0)"</td>
+<td>[100, 90]</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr class="odd">
+<td>"0x100E38f7BCEc53937BDd79ADE46F…</td>
+<td>0</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>1</td>
+<td>"null(0)"</td>
+<td>[]</td>
+<td>null</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>"0x1476A65D7B5739dE1805d5130441…</td>
+<td>22149</td>
+<td>100</td>
+<td>100</td>
+<td>100.0</td>
+<td>0.0</td>
+<td>2</td>
+<td>"100(22149), null(0)"</td>
+<td>[100]</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr class="odd">
+<td>"0x197B2c44b887c4aC01243BDE7E4b…</td>
+<td>25920</td>
+<td>90</td>
+<td>100</td>
+<td>99.902778</td>
+<td>0.981227</td>
+<td>2</td>
+<td>"100(25668), 90(252)"</td>
+<td>[100, 90]</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>"0xd625d50B0d087861c286d726eC51…</td>
+<td>0</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>1</td>
+<td>"null(0)"</td>
+<td>[]</td>
+<td>null</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>"0xdF239e0D5b4E6e820B0cFEF6972A…</td>
+<td>0</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>1</td>
+<td>"null(0)"</td>
+<td>[]</td>
+<td>null</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr class="odd">
+<td>"0xf10f56Bf0A28E0737c7e6bB0aF92…</td>
+<td>25920</td>
+<td>90</td>
+<td>100</td>
+<td>99.902778</td>
+<td>0.981227</td>
+<td>2</td>
+<td>"100(25668), 90(252)"</td>
+<td>[100, 90]</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>"0xf34CD6c09a59d7D3d1a6C3dC231a…</td>
+<td>25092</td>
+<td>100</td>
+<td>100</td>
+<td>100.0</td>
+<td>0.0</td>
+<td>2</td>
+<td>"100(25092), null(0)"</td>
+<td>[100]</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr class="odd">
+<td>"0xfD97FB8835d25740A2Da27c69762…</td>
+<td>25920</td>
+<td>90</td>
+<td>100</td>
+<td>99.902778</td>
+<td>0.981227</td>
+<td>2</td>
+<td>"100(25668), 90(252)"</td>
+<td>[100, 90]</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<ul>
+<li>Key indicators:
+<ul>
+<li><strong>Mean/std</strong>: Low or zero standard deviation indicates fixed or rarely-changing confidence.</li>
+<li><strong>Distinct values count</strong>: Few distinct values may indicate hard-coded or rarely adjusted confidence.</li>
+</ul></li>
+</ul>
+<p><strong>Identified Anomalies (Zero or Single-Value Confidence)</strong></p>
+<div id="8a8331e1" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"df_confidence_anomalies"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (11, 12)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Validator Address</th>
+<th data-quarto-table-cell-role="th">count_rows</th>
+<th data-quarto-table-cell-role="th">min_conf</th>
+<th data-quarto-table-cell-role="th">max_conf</th>
+<th data-quarto-table-cell-role="th">mean_conf</th>
+<th data-quarto-table-cell-role="th">std_conf</th>
+<th data-quarto-table-cell-role="th">distinct_values_count</th>
+<th data-quarto-table-cell-role="th">top_freq_values_str</th>
+<th data-quarto-table-cell-role="th">top_freq_values_list</th>
+<th data-quarto-table-cell-role="th">zero_variation</th>
+<th data-quarto-table-cell-role="th">only_one_value</th>
+<th data-quarto-table-cell-role="th">has_zero_conf</th>
+</tr>
+<tr class="odd even">
+<th>str</th>
+<th>u32</th>
+<th>i64</th>
+<th>i64</th>
+<th>f64</th>
+<th>f64</th>
+<th>u32</th>
+<th>str</th>
+<th>list[i64]</th>
+<th>bool</th>
+<th>bool</th>
+<th>bool</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"0x100E38f7BCEc53937BDd79ADE46F…</td>
+<td>0</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>1</td>
+<td>"null(0)"</td>
+<td>[]</td>
+<td>null</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>"0x1476A65D7B5739dE1805d5130441…</td>
+<td>22149</td>
+<td>100</td>
+<td>100</td>
+<td>100.0</td>
+<td>0.0</td>
+<td>2</td>
+<td>"100(22149), null(0)"</td>
+<td>[100]</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr class="odd">
+<td>"0x26E2724dBD14Fbd52be430B97043…</td>
+<td>0</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>1</td>
+<td>"null(0)"</td>
+<td>[]</td>
+<td>null</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>"0x383A3c437d3F12f60E5fC9901194…</td>
+<td>25920</td>
+<td>100</td>
+<td>100</td>
+<td>100.0</td>
+<td>0.0</td>
+<td>1</td>
+<td>"100(25920)"</td>
+<td>[100]</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr class="odd">
+<td>"0x3fe573552E14a0FC11Da25E43Fef…</td>
+<td>0</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>1</td>
+<td>"null(0)"</td>
+<td>[]</td>
+<td>null</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>"0xDF2D0052ea56A860443039619f6D…</td>
+<td>25902</td>
+<td>100</td>
+<td>100</td>
+<td>100.0</td>
+<td>0.0</td>
+<td>2</td>
+<td>"100(25902), null(0)"</td>
+<td>[100]</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>"0xcdEed21b471b0Dc54faF74480A0E…</td>
+<td>25920</td>
+<td>100</td>
+<td>100</td>
+<td>100.0</td>
+<td>0.0</td>
+<td>1</td>
+<td>"100(25920)"</td>
+<td>[100]</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr class="odd">
+<td>"0xd625d50B0d087861c286d726eC51…</td>
+<td>0</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>1</td>
+<td>"null(0)"</td>
+<td>[]</td>
+<td>null</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>"0xdF239e0D5b4E6e820B0cFEF6972A…</td>
+<td>0</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>1</td>
+<td>"null(0)"</td>
+<td>[]</td>
+<td>null</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr class="odd">
+<td>"0xf34CD6c09a59d7D3d1a6C3dC231a…</td>
+<td>25092</td>
+<td>100</td>
+<td>100</td>
+<td>100.0</td>
+<td>0.0</td>
+<td>2</td>
+<td>"100(25092), null(0)"</td>
+<td>[100]</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<ul>
+<li>Rows indicate validators consistently providing identical confidence, suggesting potential misconfiguration or logic errors.</li>
+</ul>
+<p><strong>Correlation Between Confidence and Price Changes</strong></p>
+<div id="3f38ab14" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"df_correlation_price_change"</span>].<span class="bu">filter</span>(pl.col(<span class="st">"num_points"</span>) <span class="op">&gt;</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (495, 4)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Validator Address</th>
+<th data-quarto-table-cell-role="th">pair_label</th>
+<th data-quarto-table-cell-role="th">corr_conf_price_change</th>
+<th data-quarto-table-cell-role="th">num_points</th>
+</tr>
+<tr class="odd even">
+<th>str</th>
+<th>str</th>
+<th>f64</th>
+<th>i64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"0x00a96aaED75015Bb44cED878D927…</td>
+<td>"ATN-USD"</td>
+<td>null</td>
+<td>2865</td>
+</tr>
+<tr class="even">
+<td>"0x01F788E4371a70D579C178Ea7F48…</td>
+<td>"ATN-USD"</td>
+<td>null</td>
+<td>2794</td>
+</tr>
+<tr class="odd">
+<td>"0x1476A65D7B5739dE1805d5130441…</td>
+<td>"ATN-USD"</td>
+<td>null</td>
+<td>2461</td>
+</tr>
+<tr class="even">
+<td>"0x197B2c44b887c4aC01243BDE7E4b…</td>
+<td>"ATN-USD"</td>
+<td>null</td>
+<td>2880</td>
+</tr>
+<tr class="odd">
+<td>"0x19E356ebC20283fc74AF0BA4C179…</td>
+<td>"ATN-USD"</td>
+<td>null</td>
+<td>2786</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>"0xcf716b3930d7cf6f2ADAD90A27c3…</td>
+<td>"SEK-USD"</td>
+<td>0.006676</td>
+<td>2880</td>
+</tr>
+<tr class="even">
+<td>"0xd61a48b0e11B0Dc6b7Bd713B1012…</td>
+<td>"SEK-USD"</td>
+<td>null</td>
+<td>2866</td>
+</tr>
+<tr class="odd">
+<td>"0xf10f56Bf0A28E0737c7e6bB0aF92…</td>
+<td>"SEK-USD"</td>
+<td>0.00658</td>
+<td>2880</td>
+</tr>
+<tr class="even">
+<td>"0xf34CD6c09a59d7D3d1a6C3dC231a…</td>
+<td>"SEK-USD"</td>
+<td>null</td>
+<td>2788</td>
+</tr>
+<tr class="odd">
+<td>"0xfD97FB8835d25740A2Da27c69762…</td>
+<td>"SEK-USD"</td>
+<td>-0.112979</td>
+<td>2880</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Note: You may observe many <code>null</code> values in the <code>corr_conf_price_change</code> column. This can happen if a validator always provides the same confidence (zero variance in confidence values) or the price change for the given pair is often <code>0</code> or extremely small (zero variance in price).</p>
+<ul>
+<li>Correlation (<code>corr_conf_price_change</code>) near zero implies confidence metrics not aligned with real market volatility. Strong correlation (positive or negative) suggests meaningful responsiveness.</li>
+</ul>
+<p><strong>Interpretation of Results</strong></p>
+<div id="c8e63bdc" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_corr_fixed <span class="op">=</span> results[<span class="st">"df_correlation_price_change"</span>].with_columns(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"corr_conf_price_change"</span>).cast(pl.Float64)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>num_anomalies <span class="op">=</span> results[<span class="st">"df_confidence_anomalies"</span>].height</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Validators with fixed confidence values: </span><span class="sc">{</span>num_anomalies<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>low_corr_count <span class="op">=</span> df_corr_fixed.<span class="bu">filter</span>(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    (pl.col(<span class="st">"corr_conf_price_change"</span>).<span class="bu">abs</span>() <span class="op">&lt;</span> <span class="fl">0.1</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (pl.col(<span class="st">"corr_conf_price_change"</span>).is_not_null())</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>).height</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of validator-currency pair combinations with low correlation (&lt;0.1): </span><span class="sc">{</span>low_corr_count<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> num_anomalies <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Identified validators with potentially hard-coded or fixed confidence values."</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"No significant anomalies in confidence values identified."</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> low_corr_count <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Confidence values for many validators do not adequately reflect market volatility."</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Confidence values generally align well with price changes."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Validators with fixed confidence values: 11
+Number of validator-currency pair combinations with low correlation (&lt;0.1): 143
+Identified validators with potentially hard-coded or fixed confidence values.
+Confidence values for many validators do not adequately reflect market volatility.</code></pre>
+</div>
+</div>
+<p><strong>List of all Validators and their Standard Deviations</strong></p>
+<div id="ee7633d0" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_variation_metrics(df: pl.DataFrame, confidence_cols: List[<span class="bu">str</span>]) <span class="op">-&gt;</span> pl.DataFrame:</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">    For each validator, compute:</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">      - min_conf, max_conf, mean_conf, std_conf</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">      - distinct_values_count, fraction_zero</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Keep relevant columns</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    keep_cols <span class="op">=</span> [<span class="st">"Validator Address"</span>, <span class="st">"Timestamp_dt"</span>] <span class="op">+</span> confidence_cols</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    df_small <span class="op">=</span> df.select([c <span class="cf">for</span> c <span class="kw">in</span> keep_cols <span class="cf">if</span> c <span class="kw">in</span> df.columns])</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Reshape into long form</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    df_long <span class="op">=</span> df_small.melt(</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        id_vars<span class="op">=</span>[<span class="st">"Validator Address"</span>, <span class="st">"Timestamp_dt"</span>],</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        value_vars<span class="op">=</span>confidence_cols,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        variable_name<span class="op">=</span><span class="st">"confidence_col"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        value_name<span class="op">=</span><span class="st">"confidence_val"</span>,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Group by validator only</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    metrics_lf <span class="op">=</span> (</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        df_long.lazy()</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        .group_by([<span class="st">"Validator Address"</span>])</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        .agg([</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>            pl.<span class="bu">min</span>(<span class="st">"confidence_val"</span>).alias(<span class="st">"min_conf"</span>),</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>            pl.<span class="bu">max</span>(<span class="st">"confidence_val"</span>).alias(<span class="st">"max_conf"</span>),</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>            pl.mean(<span class="st">"confidence_val"</span>).alias(<span class="st">"mean_conf"</span>),</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>            pl.std(<span class="st">"confidence_val"</span>).alias(<span class="st">"std_conf"</span>),</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>            pl.n_unique(<span class="st">"confidence_val"</span>).alias(<span class="st">"distinct_values_count"</span>),</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"confidence_val"</span>) <span class="op">==</span> <span class="dv">0</span>).<span class="bu">sum</span>().alias(<span class="st">"count_zero"</span>),</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>            pl.count(<span class="st">"confidence_val"</span>).alias(<span class="st">"count_total"</span>),</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>        ])</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        .with_columns([</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"count_zero"</span>) <span class="op">/</span> pl.col(<span class="st">"count_total"</span>)).alias(<span class="st">"fraction_zero"</span>)</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>        ])</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> metrics_lf.collect().sort([<span class="st">"Validator Address"</span>])</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>df_all_variation <span class="op">=</span> load_and_preprocess_submissions(<span class="st">"../submission-data/Oracle_Submission_*.csv"</span>)</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>all_conf_cols <span class="op">=</span> list_confidence_columns(df_all_variation)</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>df_variation_metrics <span class="op">=</span> compute_variation_metrics(df_all_variation, all_conf_cols)</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>df_variation_metrics <span class="op">=</span> df_variation_metrics.sort(<span class="st">"std_conf"</span>, descending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> df_variation_metrics.to_dicts():</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>    mean_conf <span class="op">=</span> row[<span class="st">'mean_conf'</span>]</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> mean_conf <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>        mean_conf <span class="op">=</span> <span class="st">"0"</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>        mean_conf <span class="op">=</span> <span class="bu">round</span>(mean_conf, <span class="dv">1</span>)</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>    std_conf <span class="op">=</span> row[<span class="st">'std_conf'</span>]</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> std_conf <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>        std_conf <span class="op">=</span> <span class="st">"0"</span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>        std_conf <span class="op">=</span> <span class="bu">round</span>(std_conf, <span class="dv">1</span>)</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"Validator </span><span class="sc">{</span>row[<span class="st">'Validator Address'</span>]<span class="sc">}</span><span class="ss">: "</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"min_conf=</span><span class="sc">{</span>row[<span class="st">'min_conf'</span>]<span class="sc">}</span><span class="ss">, "</span></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"max_conf=</span><span class="sc">{</span>row[<span class="st">'max_conf'</span>]<span class="sc">}</span><span class="ss">, "</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"mean_conf=</span><span class="sc">{</span>mean_conf<span class="sc">}</span><span class="ss">, "</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"std_conf=</span><span class="sc">{</span>std_conf<span class="sc">}</span><span class="ss">, "</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Validator 0x100E38f7BCEc53937BDd79ADE46F34362470577B: min_conf=None, max_conf=None, mean_conf=0, std_conf=0, 
+Validator 0x26E2724dBD14Fbd52be430B97043AA4c83F05852: min_conf=None, max_conf=None, mean_conf=0, std_conf=0, 
+Validator 0x3fe573552E14a0FC11Da25E43Fef11e16a785068: min_conf=None, max_conf=None, mean_conf=0, std_conf=0, 
+Validator 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357: min_conf=None, max_conf=None, mean_conf=0, std_conf=0, 
+Validator 0xdF239e0D5b4E6e820B0cFEF6972A90893c2073AB: min_conf=None, max_conf=None, mean_conf=0, std_conf=0, 
+Validator 0x1476A65D7B5739dE1805d5130441A94022Ee49fe: min_conf=100, max_conf=100, mean_conf=100.0, std_conf=0.0, 
+Validator 0x383A3c437d3F12f60E5fC990119468D3561EfBfc: min_conf=100, max_conf=100, mean_conf=100.0, std_conf=0.0, 
+Validator 0x6747c02DE7eb2099265e55715Ba2E03e8563D051: min_conf=100, max_conf=100, mean_conf=100.0, std_conf=0.0, 
+Validator 0xDF2D0052ea56A860443039619f6DAe4434bc0Ac4: min_conf=100, max_conf=100, mean_conf=100.0, std_conf=0.0, 
+Validator 0xcdEed21b471b0Dc54faF74480A0E700fCc42a7b6: min_conf=100, max_conf=100, mean_conf=100.0, std_conf=0.0, 
+Validator 0xf34CD6c09a59d7D3d1a6C3dC231a7834E5615D6A: min_conf=100, max_conf=100, mean_conf=100.0, std_conf=0.0, 
+Validator 0x01F788E4371a70D579C178Ea7F48E04e8B2CD743: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x19E356ebC20283fc74AF0BA4C179502A1F62fA7B: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0xbfDcAF35f52F9ef423ac8F2621F9eef8be6dEd17: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x2928FE5b911BCAf837cAd93eB9626E86a189f1dd: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x4cD134001EEF0843B9c69Ba9569d11fDcF4bd495: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x197B2c44b887c4aC01243BDE7E4bBa8bd95BC3a8: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x23b4Be9536F93b8D550214912fD0e38417Ff7209: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x24915749B793375a8C93090AF19928aFF1CAEcb6: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x358488a4EdCA493FCD87610dcd50c62c8A3Dd658: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x5603caFE3313D0cf56Fd4bE4A2f606dD6E43F8Eb: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x59031767f20EA8F4a3d90d33aB0DAA2ca469Fd9a: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x64F83c2538A646A550Ad9bEEb63427a377359DEE: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x791A7F840ac11841cCB0FaA968B2e3a0Db930fCe: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x99E2B4B27BDe92b42D04B6CF302cF564D2C13b74: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x9C7dAABb5101623340C925CFD6fF74088ff5672e: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0xC1F9acAF1824F6C906b35A0D2584D6E25077C7f5: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0xD9fDab408dF7Ae751691BeC2efE3b713ba3f9C36: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0xcf716b3930d7cf6f2ADAD90A27c39fDc9D643BBd: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0xf10f56Bf0A28E0737c7e6bB0aF92f3DDad34aE6a: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0xfD97FB8835d25740A2Da27c69762D74F6A931858: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x8584A78A9b94f332A34BBf24D2AF83367Da31894: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x984A46Ec685Bb41A7BBb2bc39f80C78410ff4057: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x00a96aaED75015Bb44cED878D927dcb15ec1FF54: min_conf=90, max_conf=100, mean_conf=99.9, std_conf=1.0, 
+Validator 0x36142A4f36974e2935192A1111C39330aA296D3C: min_conf=90, max_conf=100, mean_conf=93.3, std_conf=4.7, 
+Validator 0x718361fc3637199F24a2437331677D6B89a40519: min_conf=90, max_conf=100, mean_conf=93.3, std_conf=4.7, 
+Validator 0x94d28f08Ff81A80f4716C0a8EfC6CAC2Ec74d09E: min_conf=90, max_conf=100, mean_conf=93.3, std_conf=4.7, 
+Validator 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3: min_conf=90, max_conf=100, mean_conf=93.3, std_conf=4.7, 
+Validator 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775: min_conf=90, max_conf=100, mean_conf=93.3, std_conf=4.7, 
+Validator 0x6a395dE946c0493157404E2b1947493c633f569E: min_conf=90, max_conf=100, mean_conf=93.3, std_conf=4.7, 
+Validator 0xF9B38D02959379d43C764064dE201324d5e12931: min_conf=70, max_conf=100, mean_conf=93.1, std_conf=5.2, 
+Validator 0xBE287C82A786218E008FF97320b08244BE4A282c: min_conf=70, max_conf=100, mean_conf=93.1, std_conf=5.2, 
+Validator 0x7232e75a8bFd8c9ab002BB3A00eAa885BC72A6dd: min_conf=70, max_conf=100, mean_conf=93.1, std_conf=5.2, 
+Validator 0x3AaF7817618728ffEF81898E11A3171C33faAE41: min_conf=70, max_conf=100, mean_conf=93.1, std_conf=5.2, 
+Validator 0x5E17e837DcBa2728C94f95c38fA8a47CB9C8818F: min_conf=70, max_conf=100, mean_conf=93.1, std_conf=5.2, 
+Validator 0x1Be7f70BCf8393a7e4A5BcC66F6f15d6e35cfBBC: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0x22A76e194A49c9e5508Cd4A3E1cD555D088ECB08: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0x527192F3D2408C84087607b7feE1d0f907821E17: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0x551f3300FCFE0e392178b3542c009948008B2a9F: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0x9d28e40E9Ec4789f9A0D17e421F76D8D0868EA44: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0xBBf36374eb23968F25aecAEbb97BF3118f3c2fEC: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0xDCA5DFF3D42f2db3C18dBE823380A0A81db49A7E: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0xE4686A4C6E63A8ab51B458c52EB779AEcf0B74f7: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0x8f91e0ADF8065C3fFF92297267E02DF32C2978FF: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0xEf0Ba5e345C2C3937df5667A870Aae5105CAa3a5: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0xd61a48b0e11B0Dc6b7Bd713B1012563c52591BAA: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, 
+Validator 0x831B837C3DA1B6c2AB68a690206bDfF368877E19: min_conf=50, max_conf=100, mean_conf=66.7, std_conf=23.6, </code></pre>
+</div>
+</div>
+<p>Please note, <code>min_conf</code>, <code>max_conf</code>, <code>mean_conf</code> and <code>std_conf</code> are the minimum, maximum, mean and standard deviation of the confidence values this validator provided across all submissions.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

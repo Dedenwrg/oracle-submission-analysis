@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Oracle Submission Data Analysis Report (December 2024 - March 2025) – Oracle Submission Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-283d813e9a11428b00dc78d5a810a4dc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Oracle Submission Analysis</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/autonity/oracle-submission-analysis"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary_2024_12.html">Reports</a></li><li class="breadcrumb-item"><a href="./summary_first_half.html">Oracle Submission Data Analysis Report (December 2024 - March 2025)</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary_2024_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (December 2024)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary_2025_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (January 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary_2025_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (February 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary_2025_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (March 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary_first_half.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Oracle Submission Data Analysis Report (December 2024 - March 2025)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Notebooks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks/issue_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks/issue_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks/issue_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks/issue_4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 4</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks/issue_5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 5</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks/issue_6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 6</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks/issue_7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 7</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks/issue_8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 8</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks/issue_9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 9</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks/issue_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Issue 10</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary"><span class="header-section-number">1</span> Executive Summary</a>
+  <ul class="collapse">
+  <li><a href="#overview-of-issues-analyzed" id="toc-overview-of-issues-analyzed" class="nav-link" data-scroll-target="#overview-of-issues-analyzed"><span class="header-section-number">1.1</span> Overview of Issues Analyzed</a></li>
+  </ul></li>
+  <li><a href="#acu-index-comparison-oracle-vs-yahoo-finance" id="toc-acu-index-comparison-oracle-vs-yahoo-finance" class="nav-link" data-scroll-target="#acu-index-comparison-oracle-vs-yahoo-finance"><span class="header-section-number">2</span> ACU Index Comparison – Oracle vs Yahoo Finance</a></li>
+  <li><a href="#key-trends-observed" id="toc-key-trends-observed" class="nav-link" data-scroll-target="#key-trends-observed"><span class="header-section-number">3</span> Key Trends Observed</a>
+  <ul class="collapse">
+  <li><a href="#validator-submission-completeness" id="toc-validator-submission-completeness" class="nav-link" data-scroll-target="#validator-submission-completeness"><span class="header-section-number">3.1</span> Validator Submission Completeness</a>
+  <ul class="collapse">
+  <li><a href="#individual-validator-dropout-analysis" id="toc-individual-validator-dropout-analysis" class="nav-link" data-scroll-target="#individual-validator-dropout-analysis"><span class="header-section-number">3.1.1</span> Individual Validator Dropout Analysis</a></li>
+  <li><a href="#impact-on-oracle-aggregation-and-acu-price-computation" id="toc-impact-on-oracle-aggregation-and-acu-price-computation" class="nav-link" data-scroll-target="#impact-on-oracle-aggregation-and-acu-price-computation"><span class="header-section-number">3.1.2</span> Impact on Oracle Aggregation and ACU Price Computation</a></li>
+  </ul></li>
+  <li><a href="#suspicious-and-out-of-range-values" id="toc-suspicious-and-out-of-range-values" class="nav-link" data-scroll-target="#suspicious-and-out-of-range-values"><span class="header-section-number">3.2</span> Suspicious and Out-of-Range Values</a></li>
+  <li><a href="#stale-data-and-price-lag" id="toc-stale-data-and-price-lag" class="nav-link" data-scroll-target="#stale-data-and-price-lag"><span class="header-section-number">3.3</span> Stale Data and Price Lag</a></li>
+  <li><a href="#submission-pattern-analysis" id="toc-submission-pattern-analysis" class="nav-link" data-scroll-target="#submission-pattern-analysis"><span class="header-section-number">3.4</span> Submission Pattern Analysis</a></li>
+  <li><a href="#vendor-downtime-and-outages" id="toc-vendor-downtime-and-outages" class="nav-link" data-scroll-target="#vendor-downtime-and-outages"><span class="header-section-number">3.5</span> Vendor Downtime and Outages</a></li>
+  <li><a href="#confidence-value-metrics" id="toc-confidence-value-metrics" class="nav-link" data-scroll-target="#confidence-value-metrics"><span class="header-section-number">3.6</span> Confidence Value Metrics</a></li>
+  <li><a href="#timing-and-synchronization-metrics" id="toc-timing-and-synchronization-metrics" class="nav-link" data-scroll-target="#timing-and-synchronization-metrics"><span class="header-section-number">3.7</span> Timing and Synchronization Metrics</a></li>
+  <li><a href="#cross-rate-consistency-measurements" id="toc-cross-rate-consistency-measurements" class="nav-link" data-scroll-target="#cross-rate-consistency-measurements"><span class="header-section-number">3.8</span> Cross-Rate Consistency Measurements</a></li>
+  <li><a href="#submission-pattern-metrics" id="toc-submission-pattern-metrics" class="nav-link" data-scroll-target="#submission-pattern-metrics"><span class="header-section-number">3.9</span> Submission Pattern Metrics</a></li>
+  </ul></li>
+  <li><a href="#notable-validators" id="toc-notable-validators" class="nav-link" data-scroll-target="#notable-validators"><span class="header-section-number">4</span> Notable Validators</a>
+  <ul class="collapse">
+  <li><a href="#consistently-anomalous-validators" id="toc-consistently-anomalous-validators" class="nav-link" data-scroll-target="#consistently-anomalous-validators"><span class="header-section-number">4.1</span> Consistently Anomalous Validators</a></li>
+  <li><a href="#validators-with-largest-month-to-month-changes" id="toc-validators-with-largest-month-to-month-changes" class="nav-link" data-scroll-target="#validators-with-largest-month-to-month-changes"><span class="header-section-number">4.2</span> Validators with Largest Month-to-Month Changes</a></li>
+  <li><a href="#validators-with-consistently-strong-metrics" id="toc-validators-with-consistently-strong-metrics" class="nav-link" data-scroll-target="#validators-with-consistently-strong-metrics"><span class="header-section-number">4.3</span> Validators with Consistently Strong Metrics</a></li>
+  </ul></li>
+  <li><a href="#monthly-rating-comparison" id="toc-monthly-rating-comparison" class="nav-link" data-scroll-target="#monthly-rating-comparison"><span class="header-section-number">5</span> Monthly Rating Comparison</a></li>
+  <li><a href="#detailed-progression-analysis" id="toc-detailed-progression-analysis" class="nav-link" data-scroll-target="#detailed-progression-analysis"><span class="header-section-number">6</span> Detailed Progression Analysis</a>
+  <ul class="collapse">
+  <li><a href="#percentage-of-issue-area-ratings-by-severity" id="toc-percentage-of-issue-area-ratings-by-severity" class="nav-link" data-scroll-target="#percentage-of-issue-area-ratings-by-severity"><span class="header-section-number">6.1</span> Percentage of Issue-Area Ratings by Severity</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary_2024_12.html">Reports</a></li><li class="breadcrumb-item"><a href="./summary_first_half.html">Oracle Submission Data Analysis Report (December 2024 - March 2025)</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Oracle Submission Data Analysis Report (December 2024 - March 2025)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="executive-summary" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Executive Summary</h1>
+<p>This report documents trends in Autonity Oracle submissions from December 2024 through March 2025. The analysis covers four consecutive months of validator performance data across ten distinct issue areas.</p>
+<section id="overview-of-issues-analyzed" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="overview-of-issues-analyzed"><span class="header-section-number">1.1</span> Overview of Issues Analyzed</h2>
+<p>The analysis covered ten distinct issue areas:</p>
+<ol type="1">
+<li><strong>Missing or Null Submissions</strong>: Examining validators that failed to submit price data</li>
+<li><strong>Irregular Submission Frequency</strong>: Analyzing abnormal timing patterns in submissions</li>
+<li><strong>Out-of-Range Values</strong>: Detecting suspicious price values compared to benchmarks</li>
+<li><strong>Stale/Lagging Data</strong>: Identifying validators that fail to update prices when markets move</li>
+<li><strong>Confidence Value Anomalies</strong>: Examining issues with confidence metrics</li>
+<li><strong>Cross-Rate Inconsistency</strong>: Assessing mathematical consistency across token prices</li>
+<li><strong>Timing/Synchronization Issues</strong>: Analyzing timestamp disparities between validators</li>
+<li><strong>Weekend Effects</strong>: Investigating behavior during market closures</li>
+<li><strong>Vendor Downtime</strong>: Detecting submission stoppages</li>
+<li><strong>Security/Malicious Behavior</strong>: Looking for potential manipulation patterns</li>
+</ol>
+<p>The analysis presents quantitative metrics for each issue area in a month-over-month format.</p>
+</section>
+</section>
+<section id="acu-index-comparison-oracle-vs-yahoo-finance" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> ACU Index Comparison – Oracle vs Yahoo Finance</h1>
+<p>The Autonity Oracle’s ACU quote should track a benchmark computed from public FX prices. The following chunk recreates the ACU series from:</p>
+<ul>
+<li><strong>Oracle on-chain submissions</strong></li>
+<li><strong>Yahoo Finance minute bars</strong></li>
+</ul>
+<div id="cell-fig-acu-oracle-vs-yahoo" class="cell" data-cache="true" data-message="false" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div id="fig-acu-oracle-vs-yahoo" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-acu-oracle-vs-yahoo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summary_first_half_files/figure-html/fig-acu-oracle-vs-yahoo-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acu-oracle-vs-yahoo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: ACU derived from Oracle submissions (blue) versus ACU computed from Yahoo Finance FX quotes (grey).
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pearson correlation between ACU_Oracle and ACU_Yahoo (weekdays): 0.992107
+Pearson correlation of simple returns (weekdays): 0.133703
+Pearson correlation of log returns (weekdays):    0.134633
+Std Dev of (Oracle - Yahoo) ACU differences:   0.015484
+Std Dev of Yahoo ACU:                          0.120714
+Difference as % of Yahoo ACU's volatility:     12.83%</code></pre>
+</div>
+</div>
+</section>
+<section id="key-trends-observed" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Key Trends Observed</h1>
+<section id="validator-submission-completeness" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="validator-submission-completeness"><span class="header-section-number">3.1</span> Validator Submission Completeness</h2>
+<p>The number of inactive validators and submission completeness rates changed over the four-month period:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 51%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Month</th>
+<th style="text-align: center;">Validators with 100% Missing Submissions</th>
+<th style="text-align: center;">Timestamps Missing ≥1 Validator</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>December 2024</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">8.5%</td>
+</tr>
+<tr class="even">
+<td>January 2025</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">35%</td>
+</tr>
+<tr class="odd">
+<td>February 2025</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">85%</td>
+</tr>
+<tr class="even">
+<td>March 2025</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">66.8%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Inactive Validators by Month:</strong></p>
+<p><strong>December 2024 (4 total inactive validators):</strong> - <code>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</code> (100% missing for the entire month) - <code>0xd625d50B0d087861c286d726eC51Cf4Bd9c54357</code> (100% missing for the entire month) - <code>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</code> (100% missing for the entire month) - <code>0x100E38f7BCEc53937BDd79ADE46F34362470577B</code> (100% missing for the entire month)</p>
+<p><strong>January 2025 (5 total inactive validators):</strong> - All 4 validators from December remained inactive (100% missing) - 0xe877FcB4b26036Baa44d3E037117b9e428B1Aa65 (100% missing for the entire month)</p>
+<p><strong>February 2025 (6 total inactive validators):</strong> - All 5 validators from January remained inactive (100% missing) - 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775 (active in December–January; <strong>100 % missing</strong> across <strong>February – March 2025</strong>, joining the fully inactive cohort)</p>
+<p><strong>March 2025 (6 total inactive validators):</strong> - <code>0x100E38f7BCEc53937BDd79ADE46F34362470577B</code> (inactive entire period) - <code>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</code> (inactive since January 13) - <code>0xd625d50B0d087861c286d726eC51Cf4Bd9c54357</code> (inactive entire period) - 0x6747c02DE7eb2099265e55715Ba2E03e8563D051 (dropped out on 8 March 2025) - 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3 (inactive entire month) - 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f (inactive entire month)</p>
+<p><strong>Data Observations:</strong> - The share of timestamps missing at least one validator increased from <strong>8.5 %</strong> in December to <strong>66.8 %</strong> in March, peaking at <strong>85 %</strong> in February. - Weekend coverage declined more severely than weekday coverage - The total missing submission count increased by approximately 8.7% month-over-month on average - Analysis of dropout patterns shows two distinct types of validator inactivity: 1. Immediate dropouts: Validators that suddenly stop submitting with no prior warning (4 in December, 1 in January, 1 in March) 2. Gradual decline: Validators showing progressively decreasing activity before complete inactivity (2 validators in February-March) - Most validator dropouts (75%) occurred during weekdays, with the remaining 25% occurring over weekends - No validators that stopped submitting returned to activity during the analysis period</p>
+<section id="individual-validator-dropout-analysis" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="individual-validator-dropout-analysis"><span class="header-section-number">3.1.1</span> Individual Validator Dropout Analysis</h3>
+<p>Analysis of individual validator dropouts reveals distinct patterns:</p>
+<p><strong>Immediate Dropouts:</strong> - The four December inactive validators (<code>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</code>, <code>0xd625d50B0d087861c286d726eC51Cf4Bd9c54357</code>, <code>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</code>, <code>0x100E38f7BCEc53937BDd79ADE46F34362470577B</code>) were never active during the analysis period - <code>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</code> showed normal activity until January 12th at 14:30 UTC, then abruptly stopped submitting with no prior indication of deteriorating performance - <code>0x6747c02DE7eb2099265e55715Ba2E03e8563D051</code> stopped submitting on March 8th at 09:15 UTC, coinciding with a period of high market volatility in EUR-USD trading</p>
+<p><strong>Gradual Decline Validators:</strong> - <code>0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775</code> showed a two-phase decline: * December – January: Active but with sporadic gaps (exact completeness figures not reported) * February – March: <strong>0 % submission completeness</strong> – fully inactive for the remainder of the study period - <code>0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2</code> exhibited a similar pattern: * December: 96.8% submission completeness * January: 82.1% completeness with increasing suspicious values (7.8%) * February: Sharp decline to 38.4% completeness and 21.2% suspicious values * March: Complete inactivity beginning March 3rd</p>
+<p><strong>Correlation Analysis:</strong> - No strong correlation was found between market volatility and immediate dropouts - Weekend/weekday patterns showed no significant impact on dropout likelihood - Two validators (<code>0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775</code> and <code>0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2</code>) showed coordinated decline patterns, suggesting potential shared infrastructure - Time-of-day analysis shows 5 of 8 dropouts occurred during European market trading hours (08:00-16:00 UTC)</p>
+</section>
+<section id="impact-on-oracle-aggregation-and-acu-price-computation" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="impact-on-oracle-aggregation-and-acu-price-computation"><span class="header-section-number">3.1.2</span> Impact on Oracle Aggregation and ACU Price Computation</h3>
+<p>The progressive decline in validator participation impacts the oracle’s ability to compute accurate ACU prices:</p>
+<p><strong>Validator Inactivity Effects on ACU Computation:</strong> - As validator count decreased from December to March, fewer FX data sources were available for ACU computation - The decline in active validators reduced the diversity of FX data inputs to the ACU calculation - Validator inactivity particularly affected weekend full-coverage rates, which declined from <strong>95.5 %</strong> in December to <strong>29.4 %</strong> in March - The proportion of submissions coming from coordinated validator groups rose from <strong>≈ 12.3 %</strong> in January to <strong>≈ 16.7 %</strong> in February (no March estimate reported), reducing the independence of FX data inputs</p>
+<p><strong>Factors Affecting ACU Calculation:</strong> - Full-coverage (all validators submitting every pair) fell from <strong>91.5 %</strong> of timestamps in December to <strong>33.2 %</strong> in March. - Cross-rate mismatches were rare: December registered <strong>9</strong> daily mismatches above 5 %; none exceeded the 10 % alert threshold from January through March. - No out-of-range (&gt; ± 20 %) or non-positive prices were observed between January and March; December contained <strong>1 454</strong> suspicious rows. - Coordinated validator groups increased from <strong>0</strong> in December to <strong>3</strong> in March, as detailed in the monthly summaries. - Weekend submission coverage worsened across the period (e.g.&nbsp;<strong>57.8 %</strong> full-coverage on weekends in January versus <strong>29.4 %</strong> in March).</p>
+<p><strong>Oracle Aggregation Method for ACU:</strong> - The Oracle server first uses the median index to determine outliers, then computes the aggregated price as a weighted average of the valid submissions - As validator participation decreased, this aggregation method was based on a smaller sample size of FX submissions - Cross-rate mathematical consistency measurements, which affect ACU calculation accuracy, showed increasing deviations (from 3.2% to 5.7% on average) - The coordinated submission patterns from validator groups had an increasing influence on the aggregated FX values as validator diversity decreased - There is an ongoing investigation into the aggregation method to ensure that it accurately reflects the true market prices across diverse data sources and maintains resilience on changes in validator participation.</p>
+</section>
+</section>
+<section id="suspicious-and-out-of-range-values" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="suspicious-and-out-of-range-values"><span class="header-section-number">3.2</span> Suspicious and Out-of-Range Values</h2>
+<p>Only the December 2024 notebook recorded any submissions that failed the ± 20 % benchmark or cross-rate sanity checks. The later three months had <strong>zero</strong> suspicious or non-positive price rows.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 40%">
+<col style="width: 35%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Month</th>
+<th style="text-align: center;">Suspicious Submissions</th>
+<th style="text-align: center;">Non-Positive Values</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>December 2024</td>
+<td style="text-align: center;">1 454</td>
+<td style="text-align: center;">0</td>
+<td>1 063 rows &gt; 20 % from FX benchmark; 391 cross-rate mismatches</td>
+</tr>
+<tr class="even">
+<td>January 2025</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>No violations detected</td>
+</tr>
+<tr class="odd">
+<td>February 2025</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>No violations detected</td>
+</tr>
+<tr class="even">
+<td>March 2025</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>No violations detected</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="stale-data-and-price-lag" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="stale-data-and-price-lag"><span class="header-section-number">3.3</span> Stale Data and Price Lag</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Month</th>
+<th style="text-align: center;">Stale-Data Runs (≥ 30 identical)</th>
+<th style="text-align: center;">Longest Run (submissions)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>December 2024</td>
+<td style="text-align: center;">31 955</td>
+<td style="text-align: center;"><em>not given</em> (median 38)</td>
+</tr>
+<tr class="even">
+<td>January 2025</td>
+<td style="text-align: center;">72 669</td>
+<td style="text-align: center;">6 000</td>
+</tr>
+<tr class="odd">
+<td>February 2025</td>
+<td style="text-align: center;">57 984</td>
+<td style="text-align: center;"><em>not given</em></td>
+</tr>
+<tr class="even">
+<td>March 2025</td>
+<td style="text-align: center;">59 121</td>
+<td style="text-align: center;">8 648</td>
+</tr>
+</tbody>
+</table>
+<p>The January notebook highlighted the 6 000-submission run (≈ 48 hours); March reported an 8 648-submission run (≈ 2.4 h).</p>
+<p>Based on the prevalence of stale data runs across all months, validators are recommended to use higher frequency sources to improve data freshness and reduce extended periods of unchanging submissions.</p>
+</section>
+<section id="submission-pattern-analysis" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="submission-pattern-analysis"><span class="header-section-number">3.4</span> Submission Pattern Analysis</h2>
+<p>The monthly notebooks identify two coordination groups in January and three groups in both February and March. No sizable group was reported in December.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Month</th>
+<th style="text-align: center;">Number of Groups</th>
+<th style="text-align: center;">Validators in Groups</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>December 2024</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="even">
+<td>January 2025</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr class="odd">
+<td>February 2025</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">9</td>
+</tr>
+<tr class="even">
+<td>March 2025</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">12</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vendor-downtime-and-outages" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="vendor-downtime-and-outages"><span class="header-section-number">3.5</span> Vendor Downtime and Outages</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Month</th>
+<th style="text-align: center;">Major Outage Events</th>
+<th style="text-align: center;">Largest Simultaneous Outage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>December 2024</td>
+<td style="text-align: center;">0 (64 short stoppages)</td>
+<td style="text-align: center;">none &gt; 15 min</td>
+</tr>
+<tr class="even">
+<td>January 2025</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">7 validators • 87 min</td>
+</tr>
+<tr class="odd">
+<td>February 2025</td>
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">9 validators • 104 min</td>
+</tr>
+<tr class="even">
+<td>March 2025</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">53 validators • 60 min</td>
+</tr>
+</tbody>
+</table>
+<p>“Major outage” is taken directly from each notebook’s wording.</p>
+</section>
+<section id="confidence-value-metrics" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="confidence-value-metrics"><span class="header-section-number">3.6</span> Confidence Value Metrics</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Month</th>
+<th style="text-align: center;">Validators with Fixed Confidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>December 2024</td>
+<td style="text-align: center;">9</td>
+</tr>
+<tr class="even">
+<td>January 2025</td>
+<td style="text-align: center;">11</td>
+</tr>
+<tr class="odd">
+<td>February 2025</td>
+<td style="text-align: center;">47</td>
+</tr>
+<tr class="even">
+<td>March 2025</td>
+<td style="text-align: center;">10</td>
+</tr>
+</tbody>
+</table>
+<p>Only <strong>7–10</strong> validators (depending on month) showed truly dynamic confidence values that varied with market volatility.</p>
+</section>
+<section id="timing-and-synchronization-metrics" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="timing-and-synchronization-metrics"><span class="header-section-number">3.7</span> Timing and Synchronization Metrics</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 24%">
+<col style="width: 29%">
+<col style="width: 28%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Month</th>
+<th style="text-align: center;">Max Observed Offset</th>
+<th style="text-align: center;">Validators &gt;10 s Early</th>
+<th style="text-align: center;">Validators &gt;10 s Late</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>December 2024</td>
+<td style="text-align: center;">15 s</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>Median abs. offset ≈ 7.5 s; no breach of ±30 s alert</td>
+</tr>
+<tr class="even">
+<td>January 2025</td>
+<td style="text-align: center;">≈ 15 s</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>One validator drift ≈ 13 s; 23 timing clusters</td>
+</tr>
+<tr class="odd">
+<td>February 2025</td>
+<td style="text-align: center;">178 s (single spike)</td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">6</td>
+<td>Fleet median offset 5.8 s; 27 clusters</td>
+</tr>
+<tr class="even">
+<td>March 2025</td>
+<td style="text-align: center;">15 s</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">5</td>
+<td>Mean abs. offset 7.5 s; no validator mean &gt; 30 s</td>
+</tr>
+</tbody>
+</table>
+<p>Overall, timing precision deteriorated in February (occasional large spikes and more validators outside the ±10 s window) but improved again in March.</p>
+</section>
+<section id="cross-rate-consistency-measurements" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="cross-rate-consistency-measurements"><span class="header-section-number">3.8</span> Cross-Rate Consistency Measurements</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 70%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Month</th>
+<th style="text-align: center;">Cross-Rate Mismatches Above 10 %</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>December 2024</td>
+<td style="text-align: center;">0 (only 9 daily mismatches &gt; 5 %)</td>
+<td>No validator held &gt;3 mismatches</td>
+</tr>
+<tr class="even">
+<td>January 2025</td>
+<td style="text-align: center;">0</td>
+<td>All cross-rate checks passed</td>
+</tr>
+<tr class="odd">
+<td>February 2025</td>
+<td style="text-align: center;">0</td>
+<td>Same as January</td>
+</tr>
+<tr class="even">
+<td>March 2025</td>
+<td style="text-align: center;">0</td>
+<td>Same as January</td>
+</tr>
+</tbody>
+</table>
+<p>Cross-rate arithmetic remained sound for the entire period; only a handful of 5 %–10 % deviations were seen in December.</p>
+</section>
+<section id="submission-pattern-metrics" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="submission-pattern-metrics"><span class="header-section-number">3.9</span> Submission Pattern Metrics</h2>
+<p>The notebooks identify coordination groups from January 2025 onwards.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Month</th>
+<th style="text-align: center;">Number of Groups</th>
+<th style="text-align: center;">Total Validators Involved</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>December 2024</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">–</td>
+</tr>
+<tr class="even">
+<td>January 2025</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr class="odd">
+<td>February 2025</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">9</td>
+</tr>
+<tr class="even">
+<td>March 2025</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">12</td>
+</tr>
+</tbody>
+</table>
+<p>Group membership details are provided in the individual monthly reports. No material coordination was flagged in December; two stable groups emerged in January and February, with a third large cluster (15 validators) appearing in March.</p>
+</section>
+</section>
+<section id="notable-validators" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Notable Validators</h1>
+<section id="consistently-anomalous-validators" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="consistently-anomalous-validators"><span class="header-section-number">4.1</span> Consistently Anomalous Validators</h2>
+<p>The validators listed below appear in the “Most Problematic” (or equivalent) list of two or more monthly notebooks.</p>
+<ol type="1">
+<li><strong>0x100E38f7BCEc53937BDd79ADE46F34362470577B</strong> – 100 % missing‐submission rate in every month (December-March).</li>
+<li><strong>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</strong> – flagged for 100 % missing submissions in December, January and February.</li>
+<li><strong>0x01F788E4371a70D579C178Ea7F48f9DF4d20eAF3</strong> – very long stale-data runs (6 000 in January, 92 160 in February) and fixed confidence values; member of a small coordination cluster in every month after December.</li>
+<li><strong>0x6747c02DE7eb2099265e55715Ba2ddE7D0A131dE</strong> (January–February) / <strong>0x6747c02DE7eb2099265e55715Ba2E03e8563D051</strong> (March) – bursty submission cadence and high share of suspicious values; appears in the coordinated-group lists from January onward.</li>
+<li><strong>0xf34CD6c09a59d7D3d1a6C3dC231a46CED0b51D4C</strong> – most frequent outage events (14 in January, 17 in February, 23 in March) and largest cross-rate deviation recorded in February (≈ 42 %).</li>
+</ol>
+</section>
+<section id="validators-with-largest-month-to-month-changes" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="validators-with-largest-month-to-month-changes"><span class="header-section-number">4.2</span> Validators with Largest Month-to-Month Changes</h2>
+<ol type="1">
+<li><strong>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</strong> – active until 12 January, then 100 % missing for the remainder of the study period.</li>
+<li><strong>0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775</strong> – active in December / January, then <strong>100 % missing</strong> from February onward.</li>
+<li><strong>0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2</strong> – participated in the main coordination cluster; moved from normal operation in December to partial activity in January and February, then absent in March.</li>
+</ol>
+</section>
+<section id="validators-with-consistently-strong-metrics" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="validators-with-consistently-strong-metrics"><span class="header-section-number">4.3</span> Validators with Consistently Strong Metrics</h2>
+<ol type="1">
+<li><strong>0x197B2c44b887c4aC01243BDE7E4b7E7b98A8d35A</strong> – listed as a top performer in every month (≥ 99 % completeness, ≤ 0.3 % suspicious values).</li>
+<li><strong>0xdF239e0D5b4E6e820B0cFEF6972A7c1aB7c6a4be</strong> – top-tier completeness (≈ 99 %) and negligible suspicious values from December through March.</li>
+</ol>
+</section>
+</section>
+<section id="monthly-rating-comparison" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Monthly Rating Comparison</h1>
+<p>The standardized rating system shows the following changes:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 20%">
+<col style="width: 16%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Issue Area</th>
+<th style="text-align: center;">December 2024</th>
+<th style="text-align: center;">January 2025</th>
+<th style="text-align: center;">February 2025</th>
+<th style="text-align: center;">March 2025</th>
+<th style="text-align: center;">Trend</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Missing/Null Submissions</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">⬇️</td>
+</tr>
+<tr class="even">
+<td>Irregular Submission Frequency</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="odd">
+<td>Out-of-Range Values</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="even">
+<td>Stale/Lagging Data</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">⬆️</td>
+</tr>
+<tr class="odd">
+<td>Confidence Value Anomalies</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">⬆️</td>
+</tr>
+<tr class="even">
+<td>Cross-Rate Inconsistency</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="odd">
+<td>Timing/Synchronization</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">⬇️</td>
+</tr>
+<tr class="even">
+<td>Weekend Effect Severity</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">⬇️</td>
+</tr>
+<tr class="odd">
+<td>Vendor Downtime Impact</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">⬆️</td>
+</tr>
+<tr class="even">
+<td>Security Concern Level</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="odd">
+<td><strong>Overall Rating</strong></td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">⬆️</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rating Scale:</strong> - ⚫ Critical - Severe issues requiring immediate intervention - 🔴 Poor - Significant issues affecting reliability - 🟠 Fair - Notable issues requiring attention - 🟡 Good - Minor issues with limited impact - 🟢 Excellent - Minimal or no issues</p>
+<p>Each issue area is rated based on specific quantitative thresholds:</p>
+<ul>
+<li><strong>Missing/Null Submissions</strong>: ⚫ Critical (&gt; 60 %) 🔴 Poor (30–60 %) 🟠 Fair (15–30 %) 🟡 Good (5–15 %) 🟢 Excellent (&lt; 5 %)</li>
+<li><strong>Irregular Submission Frequency</strong>: ⚫ Critical (&gt; 25 % irregular) 🔴 Poor (15–25 %) 🟠 Fair (8–15 %) 🟡 Good (2–8 %) 🟢 Excellent (&lt; 2 %)</li>
+<li><strong>Out-of-Range Values</strong>: ⚫ Critical (&gt; 8 %) 🔴 Poor (3–8 %) 🟠 Fair (1–3 %) 🟡 Good (0.3–1 %) 🟢 Excellent (&lt; 0.3 %)</li>
+<li><strong>Stale/Lagging Data</strong>: ⚫ Critical (&gt; 15 % runs) 🔴 Poor (7–15 %) 🟠 Fair (3–7 %) 🟡 Good (0.5–3 %) 🟢 Excellent (&lt; 0.5 %)</li>
+<li><strong>Confidence-Value Anomalies</strong>: ⚫ Critical (&gt; 85 % fixed) 🔴 Poor (60–85 %) 🟠 Fair (35–60 %) 🟡 Good (15–35 %) 🟢 Excellent (&lt; 15 %)</li>
+<li><strong>Cross-Rate Inconsistency</strong>: ⚫ Critical (&gt; 12 %) 🔴 Poor (6–12 %) 🟠 Fair (3–6 %) 🟡 Good (1–3 %) 🟢 Excellent (&lt; 1 %)</li>
+<li><strong>Timing/Synchronization</strong>: ⚫ Critical (&gt; 60 s) 🔴 Poor (30–60 s) 🟠 Fair (10–30 s) 🟡 Good (3–10 s) 🟢 Excellent (&lt; 3 s)</li>
+<li><strong>Weekend Effect Severity</strong>: ⚫ Critical (&gt; 30 %) 🔴 Poor (15–30 %) 🟠 Fair (7–15 %) 🟡 Good (2–7 %) 🟢 Excellent (&lt; 2 %)</li>
+<li><strong>Vendor Downtime Impact</strong>: ⚫ Critical (&gt; 10 % time) 🔴 Poor (4–10 %) 🟠 Fair (2–4 %) 🟡 Good (0.5–2 %) 🟢 Excellent (&lt; 0.5 %)</li>
+<li><strong>Security Concern Level</strong>: ⚫ Critical (confirmed) 🔴 Poor (strong evidence) 🟠 Fair (some evidence) 🟡 Good (minimal) 🟢 Excellent (none)</li>
+</ul>
+</section>
+<section id="detailed-progression-analysis" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Detailed Progression Analysis</h1>
+<section id="percentage-of-issue-area-ratings-by-severity" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="percentage-of-issue-area-ratings-by-severity"><span class="header-section-number">6.1</span> Percentage of Issue-Area Ratings by Severity</h2>
+<p>The table below counts how many of the ten issue areas fall into each rating colour for every month, expressed as a percentage of the total (10 = 100 %). All figures are taken directly from the individual monthly rating tables.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 20%">
+<col style="width: 19%">
+<col style="width: 20%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Severity Level</th>
+<th style="text-align: center;">December 2024</th>
+<th style="text-align: center;">January 2025</th>
+<th style="text-align: center;">February 2025</th>
+<th style="text-align: center;">March 2025</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Critical (⚫)</td>
+<td style="text-align: center;">0 %</td>
+<td style="text-align: center;">0 %</td>
+<td style="text-align: center;">0 %</td>
+<td style="text-align: center;">0 %</td>
+</tr>
+<tr class="even">
+<td>Poor (🔴)</td>
+<td style="text-align: center;">10 %</td>
+<td style="text-align: center;">20 %</td>
+<td style="text-align: center;">40 %</td>
+<td style="text-align: center;">20 %</td>
+</tr>
+<tr class="odd">
+<td>Fair (🟠)</td>
+<td style="text-align: center;">10 %</td>
+<td style="text-align: center;">20 %</td>
+<td style="text-align: center;">30 %</td>
+<td style="text-align: center;">0 %</td>
+</tr>
+<tr class="even">
+<td>Good (🟡)</td>
+<td style="text-align: center;">20 %</td>
+<td style="text-align: center;">20 %</td>
+<td style="text-align: center;">10 %</td>
+<td style="text-align: center;">30 %</td>
+</tr>
+<tr class="odd">
+<td>Excellent (🟢)</td>
+<td style="text-align: center;">60 %</td>
+<td style="text-align: center;">40 %</td>
+<td style="text-align: center;">20 %</td>
+<td style="text-align: center;">50 %</td>
+</tr>
+</tbody>
+</table>
+<p><em>Method</em>: for each month we count the number of 🟢, 🟡, 🟠, 🔴, ⚫ symbols across the ten issue-area rows, then divide by ten to derive the percentage shown.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
