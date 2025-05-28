@@ -22,7 +22,7 @@ jobs:
         run: nix profile install tarball+https://install.devenv.sh/latest
 
       - name: Render Quarto site using devenv
-        run: devenv shell --command "quarto render ."
+        run: devenv shell -- quarto render .
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
