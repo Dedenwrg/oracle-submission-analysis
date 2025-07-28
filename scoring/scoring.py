@@ -19,12 +19,6 @@ CRYPTO_PAIRS = ["ATN-USD", "NTN-USD"]
 M_FX = 2.0  # FX accuracy multiplier
 M_CRYPTO = 2.0  # Crypto accuracy multiplier
 
-# Configuration flags
-ADJUST_FOR_PRICE_DISCREPANCY = True  # Set to True to adjust for ~50% discrepancy
-PRICE_ADJUSTMENT_FACTOR = (
-    2.0  # Factor to multiply submission prices if discrepancy detected
-)
-
 # Paths
 BASE_DIR = Path(".")
 SUBMISSION_DIR = BASE_DIR / "submission-data"
@@ -39,12 +33,6 @@ INTERMEDIATE_DIR.mkdir(parents=True, exist_ok=True)
 
 # Debug flag
 DEBUG = False  # Set to True for detailed debugging
-
-# Configuration flags
-ADJUST_FOR_PRICE_DISCREPANCY = True  # Set to True to adjust for ~50% discrepancy
-PRICE_ADJUSTMENT_FACTOR = (
-    2.0  # Factor to multiply submission prices if discrepancy detected
-)
 
 
 def debug_check_yahoo_file():
@@ -265,7 +253,7 @@ def load_usdc_usd_data():
     return df
 
 
-def load_swap_data(pair, date):
+def load_swap_data(pair, date, load_historical=False):
     """Load swap data for ATN/USDC or NTN/USDC"""
     pair_map = {"ATN-USD": "atn-usdc", "NTN-USD": "ntn-usdc"}
 
@@ -278,7 +266,48 @@ def load_swap_data(pair, date):
         print(f"Warning: Swap data directory not found: {swap_pair_dir}")
         return pd.DataFrame()
 
-    # Find file for the date
+    if load_historical:
+        # Load multiple days of data for volatility calculation
+        all_data = []
+        # Look for files within a date range (e.g., 30 days before the target date)
+        end_date = date.date()
+        start_date = end_date - pd.Timedelta(
+            days=30
+        ).to_pytimedelta().days * pd.Timedelta(days=1)
+
+        if DEBUG:
+            print(f"    Loading historical data from {start_date} to {end_date}")
+
+        for file in sorted(swap_pair_dir.glob(f"{swap_pair}-*.csv")):
+            try:
+                # Extract date from filename
+                file_date_str = file.stem.replace(f"{swap_pair}-", "")
+                file_date = pd.to_datetime(file_date_str).date()
+
+                # Check if file is within our date range
+                if start_date <= file_date <= end_date:
+                    df = pd.read_csv(file)
+                    df["timestamp"] = pd.to_datetime(df["timestamp"], utc=True)
+                    all_data.append(df)
+                    if DEBUG:
+                        print(f"      Loaded {file.name}: {len(df)} rows")
+            except:
+                continue
+
+        if all_data:
+            result = pd.concat(all_data, ignore_index=True)
+            result = result.sort_values("timestamp")
+            if DEBUG:
+                print(
+                    f"    Total historical data: {len(result)} price points over {len(all_data)} files"
+                )
+            return result
+        else:
+            if DEBUG:
+                print("    No historical data found in date range")
+            # Fall back to single day
+
+    # Original single-day loading logic
     date_str = date.strftime("%Y-%m-%d")
     filepath = swap_pair_dir / f"{swap_pair}-{date_str}.csv"
 
@@ -342,32 +371,54 @@ def calculate_fx_volatility(yahoo_data):
     return volatility
 
 
-def get_crypto_price_at_timestamp(swap_data, usdc_usd_data, timestamp):
-    """Get crypto price at a specific timestamp"""
-    # Get swap price at timestamp (constant extrapolation)
-    swap_prices = swap_data[swap_data["timestamp"] <= timestamp]
-    if len(swap_prices) == 0:
-        return None
+def get_crypto_price_mva30(swap_data, usdc_usd_data, timestamp):
+    """Get crypto price with 30-second moving average at a specific timestamp"""
+    # Calculate the 30-second window
+    window_start = timestamp - pd.Timedelta(seconds=30)
 
-    swap_price = swap_prices.iloc[-1]["price"]
+    # Get all swap prices in the 30-second window
+    swap_window = swap_data[
+        (swap_data["timestamp"] > window_start) & (swap_data["timestamp"] <= timestamp)
+    ]
 
-    # Get USDC/USD price (backward extrapolation of close)
-    usdc_prices = usdc_usd_data[usdc_usd_data["datetime"] <= timestamp]
-    if len(usdc_prices) == 0:
-        return None
+    # If no data in window, use constant extrapolation (last known price)
+    if len(swap_window) == 0:
+        swap_before = swap_data[swap_data["timestamp"] <= timestamp]
+        if len(swap_before) == 0:
+            return None
+        # Use the last known price
+        swap_window = swap_before.tail(1)
 
-    usdc_price = usdc_prices.iloc[-1]["close"]
+    # Calculate average swap price over the window
+    avg_swap_price = swap_window["price"].mean()
 
-    # Calculate price in USD
-    return swap_price * usdc_price
+    # Get USDC/USD prices in the same window
+    usdc_window = usdc_usd_data[
+        (usdc_usd_data["datetime"] > window_start)
+        & (usdc_usd_data["datetime"] <= timestamp)
+    ]
+
+    # If no USDC data in window, use backward extrapolation
+    if len(usdc_window) == 0:
+        usdc_before = usdc_usd_data[usdc_usd_data["datetime"] <= timestamp]
+        if len(usdc_before) == 0:
+            return None
+        # Use the last known close price
+        usdc_price = usdc_before.iloc[-1]["close"]
+    else:
+        # Use the average close price in the window
+        usdc_price = usdc_window["close"].mean()
+
+    # Calculate final price in USD
+    return avg_swap_price * usdc_price
 
 
 def calculate_crypto_volatility(swap_data, usdc_usd_data):
-    """Calculate annualized volatility for crypto pairs"""
+    """Calculate annualized volatility for crypto pairs using MVA30 prices"""
     if len(swap_data) == 0 or len(usdc_usd_data) == 0:
         return 0.0
 
-    # Calculate daily prices
+    # Calculate daily prices using MVA30
     daily_prices = []
     dates = pd.date_range(
         swap_data["timestamp"].min().date(),
@@ -375,14 +426,31 @@ def calculate_crypto_volatility(swap_data, usdc_usd_data):
         freq="D",
     )
 
+    if DEBUG:
+        print(
+            f"      Volatility calc: Date range from {swap_data['timestamp'].min().date()} to {swap_data['timestamp'].max().date()}"
+        )
+        print(f"      Number of days in range: {len(dates)}")
+
     for date in dates:
         end_of_day = pd.Timestamp(date, tz="UTC").replace(hour=23, minute=59, second=59)
-        price = get_crypto_price_at_timestamp(swap_data, usdc_usd_data, end_of_day)
+        price = get_crypto_price_mva30(swap_data, usdc_usd_data, end_of_day)
         if price:
             daily_prices.append(price)
 
+    if DEBUG:
+        print(f"      Daily prices calculated: {len(daily_prices)}")
+        if daily_prices:
+            print(f"      Daily price values: {daily_prices[:5]}...")  # Show first 5
+
     if len(daily_prices) < 2:
-        return 0.0
+        if DEBUG:
+            print(
+                f"      WARNING: Not enough daily prices for volatility ({len(daily_prices)} < 2)"
+            )
+            print("      Returning default volatility")
+        # Return a reasonable default volatility for crypto assets instead of 0
+        return 0.15  # 15% annualized volatility as default
 
     # Calculate log returns
     prices = pd.Series(daily_prices)
@@ -390,53 +458,110 @@ def calculate_crypto_volatility(swap_data, usdc_usd_data):
     log_returns = log_returns.dropna()
 
     if len(log_returns) == 0:
-        return 0.0
+        return 0.15  # Default volatility
 
     # Annualized volatility (365 days)
-    return log_returns.std() * np.sqrt(365)
+    volatility = log_returns.std() * np.sqrt(365)
+
+    if DEBUG:
+        print(f"      Log returns: {len(log_returns)} values")
+        print(f"      Calculated volatility: {volatility:.6f}")
+
+    # If volatility is too small (likely due to limited data), use default
+    if volatility < 0.01:  # Less than 1% annualized
+        if DEBUG:
+            print(f"      Volatility too small ({volatility:.6f}), using default 0.15")
+        return 0.15
+
+    return volatility
 
 
 def investigate_price_discrepancy(submissions_df, swap_data, usdc_usd_data, pair):
     """Investigate the price discrepancy between submissions and benchmarks"""
-    if not DEBUG or len(swap_data) == 0 or len(usdc_usd_data) == 0:
-        return
+    if len(swap_data) == 0 or len(usdc_usd_data) == 0:
+        return None
 
     price_col = f"{pair} Price"
     if price_col not in submissions_df.columns:
-        return
+        return None
 
     print(f"\n    INVESTIGATING PRICE DISCREPANCY for {pair}:")
 
-    # Sample 10 different timestamps
+    # Sample up to 10 different timestamps
     sample_df = submissions_df[submissions_df[price_col].notna()].sample(
-        min(10, len(submissions_df))
+        min(10, len(submissions_df[submissions_df[price_col].notna()]))
     )
 
     ratios = []
+    inverted_ratios = []
+    submission_prices = []
+    benchmark_prices = []
+
     for _, row in sample_df.iterrows():
         submission_price = row[price_col] / 1e18
         timestamp = row["Timestamp"]
 
-        benchmark = get_crypto_price_at_timestamp(swap_data, usdc_usd_data, timestamp)
+        # Use MVA30 benchmark
+        benchmark = get_crypto_price_mva30(swap_data, usdc_usd_data, timestamp)
         if benchmark:
             ratio = submission_price / benchmark
+            inverted_ratio = (
+                (1 / submission_price) / benchmark if submission_price > 0 else 0
+            )
+
             ratios.append(ratio)
+            inverted_ratios.append(inverted_ratio)
+            submission_prices.append(submission_price)
+            benchmark_prices.append(benchmark)
 
             if len(ratios) <= 3:  # Show first 3
                 print(f"      Time: {timestamp}")
                 print(f"        Submission: {submission_price:.6f}")
-                print(f"        Benchmark: {benchmark:.6f}")
-                print(f"        Ratio: {ratio:.6f}")
+                print(f"        Benchmark (MVA30): {benchmark:.6f}")
+                print(f"        Direct ratio: {ratio:.6f}")
+                print(f"        Inverted (1/submission): {1/submission_price:.6f}")
+                print(f"        Inverted ratio: {inverted_ratio:.6f}")
 
     if ratios:
         avg_ratio = np.mean(ratios)
         std_ratio = np.std(ratios)
-        print(f"\n      Average ratio: {avg_ratio:.6f} (std: {std_ratio:.6f})")
+        avg_inverted_ratio = np.mean(inverted_ratios)
+        std_inverted_ratio = np.std(inverted_ratios)
 
-        # Check if it's consistently around 0.5
-        if 0.48 < avg_ratio < 0.53:
-            print("        WARNING: Submissions appear to be ~50% of benchmark!")
-            print("      This suggests a systematic issue with submission data.")
+        print(f"\n      Average direct ratio: {avg_ratio:.6f} (std: {std_ratio:.6f})")
+        print(
+            f"      Average inverted ratio: {avg_inverted_ratio:.6f} (std: {std_inverted_ratio:.6f})"
+        )
+
+        # Check if inverted prices match better
+        if 0.98 < avg_inverted_ratio < 1.02:
+            print(
+                "\n       INVERTED PRICES MATCH! Validators are submitting USD/Token instead of Token/USD"
+            )
+            print("      Submissions need to be inverted (1/price) to match benchmarks")
+            return "INVERTED"
+        elif 0.48 < avg_ratio < 0.53:
+            print("\n        Submissions appear to be ~50% of benchmark")
+            print("      This is consistent with price inversion: 1/2 ≈ 0.5")
+        elif 0.98 < avg_ratio < 1.02:
+            print("\n       Submissions match benchmarks well (within 2%)")
+            return "CORRECT"
+        else:
+            print("\n        Unexpected ratio pattern")
+
+        # Show more detailed analysis
+        print(
+            f"\n      Submission price range: {min(submission_prices):.6f} - {max(submission_prices):.6f}"
+        )
+        print(
+            f"      Benchmark price range: {min(benchmark_prices):.6f} - {max(benchmark_prices):.6f}"
+        )
+        if submission_prices:
+            inverted_range = [1 / p for p in submission_prices if p > 0]
+            if inverted_range:
+                print(
+                    f"      Inverted submission range: {min(inverted_range):.6f} - {max(inverted_range):.6f}"
+                )
 
         return avg_ratio
 
@@ -532,9 +657,9 @@ def score_fx_submissions_vectorized(
 
 
 def score_crypto_submissions_vectorized(
-    submissions_df, pair, swap_data, usdc_usd_data, sigma, discrepancy_ratio=None
+    submissions_df, pair, swap_data, usdc_usd_data, sigma, discrepancy_type=None
 ):
-    """Score crypto submissions using vectorized operations"""
+    """Score crypto submissions using vectorized operations with MVA30"""
     if len(swap_data) == 0 or len(usdc_usd_data) == 0:
         if DEBUG:
             print("      No swap or USDC data available")
@@ -552,24 +677,21 @@ def score_crypto_submissions_vectorized(
     # Convert prices from wei
     prices = submissions_df[price_col] / 1e18
 
-    # Adjust for price discrepancy if detected and configured
-    if (
-        ADJUST_FOR_PRICE_DISCREPANCY
-        and discrepancy_ratio
-        and 0.48 < discrepancy_ratio < 0.53
-    ):
+    # Handle inverted prices if detected
+    if discrepancy_type == "INVERTED":
         if DEBUG:
             print(
-                f"      Adjusting submission prices by factor of {PRICE_ADJUSTMENT_FACTOR} due to detected discrepancy"
+                "      Inverting submission prices (1/price) to correct for quote convention"
             )
-        prices = prices * PRICE_ADJUSTMENT_FACTOR
+        # Invert prices where they are not zero
+        prices = prices.apply(lambda p: 1 / p if p > 0 else np.nan)
 
     timestamps = submissions_df["Timestamp"]
 
     # Initialize scores
     scores = pd.Series(0, index=submissions_df.index)
 
-    # Time scaling factor (30 seconds)
+    # Time scaling factor (30 seconds for MVA)
     time_factor = np.sqrt(30 / (365 * 24 * 60 * 60))
 
     # Create benchmark price series for all unique timestamps
@@ -578,10 +700,10 @@ def score_crypto_submissions_vectorized(
 
     if DEBUG:
         print(
-            f"      Calculating benchmarks for {len(unique_timestamps)} unique timestamps..."
+            f"      Calculating MVA30 benchmarks for {len(unique_timestamps)} unique timestamps..."
         )
 
-    # Calculate all benchmarks
+    # Calculate all benchmarks with MVA30
     for i, ts in enumerate(unique_timestamps):
         if i % 500 == 0 and i > 0:
             print(
@@ -589,15 +711,15 @@ def score_crypto_submissions_vectorized(
                 end="",
                 flush=True,
             )
-        price = get_crypto_price_at_timestamp(swap_data, usdc_usd_data, ts)
+        price = get_crypto_price_mva30(swap_data, usdc_usd_data, ts)
         if price:
             benchmark_prices[ts] = price
 
     if DEBUG:
-        print(f"\n      Calculated {len(benchmark_prices)} benchmark prices")
+        print(f"\n      Calculated {len(benchmark_prices)} MVA30 benchmark prices")
         if benchmark_prices:
             sample_prices = list(benchmark_prices.values())[:3]
-            print(f"      Sample benchmark prices: {sample_prices}")
+            print(f"      Sample MVA30 benchmark prices: {sample_prices}")
 
     # Map benchmark prices to submissions
     benchmarks = timestamps.map(benchmark_prices)
@@ -630,18 +752,14 @@ def score_crypto_submissions_vectorized(
             ]  # Show first 5 valid comparisons
             print("\n      Sample comparisons:")
             for idx in sample_indices:
-                adjusted_indicator = (
-                    " (adjusted)"
-                    if ADJUST_FOR_PRICE_DISCREPANCY
-                    and discrepancy_ratio
-                    and 0.48 < discrepancy_ratio < 0.53
-                    else ""
+                price_label = (
+                    "Inverted submission"
+                    if discrepancy_type == "INVERTED"
+                    else "Submission price"
                 )
                 print(f"        Index {idx}:")
-                print(
-                    f"          Submission price: {prices[idx]:.6f}{adjusted_indicator}"
-                )
-                print(f"          Benchmark: {benchmarks[idx]:.6f}")
+                print(f"          {price_label}: {prices[idx]:.6f}")
+                print(f"          MVA30 Benchmark: {benchmarks[idx]:.6f}")
                 print(
                     f"          Bounds: [{lower_bounds[idx]:.6f}, {upper_bounds[idx]:.6f}]"
                 )
@@ -709,24 +827,42 @@ def process_date(date_str):
 
     crypto_data = {}
     crypto_volatilities = {}
-    crypto_discrepancy_ratios = {}
+    crypto_discrepancy_analysis = {}
+
     for pair in CRYPTO_PAIRS:
         print(f"\n  Loading {pair}...")
-        data = load_swap_data(pair, date)
+        # Load single day data for scoring
+        data = load_swap_data(pair, date, load_historical=False)
         if len(data) > 0:
             crypto_data[pair] = data
-            crypto_volatilities[pair] = calculate_crypto_volatility(data, usdc_usd_data)
-            print(
-                f"  {pair}: {len(data)} prices, volatility={crypto_volatilities[pair]:.4f}"
-            )
+
+            # Load historical data for volatility calculation
+            print("  Loading historical data for volatility calculation...")
+            historical_data = load_swap_data(pair, date, load_historical=True)
+
+            if len(historical_data) > len(data):
+                # Use historical data for volatility
+                crypto_volatilities[pair] = calculate_crypto_volatility(
+                    historical_data, usdc_usd_data
+                )
+                print(
+                    f"  {pair}: {len(data)} prices for scoring, {len(historical_data)} historical prices, volatility={crypto_volatilities[pair]:.4f}"
+                )
+            else:
+                # Fall back to single day with default volatility
+                crypto_volatilities[pair] = calculate_crypto_volatility(
+                    data, usdc_usd_data
+                )
+                print(
+                    f"  {pair}: {len(data)} prices, volatility={crypto_volatilities[pair]:.4f} (may be default due to single day)"
+                )
 
             # Investigate price discrepancy
-            if DEBUG:
-                ratio = investigate_price_discrepancy(
-                    submissions, data, usdc_usd_data, pair
-                )
-                if ratio:
-                    crypto_discrepancy_ratios[pair] = ratio
+            discrepancy = investigate_price_discrepancy(
+                submissions, data, usdc_usd_data, pair
+            )
+            if discrepancy:
+                crypto_discrepancy_analysis[pair] = discrepancy
 
     # Initialize validator scores
     validator_scores = {
@@ -759,14 +895,14 @@ def process_date(date_str):
     for pair in CRYPTO_PAIRS:
         if pair in crypto_data:
             print(f"\n  Processing {pair}...")
-            discrepancy_ratio = crypto_discrepancy_ratios.get(pair)
+            discrepancy_type = crypto_discrepancy_analysis.get(pair)
             pair_scores = score_crypto_submissions_vectorized(
                 submissions,
                 pair,
                 crypto_data[pair],
                 usdc_usd_data,
                 crypto_volatilities[pair],
-                discrepancy_ratio,
+                discrepancy_type,
             )
 
             # Aggregate by validator
