@@ -82,16 +82,47 @@ def load_and_preprocess_submissions(submission_glob: str) -> pl.DataFrame:
 def load_yahoo_finance_data(directory_pattern: str, pair_label: str) -> pl.DataFrame:
     """
     Loads Yahoo Finance CSVs and returns a Polars DataFrame.
+    Handles minor schema variations across files.
     """
     files = sorted(glob.glob(directory_pattern))
     if not files:
         raise ValueError(f"No Yahoo CSVs found: {directory_pattern}")
 
-    lf = pl.concat(
-        [pl.scan_csv(f, has_header=False, skip_rows=3,
-                     new_columns=["Datetime","Close","High","Low","Open","Volume"],
-                     try_parse_dates=True) for f in files]
-    ).sort("Datetime").select([
+    def _scan_one_yf_csv(path: str) -> pl.LazyFrame:
+        candidate_schemas = [
+            ["Datetime", "Adj Close", "Close", "High", "Low", "Open", "Volume"],
+            ["Datetime", "Close", "High", "Low", "Open", "Volume"],
+            ["Datetime", "Price", "Adj Close", "Close", "High", "Low", "Open", "Volume"],
+            ["Datetime", "Price", "Close", "High", "Low", "Open", "Volume"],
+        ]
+
+        last_err: Exception | None = None
+        for cols in candidate_schemas:
+            try:
+                lf_local = pl.scan_csv(
+                    path,
+                    has_header=False,
+                    skip_rows=3,
+                    new_columns=cols,
+                    try_parse_dates=True,
+                )
+                if "Close" not in lf_local.columns and "Price" in lf_local.columns:
+                    lf_local = lf_local.rename({"Price": "Close"})
+                # Normalize schema & dtypes (only keep needed columns)
+                lf_local = (
+                    lf_local.select(["Datetime", "Close"])  # drop extras to avoid concat schema issues
+                    .with_columns([
+                        pl.col("Datetime").cast(pl.Utf8).str.strptime(pl.Datetime, strict=False).alias("Datetime"),
+                        pl.col("Close").cast(pl.Float64).alias("Close"),
+                    ])
+                )
+                return lf_local
+            except Exception as e:
+                last_err = e
+                continue
+        raise last_err if last_err is not None else RuntimeError("Failed to parse Yahoo CSV")
+
+    lf = pl.concat([_scan_one_yf_csv(f) for f in files]).sort("Datetime").select([
         pl.col("Datetime").alias("timestamp_benchmark"),
         pl.col("Close").alias("benchmark_close")
     ])
