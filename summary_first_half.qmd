@@ -90,30 +90,27 @@ def load_yahoo_finance_data(directory_pattern: str, pair_label: str) -> pl.DataF
 
     lf_list = []
     for f in files:
-        lf_temp = pl.scan_csv(
-            f,
-            has_header=False,
-            skip_rows=3,
-            new_columns=["Datetime", "Close", "High", "Low", "Open", "Volume"],
-            try_parse_dates=True,
+        lf_temp = (
+            pl.scan_csv(
+                f,
+                has_header=False,
+                skip_rows=3,
+                new_columns=["Datetime", "Close", "High", "Low", "Open", "Volume"],
+                try_parse_dates=True,
+            )
+            .select(["Datetime", "Close"])  # enforce consistent schema across files
+            .with_columns([pl.col("Close").cast(pl.Float64)])
         )
         lf_list.append(lf_temp)
 
     lf = pl.concat(lf_list)
     df = (
-        lf.select(
-            [
-                pl.col("Datetime").alias("timestamp_benchmark"),
-                pl.col("Close").alias("benchmark_close"),
-            ]
-        )
+        lf.rename({"Datetime": "timestamp_benchmark", "Close": "benchmark_close"})
         .sort("timestamp_benchmark")
         .collect()
-        .with_columns(
-            [
-                pl.lit(pair_label).alias("symbol"),
-            ]
-        )
+        .with_columns([
+            pl.lit(pair_label).alias("symbol"),
+        ])
     )
     return df
 

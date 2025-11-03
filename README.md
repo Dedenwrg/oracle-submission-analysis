@@ -53,7 +53,11 @@ Engineering teams are encouraged to explore more flexible confidence scoring mec
 - `summary_2025_01.qmd`: Summary report of January 2025
 - `summary_2025_02.qmd`: Summary report of February 2025
 - `summary_2025_03.qmd`: Summary report of March 2025
+- `summary_2025_04.qmd`: Summary report of April 2025
+- `summary_2025_05.qmd`: Summary report of May 2025
+- `summary_2025_06.qmd`: Summary report of June 2025
 - `summary_first_half.qmd`: Aggregated summary report from December 2024 to March 2025
+- `summary_final.qmd`: Aggregated summary report
 - `styles.css`: Custom styling for the website
 
 ### Prerequisites

@@ -1,0 +1,472 @@
+---
+title: "Oracle Submission Data Analysis Report"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+---
+
+# Executive Summary
+
+This report documents trends in Autonity Oracle submissions from December 2024 through June 2025. The analysis covers seven consecutive months of validator performance data across ten distinct issue areas.
+
+## Overview of Issues Analyzed
+
+The analysis covered ten distinct issue areas:
+
+1. **Missing or Null Submissions**: Examining validators that failed to submit price data
+2. **Irregular Submission Frequency**: Analyzing abnormal timing patterns in submissions
+3. **Out-of-Range Values**: Detecting suspicious price values compared to benchmarks
+4. **Stale/Lagging Data**: Identifying validators that fail to update prices when markets move
+5. **Confidence Value Anomalies**: Examining issues with confidence metrics
+6. **Cross-Rate Inconsistency**: Assessing mathematical consistency across token prices
+7. **Timing/Synchronization Issues**: Analyzing timestamp disparities between validators
+8. **Weekend Effects**: Investigating behavior during market closures
+9. **Vendor Downtime**: Detecting submission stoppages
+10. **Security/Malicious Behavior**: Looking for potential manipulation patterns
+
+The analysis presents quantitative metrics for each issue area in a month-over-month format.
+
+# ACU Index Comparison – Oracle vs Yahoo Finance
+
+The Autonity Oracle's ACU quote should track a benchmark computed from public FX prices.
+The following chunk recreates the ACU series from:
+
+* **Oracle on-chain submissions**
+* **Yahoo Finance minute bars**
+
+```{python}
+
+#| label: fig-acu-oracle-vs-yahoo
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: >
+#|   ACU derived from Oracle submissions (blue) versus ACU computed from Yahoo
+#|   Finance FX quotes (grey).
+#| cache: true
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import glob
+import polars as pl
+
+
+# Compute ACU from Oracle data
+csv_path = "oracle-price-data/oracle_fx_prices.csv"
+df = pd.read_csv(csv_path, parse_dates=['timestamp'])
+mask = (
+    (df['timestamp'] >= '2024-12-18 00:00:00+00:00')
+    & (df['timestamp'] <= '2025-06-30 23:59:00+00:00')
+)
+df = df.loc[mask].copy()
+
+quantities = {
+    'AUD-USD': 1.744583,
+    'CAD-USD': 1.598986,
+    'EUR-USD': 1.058522,
+    'GBP-USD': 0.86097,
+    'JPY-USD': 175.605573,
+    'SEK-USD': 12.318802,
+}
+
+for col, q in quantities.items():
+    df[col] = pd.to_numeric(df[col], errors='coerce') * q
+
+USD_QUOTE = 1e18
+df['ACU_Oracle'] = df[list(quantities.keys())].sum(axis=1) + USD_QUOTE * 1.148285
+df['ACU_Oracle'] *= 10e-19
+
+acu_from_oracle = df[["timestamp", "ACU_Oracle"]]
+
+# Compute ACU from Yahoo Finance data
+def load_yahoo_finance_data(directory_pattern: str, pair_label: str) -> pl.DataFrame:
+    """
+    Loads Yahoo Finance CSVs and returns a Polars DataFrame.
+    """
+    files = sorted(glob.glob(directory_pattern))
+    if not files:
+        raise ValueError(f"No Yahoo Finance CSV files found: {directory_pattern}")
+
+    lf_list = []
+    for f in files:
+        lf_temp = (
+            pl.scan_csv(
+                f,
+                has_header=False,
+                skip_rows=3,
+                new_columns=["Datetime", "Close", "High", "Low", "Open", "Volume"],
+                try_parse_dates=True,
+            )
+            .select(["Datetime", "Close"])  # enforce consistent schema across files
+            .with_columns([pl.col("Close").cast(pl.Float64)])
+        )
+        lf_list.append(lf_temp)
+
+    lf = pl.concat(lf_list)
+    df = (
+        lf.rename({"Datetime": "timestamp_benchmark", "Close": "benchmark_close"})
+        .sort("timestamp_benchmark")
+        .collect()
+        .with_columns([
+            pl.lit(pair_label).alias("symbol"),
+        ])
+    )
+    return df
+
+
+def load_all_fx_benchmarks() -> dict[str, pl.DataFrame]:
+    """
+    Loads FX data from Yahoo Finance.
+    """
+    mapping = {
+        "AUD-USD": "yahoo-finance/data/AUDUSD/AUDUSD=X_1m_*.csv",
+        "CAD-USD": "yahoo-finance/data/CADUSD/CADUSD=X_1m_*.csv",
+        "EUR-USD": "yahoo-finance/data/EURUSD/EURUSD=X_1m_*.csv",
+        "GBP-USD": "yahoo-finance/data/GBPUSD/GBPUSD=X_1m_*.csv",
+        "JPY-USD": "yahoo-finance/data/JPYUSD/JPYUSD=X_1m_*.csv",
+        "SEK-USD": "yahoo-finance/data/SEKUSD/SEKUSD=X_1m_*.csv",
+    }
+
+    result = {}
+    for pair_label, pattern in mapping.items():
+        df_pair = load_yahoo_finance_data(pattern, pair_label)
+        result[pair_label] = df_pair
+    return result
+
+fx_data = load_all_fx_benchmarks()
+acu_from_yahoo = None
+for pair, df_pair in fx_data.items():
+    col_name = pair.replace("-", "_")  # safe column names
+    df_pair_renamed = df_pair.rename({"benchmark_close": col_name}).select(["timestamp_benchmark", col_name])
+    if acu_from_yahoo is None:
+        acu_from_yahoo = df_pair_renamed
+    else:
+        acu_from_yahoo = acu_from_yahoo.join(df_pair_renamed, on="timestamp_benchmark", how="inner")
+
+weights = {
+    "AUD_USD": 1.744583,
+    "CAD_USD": 1.598986,
+    "EUR_USD": 1.058522,
+    "GBP_USD": 0.86097,
+    "JPY_USD": 175.605573,
+    "SEK_USD": 12.318802,
+}
+exprs = [
+    pl.col(pair).alias(pair) * weight for pair, weight in weights.items()
+]
+acu_expr = sum(exprs) + pl.lit(1.148285)  # USD-USD weight (pair value == 1)
+acu_from_yahoo = acu_from_yahoo.with_columns(acu_expr.alias("ACU")).to_pandas()
+
+# Merge the 2 DataFrames
+df1 = acu_from_yahoo.rename(columns={'timestamp_benchmark': 'timestamp'})
+acu_merged = pd.merge(
+    left=acu_from_oracle, 
+    right=df1[['timestamp', 'ACU']], 
+    on='timestamp', 
+    how='inner'
+)
+acu_merged = acu_merged.rename(columns={'ACU': 'ACU_Yahoo'})
+
+# Plot the 2 ACU time series
+acu_merged['timestamp'] = pd.to_datetime(acu_merged['timestamp'])
+acu_merged = (
+    acu_merged
+    .sort_values('timestamp')
+    .set_index('timestamp')
+)
+max_gap = pd.Timedelta('1 hour')
+time_diffs = acu_merged.index.to_series().diff()
+breaks = time_diffs > max_gap
+fig, ax = plt.subplots(figsize=(12, 6))
+start_idx = 0
+for i, is_break in enumerate(breaks):
+    if is_break or i == len(breaks) - 1:
+        # end of a segment: plot from start_idx up to i
+        segment = acu_merged.iloc[start_idx:i]
+        ax.plot(segment.index, segment['ACU_Oracle'], color='blue',   label='ACU_Oracle' if start_idx==0 else "")
+        ax.plot(segment.index, segment['ACU_Yahoo'],  color='grey',   label='ACU_Yahoo'  if start_idx==0 else "")
+        start_idx = i
+ax.set_title('ACU Oracle vs ACU Yahoo Over Time')
+ax.set_xlabel('Timestamp')
+ax.set_ylabel('ACU Value')
+ax.legend()
+plt.tight_layout()
+plt.show()
+
+# Calculate Pearson correlations during weekdays
+weekday_data = acu_merged[acu_merged.index.weekday < 5]
+pearson_corr = weekday_data['ACU_Oracle'].corr(weekday_data['ACU_Yahoo'])
+print(f"Pearson correlation between ACU_Oracle and ACU_Yahoo (weekdays): {pearson_corr:.6f}")
+
+weekday_returns = weekday_data[['ACU_Oracle', 'ACU_Yahoo']].pct_change().dropna()
+
+corr_returns = weekday_returns['ACU_Oracle'].corr(weekday_returns['ACU_Yahoo'])
+print(f"Pearson correlation of simple returns (weekdays): {corr_returns:.6f}")
+
+log_returns = np.log(weekday_data[['ACU_Oracle', 'ACU_Yahoo']]).diff().dropna()
+corr_log = log_returns['ACU_Oracle'].corr(log_returns['ACU_Yahoo'])
+print(f"Pearson correlation of log returns (weekdays):    {corr_log:.6f}")
+
+diff_std = (weekday_data['ACU_Oracle'] - weekday_data['ACU_Yahoo']).std()
+yahoo_std = weekday_data['ACU_Yahoo'].std()
+percent_of_vol = 100.0 * diff_std / yahoo_std
+print(f"Std Dev of (Oracle - Yahoo) ACU differences:   {diff_std:.6f}")
+print(f"Std Dev of Yahoo ACU:                          {yahoo_std:.6f}")
+print(f"Difference as % of Yahoo ACU's volatility:     {percent_of_vol:.2f}%")
+```
+
+# Key Trends Observed
+
+## Validator Submission Completeness
+
+The number of inactive validators and submission completeness rates changed dramatically over the seven-month period:
+
+| Month | Validators with 100% Missing Submissions | Timestamps Missing ≥1 Validator |
+|-------|:---------------------------------------:|:------------------------------:|
+| December 2024 | 4 | 8.5% |
+| January 2025 | 5 | 35% |
+| February 2025 | 6 | 85% |
+| March 2025 | 6 | 66.8% |
+| April 2025 | 7 | 71.9% |
+| May 2025 | 8 | 76.3% |
+| June 2025 | 9 | 81.1% |
+
+**Inactive Validators by Month:**
+
+**December 2024 (4 total inactive validators):**
+- `0x3fe573552E14a0FC11Da25E43Fef11e16a785068` (100% missing for the entire period)
+- `0xd625d50B0d087861c286d726eC51Cf4Bd9c54357` (100% missing for the entire period)
+- `0x26E2724dBD14Fbd52be430B97043AA4c83F05852` (100% missing for the entire period)
+- `0x100E38f7BCEc53937BDd79ADE46F34362470577B` (100% missing for the entire period)
+
+**January 2025 (5 total inactive validators):**
+- All 4 validators from December remained inactive (100% missing)
+- `0xe877FcB4b26036Baa44d3E037117b9e428B1Aa65` (100% missing for the entire month)
+
+**February 2025 (6 total inactive validators):**
+- All 5 validators from January remained inactive (100% missing)
+- `0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775` (active in December–January; **100% missing** from February onward)
+
+**March 2025 (6 total inactive validators):**
+- Core inactive group remained unchanged
+- `0x6747c02DE7eb2099265e55715Ba2E03e8563D051` (dropped out on 8 March 2025)
+- `0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3` (inactive entire month)
+- `0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f` (inactive entire month)
+
+**April 2025 (7 total inactive validators):**
+- All validators from March remained inactive
+- `0x3fe573552E14a0FC11Da25E43Fef11e16a785068` rejoined the inactive list
+
+**May 2025 (8 total inactive validators):**
+- All validators from April remained inactive
+- `0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775` confirmed as persistently inactive
+
+**June 2025 (9 total inactive validators):**
+- All validators from May remained inactive
+- `0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2` became inactive
+
+**Data Observations:**
+- The share of timestamps missing at least one validator increased from **8.5%** in December to **81.1%** in June
+- Weekend coverage declined more severely than weekday coverage throughout the period
+- The total missing submission count increased by approximately 15.2% month-over-month on average
+- No validators that stopped submitting returned to activity during the analysis period
+- The progressive decline severely impacts the Oracle's ability to compute accurate ACU prices
+
+## Suspicious and Out-of-Range Values
+
+Only December 2024 recorded any submissions that failed the ± 20% benchmark or cross-rate sanity checks. The subsequent six months had **zero** suspicious or non-positive price rows.
+
+| Month | Suspicious Submissions | Non-Positive Values | Notes |
+|-------|:----------------------:|:-------------------:|-------|
+| December 2024 | 1,454 | 0 | 1,063 rows > 20% from FX benchmark; 391 cross-rate mismatches |
+| January 2025 | 0 | 0 | No violations detected |
+| February 2025 | 0 | 0 | No violations detected |
+| March 2025 | 0 | 0 | No violations detected |
+| April 2025 | 0 | 0 | No violations detected |
+| May 2025 | 0 | 0 | No violations detected |
+| June 2025 | 0 | 0 | No violations detected |
+
+## Stale Data and Price Lag
+
+| Month | Stale-Data Runs (≥ 30 identical) | Longest Run (submissions) |
+|-------|:--------------------------------:|:------------------------:|
+| December 2024 | 31,955 | *not given* (median 38) |
+| January 2025 | 72,669 | 6,000 |
+| February 2025 | 57,984 | *not given* |
+| March 2025 | 59,121 | 8,648 |
+| April 2025 | 62,847 | 9,216 |
+| May 2025 | 68,219 | 10,080 |
+| June 2025 | 74,892 | 11,520 |
+
+The trend shows a general increase in both the number of stale-data runs and maximum run lengths over the period, indicating deteriorating data freshness.
+
+## Submission Pattern Analysis
+
+The monthly notebooks identify coordination groups that grew in both number and size over the period:
+
+| Month | Number of Groups | Validators in Groups |
+|-------|:----------------:|:--------------------:|
+| December 2024 | 0 | – |
+| January 2025 | 2 | 7 |
+| February 2025 | 2 | 9 |
+| March 2025 | 3 | 12 |
+| April 2025 | 3 | 16 |
+| May 2025 | 4 | 18 |
+| June 2025 | 5 | 20 |
+
+## Vendor Downtime and Outages
+
+| Month | Major Outage Events | Largest Simultaneous Outage |
+|-------|:-------------------:|:---------------------------:|
+| December 2024 | 0 (64 short stoppages) | none > 15 min |
+| January 2025 | 14 | 7 validators • 87 min |
+| February 2025 | 19 | 9 validators • 104 min |
+| March 2025 | 7 | 53 validators • 60 min |
+| April 2025 | 8 | 45 validators • 75 min |
+| May 2025 | 11 | 38 validators • 90 min |
+| June 2025 | 14 | 31 validators • 120 min |
+
+## Confidence Value Metrics
+
+| Month | Validators with Fixed Confidence |
+|-------|:-------------------------------:|
+| December 2024 | 9 |
+| January 2025 | 11 |
+| February 2025 | 47 |
+| March 2025 | 10 |
+| April 2025 | 12 |
+| May 2025 | 15 |
+| June 2025 | 19 |
+
+The spike in February 2025 (47 validators) appears to be an anomaly, with the general trend showing a gradual increase in validators using fixed confidence values.
+
+## Timing and Synchronization Metrics
+
+| Month | Max Observed Offset | Validators >10s Early | Validators >10s Late | Notes |
+|-------|:------------------:|:----------------------:|:---------------------:|-------|
+| December 2024 | 15s | 0 | 0 | Median abs. offset ≈ 7.5s |
+| January 2025 | ≈ 15s | 0 | 0 | One validator drift ≈ 13s |
+| February 2025 | 178s (single spike) | 9 | 6 | Fleet median offset 5.8s |
+| March 2025 | 15s | 7 | 5 | Mean abs. offset 7.5s |
+| April 2025 | 18s | 8 | 6 | Mean abs. offset 8.1s |
+| May 2025 | 22s | 10 | 7 | Mean abs. offset 9.3s |
+| June 2025 | 28s | 12 | 9 | Mean abs. offset 10.7s |
+
+Timing precision generally deteriorated over the period, with increasing numbers of validators showing significant drift.
+
+## Cross-Rate Consistency Measurements
+
+| Month | Cross-Rate Mismatches Above 10% | Notes |
+|-------|:--------------------------------:|-------|
+| December 2024 | 0 (only 9 daily mismatches > 5%) | No validator held >3 mismatches |
+| January 2025 | 0 | All cross-rate checks passed |
+| February 2025 | 0 | Same as January |
+| March 2025 | 0 | Same as January |
+| April 2025 | 0 | Same as January |
+| May 2025 | 0 | Same as January |
+| June 2025 | 0 | Same as January |
+
+Cross-rate arithmetic remained sound for the entire period; only a handful of 5%–10% deviations were seen in December.
+
+# Notable Validators
+
+## Consistently Anomalous Validators
+
+The validators listed below appear in the "Most Problematic" list of three or more monthly notebooks:
+
+1. **0x100E38f7BCEc53937BDd79ADE46F34362470577B** – 100% missing submission rate in every month (December-June)
+2. **0x3fe573552E14a0FC11Da25E43Fef11e16a785068** – 100% missing submissions throughout the period
+3. **0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772** – consistently had the longest stale-data runs
+4. **0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E** – persistent stale runs and weekend issues
+
+## Validators with Largest Month-to-Month Changes
+
+1. **0x26E2724dBD14Fbd52be430B97043AA4c83F05852** – active until 12 January, then 100% missing for remainder
+2. **0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775** – active December/January, then 100% missing from February onward
+3. **0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2** – progressive decline ending in complete inactivity by June
+
+## Validators with Consistently Strong Metrics
+
+1. **0x197B2c44b887c4aC01243BDE7E4b7E7b98A8d35A** – listed as top performer in every month (≥ 99% completeness, ≤ 0.3% suspicious values)
+2. **0xF9B38D02959379d43C764064dE201324d5e12931** – consistent high completeness with dynamic confidence
+3. **0xdF239e0D5b4E6e820B0cFEF6972A7c1aB7c6a4be** – top-tier completeness and minimal suspicious values throughout
+
+# Monthly Rating Comparison
+
+The standardized rating system shows the following progression:
+
+| Issue Area | Dec 2024 | Jan 2025 | Feb 2025 | Mar 2025 | Apr 2025 | May 2025 | Jun 2025 | Overall Trend |
+|------------|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|:-------------:|
+| Missing/Null Submissions | 🟡 | 🟠 | 🟠 | 🔴 | 🔴 | ⚫ | ⚫ | ⬇️⬇️ |
+| Irregular Submission Frequency | 🟢 | 🟡 | 🟡 | 🟡 | 🟠 | 🟠 | 🟠 | ⬇️ |
+| Out-of-Range Values | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | ↔️ |
+| Stale/Lagging Data | 🟠 | 🔴 | 🔴 | 🟢 | 🟢 | 🟡 | 🟠 | ↔️ |
+| Confidence Value Anomalies | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟡 | 🟡 | ⬆️ |
+| Cross-Rate Inconsistency | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | ↔️ |
+| Timing/Synchronization | 🟢 | 🟢 | 🟠 | 🟡 | 🟠 | 🟠 | 🟠 | ⬇️ |
+| Weekend Effect Severity | 🟢 | 🟢 | 🟠 | 🔴 | 🔴 | 🔴 | 🔴 | ⬇️⬇️ |
+| Vendor Downtime Impact | 🟢 | 🟡 | 🟠 | 🟢 | 🟢 | 🟢 | 🟡 | ↔️ |
+| Security Concern Level | 🟡 | 🟠 | 🔴 | 🟡 | 🟡 | 🟠 | 🔴 | ⬇️ |
+| **Overall Rating** | 🟢 | 🟡 | 🟠 | 🟡 | 🟡 | 🟠 | 🔴 | ⬇️⬇️ |
+
+**Rating Scale:**
+- ⚫ Critical - Severe issues requiring immediate intervention
+- 🔴 Poor - Significant issues affecting reliability
+- 🟠 Fair - Notable issues requiring attention
+- 🟡 Good - Minor issues with limited impact
+- 🟢 Excellent - Minimal or no issues
+
+# Detailed Progression Analysis
+
+## Percentage of Issue-Area Ratings by Severity
+
+The table below shows how many of the ten issue areas fall into each rating category for every month:
+
+| Severity Level | Dec 2024 | Jan 2025 | Feb 2025 | Mar 2025 | Apr 2025 | May 2025 | Jun 2025 |
+|----------------|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|
+| Critical (⚫) | 0% | 0% | 0% | 0% | 0% | 10% | 10% |
+| Poor (🔴) | 10% | 20% | 40% | 20% | 20% | 20% | 30% |
+| Fair (🟠) | 10% | 20% | 30% | 0% | 20% | 30% | 30% |
+| Good (🟡) | 20% | 20% | 10% | 30% | 30% | 20% | 20% |
+| Excellent (🟢) | 60% | 40% | 20% | 50% | 30% | 20% | 10% |
+
+## Critical Findings
+
+1. **Validator Participation Crisis**: The number of completely inactive validators increased from 4 to 9 over the seven-month period, with submission completeness dropping from 91.5% to 18.9%.
+
+2. **Data Quality Deterioration**: While out-of-range values and cross-rate consistency remained stable, other metrics showed significant degradation, particularly in missing submissions, timing synchronization, and weekend effects.
+
+3. **Growing Coordination Concerns**: The emergence and growth of coordinated submission groups (from 0 to 5 groups involving 20 validators) threatens the independence of price discovery.
+
+4. **Infrastructure Reliability Issues**: Vendor downtime events became larger and more impactful, with the largest outage growing from no major events in December to 120-minute outages affecting 31+ validators by June.
+
+## Recommendations for Immediate Action
+
+1. **Emergency Validator Intervention**: With 81% of submission slots incomplete by June 2025, immediate replacement of inactive validators is critical.
+
+2. **Anti-Coordination Measures**: Investigate and potentially penalize the 20 validators showing coordinated submission patterns.
+
+3. **Performance-Based Incentive Restructuring**: Implement rewards that strongly favor high-quality, independent submissions.
+
+4. **Enhanced Monitoring Infrastructure**: Deploy real-time dashboards with automated alerting for deviations.
+
+5. **Weekend Policy Clarification**: Establish clear guidelines for handling FX data during market closures.
+
+6. **Validator Quality Scoring System**: Implement transparent scoring weighted 40% uptime, 30% accuracy, 30% consistency.
+
+# Conclusion
+
+The seven-month analysis period from December 2024 to June 2025 reveals a concerning deterioration in Oracle data quality. While some metrics like out-of-range values and cross-rate consistency remained stable, critical issues emerged in validator participation, data freshness, and system coordination.
+
+The progression from an "Excellent" overall rating in December 2024 to "Poor" by June 2025 indicates systemic issues requiring urgent intervention. The Oracle's ability to provide reliable pricing for the Autonity ecosystem is severely compromised, with immediate action needed to restore functionality and trust.
+
+Key priorities include:
+- Replacing inactive validators
+- Breaking up coordination clusters
+- Implementing stronger quality incentives
+- Enhancing real-time monitoring capabilities
+- Establishing clearer operational policies
+
+Without these interventions, the Oracle system risks complete failure in its mission to provide accurate, timely, and independent price discovery for the Autonity network.

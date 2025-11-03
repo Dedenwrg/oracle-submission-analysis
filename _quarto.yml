@@ -18,7 +18,11 @@ website:
           - summary_2025_01.qmd
           - summary_2025_02.qmd
           - summary_2025_03.qmd
+          - summary_2025_04.qmd
+          - summary_2025_05.qmd
+          - summary_2025_06.qmd
           - summary_first_half.qmd
+          - summary_final.qmd
       - section: "Notebooks"
         contents:
           - notebooks/issue_1.qmd
