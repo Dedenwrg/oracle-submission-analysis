@@ -236,38 +236,46 @@ The number of inactive validators and submission completeness rates changed dram
 **Inactive Validators by Month:**
 
 **December 2024 (4 total inactive validators):**
+
 - `0x3fe573552E14a0FC11Da25E43Fef11e16a785068` (100% missing for the entire period)
 - `0xd625d50B0d087861c286d726eC51Cf4Bd9c54357` (100% missing for the entire period)
 - `0x26E2724dBD14Fbd52be430B97043AA4c83F05852` (100% missing for the entire period)
 - `0x100E38f7BCEc53937BDd79ADE46F34362470577B` (100% missing for the entire period)
 
 **January 2025 (5 total inactive validators):**
+
 - All 4 validators from December remained inactive (100% missing)
 - `0xe877FcB4b26036Baa44d3E037117b9e428B1Aa65` (100% missing for the entire month)
 
 **February 2025 (6 total inactive validators):**
+
 - All 5 validators from January remained inactive (100% missing)
 - `0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775` (active in December–January; **100% missing** from February onward)
 
 **March 2025 (6 total inactive validators):**
+
 - Core inactive group remained unchanged
 - `0x6747c02DE7eb2099265e55715Ba2E03e8563D051` (dropped out on 8 March 2025)
 - `0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3` (inactive entire month)
 - `0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f` (inactive entire month)
 
 **April 2025 (7 total inactive validators):**
+
 - All validators from March remained inactive
 - `0x3fe573552E14a0FC11Da25E43Fef11e16a785068` rejoined the inactive list
 
 **May 2025 (8 total inactive validators):**
+
 - All validators from April remained inactive
 - `0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775` confirmed as persistently inactive
 
 **June 2025 (9 total inactive validators):**
+
 - All validators from May remained inactive
 - `0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2` became inactive
 
 **Data Observations:**
+
 - The share of timestamps missing at least one validator increased from **8.5%** in December to **81.1%** in June
 - Weekend coverage declined more severely than weekday coverage throughout the period
 - The total missing submission count increased by approximately 15.2% month-over-month on average
