@@ -452,17 +452,15 @@ The table below shows how many of the ten issue areas fall into each rating cate
 
 ## Recommendations for Immediate Action
 
-1. **Emergency Validator Intervention**: With 81% of submission slots incomplete by June 2025, immediate replacement of inactive validators is critical.
+1. **Validator Replacement**: With 81% of submission slots incomplete by June 2025, replacement of inactive validators with vetted candidates shall be considered.
 
-2. **Anti-Coordination Measures**: Investigate and potentially penalize the 20 validators showing coordinated submission patterns.
+2. **Performance-Based Incentive Restructuring**: Implement rewards that strongly favor high-quality, independent submissions.
 
-3. **Performance-Based Incentive Restructuring**: Implement rewards that strongly favor high-quality, independent submissions.
+3. **Enhanced Monitoring Infrastructure**: Deploy real-time dashboards with automated alerting for deviations.
 
-4. **Enhanced Monitoring Infrastructure**: Deploy real-time dashboards with automated alerting for deviations.
+4. **Weekend Policy Clarification**: Establish clear guidelines for handling FX data during market closures.
 
-5. **Weekend Policy Clarification**: Establish clear guidelines for handling FX data during market closures.
-
-6. **Validator Quality Scoring System**: Implement transparent scoring weighted 40% uptime, 30% accuracy, 30% consistency.
+5. **Validator Quality Scoring System**: Implement transparent scoring weighted 40% uptime, 30% accuracy, 30% consistency.
 
 # Conclusion
 
