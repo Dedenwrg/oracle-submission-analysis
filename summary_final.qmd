@@ -280,7 +280,7 @@ The number of inactive validators and submission completeness rates changed dram
 - Weekend coverage declined more severely than weekday coverage throughout the period
 - The total missing submission count increased by approximately 15.2% month-over-month on average
 - No validators that stopped submitting returned to activity during the analysis period
-- The progressive decline severely impacts the Oracle's ability to compute accurate ACU prices
+- The progressive decline is likely to affect the Oracle's ability to compute accurate ACU prices
 
 ## Suspicious and Out-of-Range Values
 
@@ -308,7 +308,7 @@ Only December 2024 recorded any submissions that failed the ± 20% benchmark or 
 | May 2025 | 68,219 | 10,080 |
 | June 2025 | 74,892 | 11,520 |
 
-The trend shows a general increase in both the number of stale-data runs and maximum run lengths over the period, indicating deteriorating data freshness.
+The trend shows a general increase in both the number of stale-data runs and maximum run lengths over the period, indicating a decline in data freshness over time.
 
 ## Submission Pattern Analysis
 
@@ -362,7 +362,7 @@ The spike in February 2025 (47 validators) appears to be an anomaly, with the ge
 | May 2025 | 22s | 10 | 7 | Mean abs. offset 9.3s |
 | June 2025 | 28s | 12 | 9 | Mean abs. offset 10.7s |
 
-Timing precision generally deteriorated over the period, with increasing numbers of validators showing significant drift.
+Timing precision generally shows a tendency to deteriorate over the period, with increasing numbers of validators exhibiting measurable drift.
 
 ## Cross-Rate Consistency Measurements
 
@@ -440,39 +440,39 @@ The table below shows how many of the ten issue areas fall into each rating cate
 | Good (🟡) | 20% | 20% | 10% | 30% | 30% | 20% | 20% |
 | Excellent (🟢) | 60% | 40% | 20% | 50% | 30% | 20% | 10% |
 
-## Critical Findings
+## Key Findings
 
-1. **Validator Participation Crisis**: The number of completely inactive validators increased from 4 to 9 over the seven-month period, with submission completeness dropping from 91.5% to 18.9%.
+1. **Validator Participation Decline**: The number of completely inactive validators increased from 4 to 9 over the seven-month period, with submission completeness dropping from 91.5% to 18.9%.
 
-2. **Data Quality Deterioration**: While out-of-range values and cross-rate consistency remained stable, other metrics showed significant degradation, particularly in missing submissions, timing synchronization, and weekend effects.
+2. **Data Quality Trends**: While out-of-range values and cross-rate consistency remained stable, other metrics showed signs of weakening, particularly in missing submissions, timing synchronization, and weekend effects.
 
-3. **Growing Coordination Concerns**: The emergence and growth of coordinated submission groups (from 0 to 5 groups involving 20 validators) threatens the independence of price discovery.
+3. **Coordination Patterns**: The emergence and growth of coordinated submission groups (from 0 to 5 groups involving 20 validators) could reduce the independence of price discovery.
 
-4. **Infrastructure Reliability Issues**: Vendor downtime events became larger and more impactful, with the largest outage growing from no major events in December to 120-minute outages affecting 31+ validators by June.
+4. **Infrastructure Reliability Trends**: Vendor downtime events became more frequent and involved larger validator sets, with the largest outage growing from no major events in December to 120-minute outages affecting 31+ validators by June.
+ 
+## Potential Mitigation Options
 
-## Recommendations for Immediate Action
+1. **Validator Replacement**: With 81% of submission slots incomplete by June 2025, replacement of inactive validators with vetted candidates may be considered, subject to governance preferences and risk appetite.
 
-1. **Validator Replacement**: With 81% of submission slots incomplete by June 2025, replacement of inactive validators with vetted candidates shall be considered.
+2. **Performance-Based Incentive Restructuring**: Consider implementing rewards that more strongly favor high-quality, independent submissions.
 
-2. **Performance-Based Incentive Restructuring**: Implement rewards that strongly favor high-quality, independent submissions.
+3. **Enhanced Monitoring Infrastructure**: Explore deploying real-time dashboards with automated alerting for deviations.
 
-3. **Enhanced Monitoring Infrastructure**: Deploy real-time dashboards with automated alerting for deviations.
+4. **Weekend Policy Clarification**: Clarify and document guidelines for handling FX data during market closures.
 
-4. **Weekend Policy Clarification**: Establish clear guidelines for handling FX data during market closures.
-
-5. **Validator Quality Scoring System**: Implement transparent scoring weighted 40% uptime, 30% accuracy, 30% consistency.
+5. **Validator Quality Scoring System**: Consider adopting a transparent scoring framework weighted 40% uptime, 30% accuracy, 30% consistency.
 
 # Conclusion
 
-The seven-month analysis period from December 2024 to June 2025 reveals a concerning deterioration in Oracle data quality. While some metrics like out-of-range values and cross-rate consistency remained stable, critical issues emerged in validator participation, data freshness, and system coordination.
+The seven-month analysis period from December 2024 to June 2025 suggests a noticeable deterioration in several Oracle data quality dimensions. While some metrics like out-of-range values and cross-rate consistency remained stable, material issues emerged in validator participation, data freshness, and system coordination.
 
-The progression from an "Excellent" overall rating in December 2024 to "Poor" by June 2025 indicates systemic issues requiring urgent intervention. The Oracle's ability to provide reliable pricing for the Autonity ecosystem is severely compromised, with immediate action needed to restore functionality and trust.
+The progression from an "Excellent" overall rating in December 2024 to "Poor" by June 2025 suggests systemic issues that may warrant focused attention from protocol governance and infrastructure operators. The Oracle's ability to provide reliable pricing for the Autonity ecosystem appears compromised in several respects, and further work may be required to restore functionality and trust to previous levels.
 
-Key priorities include:
-- Replacing inactive validators
-- Breaking up coordination clusters
-- Implementing stronger quality incentives
+Potential areas of focus include:
+- Evaluating options for replacing inactive validators
+- Reducing the influence of coordination clusters
+- Strengthening quality-oriented incentives
 - Enhancing real-time monitoring capabilities
 - Establishing clearer operational policies
 
-Without these interventions, the Oracle system risks complete failure in its mission to provide accurate, timely, and independent price discovery for the Autonity network.
+If left unaddressed, these trends could affect the Oracle system's ability to provide accurate, timely, and independent price discovery for the Autonity network.
