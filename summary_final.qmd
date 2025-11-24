@@ -442,7 +442,7 @@ The table below shows how many of the ten issue areas fall into each rating cate
 
 ## Key Findings
 
-1. **Validator Participation Decline**: The number of completely inactive validators increased from 4 to 9 over the seven-month period, with submission completeness dropping from 91.5% to 18.9%.
+1. **Validator Participation Decline**: The number of completely inactive validators increased from 4 (~7.5% of the committee) to 9 (20% of the committee) over the seven-month period, with submission completeness dropping from 91.5% to 18.9%.
 
 2. **Data Quality Trends**: While out-of-range values and cross-rate consistency remained stable, other metrics showed signs of weakening, particularly in missing submissions, timing synchronization, and weekend effects.
 
