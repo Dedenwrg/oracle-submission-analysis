@@ -86,29 +86,50 @@ df['ACU_Oracle'] *= 10e-19
 acu_from_oracle = df[["timestamp", "ACU_Oracle"]]
 
 # Compute ACU from Yahoo Finance data
+def _scan_one_yf_csv(path: str) -> pl.LazyFrame:
+    """
+    Reads a single Yahoo Finance CSV, handling both old (6-column) and new (7-column) formats.
+    """
+    candidate_schemas = [
+        ["Datetime", "Adj Close", "Close", "High", "Low", "Open", "Volume"],  # 7 columns (new format)
+        ["Datetime", "Close", "High", "Low", "Open", "Volume"],                # 6 columns (old format)
+    ]
+    
+    last_err: Exception | None = None
+    for cols in candidate_schemas:
+        try:
+            lf_local = pl.scan_csv(
+                path,
+                has_header=False,
+                skip_rows=3,
+                new_columns=cols,
+                try_parse_dates=True,
+            )
+            # Ensure we have Close column and select only what we need
+            lf_local = lf_local.select([
+                pl.col("Datetime"),
+                pl.col("Close").cast(pl.Float64),
+            ])
+            # Trigger a collect to verify schema works
+            _ = lf_local.limit(1).collect()
+            return lf_local
+        except Exception as e:
+            last_err = e
+            continue
+    
+    raise RuntimeError(f"Could not parse {path}: {last_err}")
+
+
 def load_yahoo_finance_data(directory_pattern: str, pair_label: str) -> pl.DataFrame:
     """
     Loads Yahoo Finance CSVs and returns a Polars DataFrame.
+    Handles both old (6-column) and new (7-column with Adj Close) formats.
     """
     files = sorted(glob.glob(directory_pattern))
     if not files:
         raise ValueError(f"No Yahoo Finance CSV files found: {directory_pattern}")
 
-    lf_list = []
-    for f in files:
-        lf_temp = (
-            pl.scan_csv(
-                f,
-                has_header=False,
-                skip_rows=3,
-                new_columns=["Datetime", "Close", "High", "Low", "Open", "Volume"],
-                try_parse_dates=True,
-            )
-            .select(["Datetime", "Close"])  # enforce consistent schema across files
-            .with_columns([pl.col("Close").cast(pl.Float64)])
-        )
-        lf_list.append(lf_temp)
-
+    lf_list = [_scan_one_yf_csv(f) for f in files]
     lf = pl.concat(lf_list)
     df = (
         lf.rename({"Datetime": "timestamp_benchmark", "Close": "benchmark_close"})
