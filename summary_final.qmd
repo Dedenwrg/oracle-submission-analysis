@@ -5,6 +5,11 @@ format:
     toc: true
     toc-depth: 3
     number-sections: true
+jupyter:
+  kernelspec:
+    name: devenv
+    language: python
+    display_name: Python (devenv)
 ---
 
 # Executive Summary

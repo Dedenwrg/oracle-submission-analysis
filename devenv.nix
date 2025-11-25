@@ -6,6 +6,10 @@
     pkgs.quarto
   ];
 
+  env.LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
+    pkgs.zlib
+  ];
+
   languages.python = {
     enable = true;
     venv.enable = true;
