@@ -1,0 +1,186 @@
+---
+title: "Oracle Submission Analysis - Summary of Key Findings (May 2025)"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+---
+
+# Executive Summary
+
+This document provides a straightforward summary of the key findings from an analysis of Autonity Oracle submissions data from May 2025. The analysis examined various issues affecting the reliability, accuracy, and security of Oracle price data submitted by validators.
+
+## Overview of Issues Analyzed
+
+The investigation covered ten distinct issue areas:
+
+1. **Missing or Null Submissions**: Examining validators that failed to submit price data
+2. **Irregular Submission Frequency**: Analyzing abnormal timing patterns in submissions
+3. **Out-of-Range Values**: Detecting suspicious price values compared to benchmarks
+4. **Stale/Lagging Data**: Identifying validators that fail to update prices when markets move
+5. **Confidence Value Anomalies**: Examining issues with confidence metrics
+6. **Cross-Rate Inconsistency**: Assessing mathematical consistency across token prices
+7. **Timing/Synchronization Issues**: Analyzing timestamp disparities between validators
+8. **Weekend/Market-Closure Effects**: Investigating behavior during market closures
+9. **Vendor Downtime**: Detecting submission stoppages
+10. **Security/Malicious Behavior**: Looking for potential manipulation patterns
+
+# Key Findings
+
+## Missing or Null Submissions
+
+- **Eight validators** had 100% missing-submission rates:
+  - 0x100E38f7BCEc53937BDd79ADE46F34362470577B
+  - 0x26E2724dBD14Fbd52be430B97043AA4c83F05852
+  - 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357
+  - 0x6747c02DE7eb2099265e55715Ba2E03e8563D051
+  - 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3
+  - 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f
+  - 0x3fe573552E14a0FC11Da25E43Fef11e16a785068
+  - 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775
+- **Average daily full-coverage (ALL-FX mode)**: **23.7%**
+- Weekend full-coverage **19.8%** vs weekday **26.3%**
+- Approximately **89,285 submission timestamps** were analyzed; **≈ 76.3%** of validator-slot combinations were missing at least one pair
+
+## Irregular Submission Frequency
+
+- Submission counts ranged from **0 to 2,880 per day** (expected 2,880)
+- **9 validators** maintained ≥ 99% cadence for the whole month
+- **10 validators** exhibited gaps exceeding 2h
+- **≈ 12.8% of all submissions** occurred outside the expected 30-second interval
+- Intervals within a **±5% tolerance band** around the 30-second target (0.475–0.525 min) were counted as **on-schedule**
+- The median daily submission count across active validators was **2,675**
+
+## Out-of-Range Values
+
+- **0 suspicious price submissions** were detected within the ± 20% benchmark threshold  
+  - No non-positive values and **no cross-rate inconsistencies** above 10%
+
+## Stale/Lagging Data
+
+- **68,219 stale-data runs** were detected. Each run is defined as **≥ 30 identical consecutive submissions** for a given pair
+- The longest run spanned **10,080 consecutive submissions** (~ 2.8h)
+- **0 lagging windows** were observed in which price moved ≥ 5% within 60 min
+
+## Confidence Value Anomalies
+
+- **15 validators** supplied fixed confidence values (up from 12 in April)
+- **212 validator-pair combinations** showed **near-zero correlation** (< 0.1) between confidence and price change
+- For this analysis, an *anomalous* confidence metric is one that is either **fixed (zero variance)** or **poorly correlated (< 0.1)** with underlying price moves
+- Autonity token pairs remained heavily fixed at **confidence = 100**
+
+## Cross-Rate Inconsistency
+
+- **0 mismatches** exceeded the 10% tolerance – all ATN/NTN cross-checks passed
+
+## Timing/Synchronization Issues
+
+- Time drift between validators ranged from **0.7s** (best) to **22s** (worst)
+- The **mean absolute offset** across the fleet was **9.3s**; no validator's mean exceeded **30s**
+- **10 validators** consistently submitted **≥ 10s early**, while **7 validators** were **≥ 10s late** relative to the round median
+
+## Weekend/Market-Closure Effects
+
+- Weekend submissions totalled **2,014,892 rows** (**48.1%** of all data) – inconsistent with closed FX markets
+- Weekend full-coverage was **6.5 pp lower** than weekdays (19.8% vs 26.3%)
+- Stale-run frequency was noticeably higher on weekends, and prices were generally carried forward from Friday closes
+
+## Vendor Downtime Issues
+
+- **11 isolated outage events** plus **one cluster of 38 validators** (23 May 03:15 UTC, ~ 90 min)
+- **Cumulative downtime < 0.9%** – slight deterioration versus April
+
+## Security/Malicious Behavior Indicators
+
+- **3,897 validator-pair overlap events** (≥ 75% identical prices) were flagged
+- **2 multi-validator extreme-outlier events** were observed in May, affecting 4 validators
+
+# Notable Validators
+
+## Highest Performing Validators
+
+1. **0x197B2c44b887c4aC01243BDE7E4b7E7b98A8d35A**  
+   – 99.3% completeness • 0 flagged values • avg 0.16% deviation • dynamic confidence
+2. **0xF9B38D02959379d43C764064dE201324d5e12931**  
+   – 99.5% completeness • dynamic confidence • minimal downtime
+3. **0xdF239e0D5b4E6e820B0cFEF6972A7c1aB7c6a4be**  
+   – 99.1% completeness • avg 0.20% benchmark deviation • robust timing
+
+## Most Problematic Validators
+
+1. **0x100E38f7BCEc53937BDd79ADE46F34362470577B** – 100% missing
+2. **0x3fe573552E14a0FC11Da25E43Fef11e16a785068** – 100% missing
+3. **0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775** – 100% missing (newly inactive)
+4. **0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772** – longest stale-run (10,080)
+5. **0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E** – multiple stale runs > 6,800; weekend ratio 61%
+
+## Validators with Coordinated Behavior
+
+**Cluster 1** (NTN-ATN, 18 validators) – ≥ 20k identical overlaps  
+**Cluster 2** (ATN-USD, 10 validators) – ≥ 95k identical overlaps  
+**Cluster 3** (AUD-USD, 4 validators) – near-perfect mirroring  
+**Cluster 4** (EUR-USD, 3 validators) – emerged in May with 72% overlap
+
+# Implications and Recommendations
+
+## Data Quality Concerns
+
+- Coverage gaps have worsened (76.3% of slots incomplete)
+- Stale pricing continues to increase (68,219 runs)
+- Weekend pricing behavior conflicts with real-world FX market closures
+- Growing number of coordinated submission groups
+
+## Validator Performance
+
+- Top-10 validators: **≈ 2.1%** problematic submissions  
+- Bottom-10 validators: **≈ 51.2%** problematic submissions
+
+## Recommendations
+
+1. **Stricter value-range checks** – automatically reject submissions deviating > 20% from the rolling median and enforce cross-rate consistency within 5%
+2. **Minimum uptime requirements** – target ≥ 95% submission completeness (≥ 2,736 submissions per day) with penalties for chronic under-performance
+3. **Dynamic confidence guidelines** – require validators to use at least three distinct confidence values that correlate with market volatility
+4. **Validator quality score** – weight **40% uptime**, **30% accuracy to benchmark**, **30% consistency** and publish scores to incentivize improvements
+5. **Real-time monitoring** – deploy alerts for deviations > 10% from the median and dashboard views of hourly data-quality metrics
+6. **Urgent intervention** – address the growing number of inactive validators and coordination clusters
+
+# Monthly Comparison Table
+
+| Issue Area | Rating | Scale Description |
+|------------|:------:|-------------------|
+| Missing/Null Submissions | ⚫ | ⚫ Critical (> 60%) 🔴 Poor (30–60%) 🟠 Fair (15–30%) 🟡 Good (5–15%) 🟢 Excellent (< 5%) |
+| Irregular Submission Frequency | 🟠 | ⚫ Critical (> 25% irregular) 🔴 Poor (15–25%) 🟠 Fair (8–15%) 🟡 Good (2–8%) 🟢 Excellent (< 2%) |
+| Out-of-Range Values | 🟢 | ⚫ Critical (> 8%) 🔴 Poor (3–8%) 🟠 Fair (1–3%) 🟡 Good (0.3–1%) 🟢 Excellent (< 0.3%) |
+| Stale/Lagging Data | 🟡 | ⚫ Critical (> 15% runs) 🔴 Poor (7–15%) 🟠 Fair (3–7%) 🟡 Good (0.5–3%) 🟢 Excellent (< 0.5%) |
+| Confidence Value Anomalies | 🟡 | ⚫ Critical (> 85% fixed) 🔴 Poor (60–85%) 🟠 Fair (35–60%) 🟡 Good (15–35%) 🟢 Excellent (< 15%) |
+| Cross-Rate Inconsistency | 🟢 | ⚫ Critical (> 12%) 🔴 Poor (6–12%) 🟠 Fair (3–6%) 🟡 Good (1–3%) 🟢 Excellent (< 1%) |
+| Timing/Synchronization | 🟠 | ⚫ Critical (> 60s) 🔴 Poor (30–60s) 🟠 Fair (10–30s) 🟡 Good (3–10s) 🟢 Excellent (< 3s) |
+| Weekend/Market-Closure Effects | 🔴 | ⚫ Critical (> 30%) 🔴 Poor (15–30%) 🟠 Fair (7–15%) 🟡 Good (2–7%) 🟢 Excellent (< 2%) |
+| Vendor Downtime Impact | 🟢 | ⚫ Critical (> 10% time) 🔴 Poor (4–10%) 🟠 Fair (2–4%) 🟡 Good (0.5–2%) 🟢 Excellent (< 0.5%) |
+| Security Concern Level | 🟠 | ⚫ Critical (confirmed) 🔴 Poor (strong evidence) 🟠 Fair (some evidence) 🟡 Good (minimal) 🟢 Excellent (none) |
+| **Overall Rating** | 🟠 | ⚫ Critical 🔴 Poor 🟠 Fair 🟡 Good 🟢 Excellent |
+
+# Month-to-Month Comparison
+
+| Issue Area | December 2024 | January 2025 | February 2025 | March 2025 | April 2025 | May 2025 | Trend |
+|------------|:------------:|:------------:|:-------------:|:----------:|:----------:|:--------:|:-----:|
+| Missing/Null Submissions | 🟡 | 🟠 | 🟠 | 🔴 | 🔴 | ⚫ | ⬇️ |
+| Irregular Submission Frequency | 🟢 | 🟡 | 🟡 | 🟡 | 🟠 | 🟠 | ↔️ |
+| Out-of-Range Values | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | ↔️ |
+| Stale/Lagging Data | 🟠 | 🔴 | 🔴 | 🟢 | 🟢 | 🟡 | ⬇️ |
+| Confidence Value Anomalies | 🔴 | 🔴 | 🔴 | 🟢 | 🟢 | 🟡 | ⬇️ |
+| Cross-Rate Inconsistency | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | 🟢 | ↔️ |
+| Timing/Synchronization | 🟢 | 🟢 | 🟠 | 🟡 | 🟠 | 🟠 | ↔️ |
+| Weekend/Market-Closure Effects | 🟢 | 🟢 | 🟠 | 🔴 | 🔴 | 🔴 | ↔️ |
+| Vendor Downtime Impact | 🟢 | 🟡 | 🟠 | 🟢 | 🟢 | 🟢 | ↔️ |
+| Security Concern Level | 🟡 | 🟠 | 🔴 | 🟡 | 🟡 | 🟠 | ⬇️ |
+| **Overall Rating** | 🟢 | 🟡 | 🟠 | 🟡 | 🟡 | 🟠 | ⬇️ |
+
+**Key Changes**
+
+- Missing/Null Submissions reached **Critical** level with 76.3% of slots incomplete and an eighth validator becoming inactive
+- Stale/Lagging Data deteriorated to **Good** with increased stale run counts and longer maximum runs
+- Confidence Value Anomalies worsened to **Good** with 15 validators now using fixed values
+- Security Concern Level degraded to **Fair** with emergence of extreme-outlier events and a fourth coordination cluster
+- Overall rating declined to **Fair**, indicating significant deterioration in Oracle data quality
