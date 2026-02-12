@@ -509,3 +509,5 @@ The findings from this testnet analysis provide a foundation for further investi
 
 - **Re-run the analysis on Mainnet**: Verify the extent to which the issues identified in testnet are present on mainnet. This will help determine whether the observed patterns are specific to the testnet environment or reflect broader systemic concerns.
 - **Review focus areas with stakeholders**: Engage with the validator community and protocol development team to discuss the identified issues, validate the findings, and collaboratively develop appropriate responses and improvements to the Oracle system.
+
+The analysis has been run on October 2025 Mainnet data. Compared to the Tiber Challenge months, mainnet October has proven substantially better on reliability, accuracy and robustness. This moves the reported oracle data quality from an overall "Poor" rating on Testnet to a "Good" rating on Mainnet. Review of focus areas with stakeholders is to do.
