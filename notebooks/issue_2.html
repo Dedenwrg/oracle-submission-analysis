@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-283d813e9a11428b00dc78d5a810a4dc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d41974b8c531fc798e187f5f45875d69.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -188,8 +188,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../summary_2025_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (April 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (May 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (June 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../summary_first_half.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oracle Submission Data Analysis Report (December 2024 - March 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_final.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Data Analysis Report</span></a>
   </div>
 </li>
       </ul>
@@ -349,11 +373,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Analyze daily submission counts to detect irregularities or patterns.</li>
 </ol>
 <p>Below is the Python script:</p>
-<div id="97195840" class="cell" data-execution_count="1">
+<div id="0ef2f86b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="3d4140a5" class="cell" data-execution_count="2">
+<div id="b0729bc5" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_and_preprocess(submission_glob: <span class="bu">str</span>) <span class="op">-&gt;</span> pl.LazyFrame:</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads Oracle Submission CSVs and returns a Polars DataFrame.</span></span>
@@ -479,12 +503,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_daily_submission_counts"</span>: df_daily_counts,</span>
 <span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="0ed01300" class="cell" data-execution_count="3">
+<div id="31eea785" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> analyze_irregular_submission_frequency(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    submission_glob<span class="op">=</span><span class="st">"../submission-data/Oracle_Submission_*.csv"</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/run/user/1001/ipykernel_56750/3064959644.py:11: DeprecationWarning: The argument `dtypes` for `scan_csv` is deprecated. It has been renamed to `schema_overrides`.
+<pre><code>/run/user/1001/ipykernel_11836/3064959644.py:11: DeprecationWarning: The argument `dtypes` for `scan_csv` is deprecated. It has been renamed to `schema_overrides`.
   lf_temp = pl.scan_csv(</code></pre>
 </div>
 </div>
@@ -494,7 +518,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="what-are-the-results">2.4 What are the results?</h3>
 <p>Below are findings from the <code>results</code> dictionary to interpret the analysis. Results dynamically update upon notebook re-execution.</p>
 <p><strong>Validator Interval Statistics</strong></p>
-<div id="01a84192" class="cell" data-execution_count="4">
+<div id="e4092971" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"df_validator_interval_stats"</span>].sort(<span class="st">"total_submissions"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div><style>
@@ -637,7 +661,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong><code>num_duplicates</code></strong>: Indicates repeated submissions at identical timestamps, possibly due to retries or software bugs.</li>
 </ul>
 <p><strong>Daily Submission Counts</strong></p>
-<div id="045a3f38" class="cell" data-execution_count="5">
+<div id="f80d3f54" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"df_daily_submission_counts"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div><style>
@@ -750,7 +774,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The <code>count_submissions_that_day</code> column highlights how submission frequency varies by day. Large variations may indicate operational issues such as outages or configuration problems.</p>
 <p><strong>List of all Validators and their Fraction Out of Range</strong></p>
-<div id="bfd778e0" class="cell" data-execution_count="6">
+<div id="2e83fcc7" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fraction_out_of_range(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    df: pl.DataFrame, </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    expected_interval: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.5</span>, </span>

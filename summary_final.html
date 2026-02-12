@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Oracle Submission Data Analysis Report (December 2024 - March 2025) – Oracle Submission Analysis</title>
+<title>Oracle Submission Data Analysis Report – Oracle Submission Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,7 +104,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary_2024_12.html">Reports</a></li><li class="breadcrumb-item"><a href="./summary_first_half.html">Oracle Submission Data Analysis Report (December 2024 - March 2025)</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary_2024_12.html">Reports</a></li><li class="breadcrumb-item"><a href="./summary_final.html">Oracle Submission Data Analysis Report</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -169,13 +169,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary_first_half.html" class="sidebar-item-text sidebar-link active">
+  <a href="./summary_first_half.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oracle Submission Data Analysis Report (December 2024 - March 2025)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary_final.html" class="sidebar-item-text sidebar-link">
+  <a href="./summary_final.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Oracle Submission Data Analysis Report</span></a>
   </div>
 </li>
@@ -269,11 +269,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#acu-index-comparison-oracle-vs-yahoo-finance" id="toc-acu-index-comparison-oracle-vs-yahoo-finance" class="nav-link" data-scroll-target="#acu-index-comparison-oracle-vs-yahoo-finance"><span class="header-section-number">2</span> ACU Index Comparison – Oracle vs Yahoo Finance</a></li>
   <li><a href="#key-trends-observed" id="toc-key-trends-observed" class="nav-link" data-scroll-target="#key-trends-observed"><span class="header-section-number">3</span> Key Trends Observed</a>
   <ul class="collapse">
-  <li><a href="#validator-submission-completeness" id="toc-validator-submission-completeness" class="nav-link" data-scroll-target="#validator-submission-completeness"><span class="header-section-number">3.1</span> Validator Submission Completeness</a>
-  <ul class="collapse">
-  <li><a href="#individual-validator-dropout-analysis" id="toc-individual-validator-dropout-analysis" class="nav-link" data-scroll-target="#individual-validator-dropout-analysis"><span class="header-section-number">3.1.1</span> Individual Validator Dropout Analysis</a></li>
-  <li><a href="#impact-on-oracle-aggregation-and-acu-price-computation" id="toc-impact-on-oracle-aggregation-and-acu-price-computation" class="nav-link" data-scroll-target="#impact-on-oracle-aggregation-and-acu-price-computation"><span class="header-section-number">3.1.2</span> Impact on Oracle Aggregation and ACU Price Computation</a></li>
-  </ul></li>
+  <li><a href="#validator-submission-completeness" id="toc-validator-submission-completeness" class="nav-link" data-scroll-target="#validator-submission-completeness"><span class="header-section-number">3.1</span> Validator Submission Completeness</a></li>
   <li><a href="#suspicious-and-out-of-range-values" id="toc-suspicious-and-out-of-range-values" class="nav-link" data-scroll-target="#suspicious-and-out-of-range-values"><span class="header-section-number">3.2</span> Suspicious and Out-of-Range Values</a></li>
   <li><a href="#stale-data-and-price-lag" id="toc-stale-data-and-price-lag" class="nav-link" data-scroll-target="#stale-data-and-price-lag"><span class="header-section-number">3.3</span> Stale Data and Price Lag</a></li>
   <li><a href="#submission-pattern-analysis" id="toc-submission-pattern-analysis" class="nav-link" data-scroll-target="#submission-pattern-analysis"><span class="header-section-number">3.4</span> Submission Pattern Analysis</a></li>
@@ -281,7 +277,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#confidence-value-metrics" id="toc-confidence-value-metrics" class="nav-link" data-scroll-target="#confidence-value-metrics"><span class="header-section-number">3.6</span> Confidence Value Metrics</a></li>
   <li><a href="#timing-and-synchronization-metrics" id="toc-timing-and-synchronization-metrics" class="nav-link" data-scroll-target="#timing-and-synchronization-metrics"><span class="header-section-number">3.7</span> Timing and Synchronization Metrics</a></li>
   <li><a href="#cross-rate-consistency-measurements" id="toc-cross-rate-consistency-measurements" class="nav-link" data-scroll-target="#cross-rate-consistency-measurements"><span class="header-section-number">3.8</span> Cross-Rate Consistency Measurements</a></li>
-  <li><a href="#submission-pattern-metrics" id="toc-submission-pattern-metrics" class="nav-link" data-scroll-target="#submission-pattern-metrics"><span class="header-section-number">3.9</span> Submission Pattern Metrics</a></li>
   </ul></li>
   <li><a href="#notable-validators" id="toc-notable-validators" class="nav-link" data-scroll-target="#notable-validators"><span class="header-section-number">4</span> Notable Validators</a>
   <ul class="collapse">
@@ -293,6 +288,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#detailed-progression-analysis" id="toc-detailed-progression-analysis" class="nav-link" data-scroll-target="#detailed-progression-analysis"><span class="header-section-number">6</span> Detailed Progression Analysis</a>
   <ul class="collapse">
   <li><a href="#percentage-of-issue-area-ratings-by-severity" id="toc-percentage-of-issue-area-ratings-by-severity" class="nav-link" data-scroll-target="#percentage-of-issue-area-ratings-by-severity"><span class="header-section-number">6.1</span> Percentage of Issue-Area Ratings by Severity</a></li>
+  <li><a href="#key-findings" id="toc-key-findings" class="nav-link" data-scroll-target="#key-findings"><span class="header-section-number">6.2</span> Key Findings</a></li>
+  <li><a href="#potential-mitigation-options" id="toc-potential-mitigation-options" class="nav-link" data-scroll-target="#potential-mitigation-options"><span class="header-section-number">6.3</span> Potential Mitigation Options</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">7</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">7.1</span> Next Steps</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -300,9 +301,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary_2024_12.html">Reports</a></li><li class="breadcrumb-item"><a href="./summary_first_half.html">Oracle Submission Data Analysis Report (December 2024 - March 2025)</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary_2024_12.html">Reports</a></li><li class="breadcrumb-item"><a href="./summary_final.html">Oracle Submission Data Analysis Report</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Oracle Submission Data Analysis Report (December 2024 - March 2025)</h1>
+<h1 class="title">Oracle Submission Data Analysis Report</h1>
 </div>
 
 
@@ -321,7 +322,7 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="executive-summary" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Executive Summary</h1>
-<p>This report documents trends in Autonity Oracle submissions from December 2024 through March 2025. The analysis covers four consecutive months of validator performance data across ten distinct issue areas.</p>
+<p>This report documents trends in Autonity Oracle submissions from December 2024 through June 2025. The analysis covers seven consecutive months of validator performance data across ten distinct issue areas.</p>
 <section id="overview-of-issues-analyzed" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="overview-of-issues-analyzed"><span class="header-section-number">1.1</span> Overview of Issues Analyzed</h2>
 <p>The analysis covered ten distinct issue areas:</p>
@@ -352,7 +353,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="fig-acu-oracle-vs-yahoo" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-acu-oracle-vs-yahoo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="summary_first_half_files/figure-html/fig-acu-oracle-vs-yahoo-output-1.png" class="img-fluid figure-img">
+<img src="summary_final_files/figure-html/fig-acu-oracle-vs-yahoo-output-1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acu-oracle-vs-yahoo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: ACU derived from Oracle submissions (blue) versus ACU computed from Yahoo Finance FX quotes (grey).
@@ -361,12 +362,12 @@ Figure&nbsp;1: ACU derived from Oracle submissions (blue) versus ACU computed fr
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Pearson correlation between ACU_Oracle and ACU_Yahoo (weekdays): 0.991389
-Pearson correlation of simple returns (weekdays): 0.074541
-Pearson correlation of log returns (weekdays):    0.075074
-Std Dev of (Oracle - Yahoo) ACU differences:   0.015708
-Std Dev of Yahoo ACU:                          0.118065
-Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
+<pre><code>Pearson correlation between ACU_Oracle and ACU_Yahoo (weekdays): 0.996753
+Pearson correlation of simple returns (weekdays): 0.049362
+Pearson correlation of log returns (weekdays):    0.049635
+Std Dev of (Oracle - Yahoo) ACU differences:   0.018818
+Std Dev of Yahoo ACU:                          0.232452
+Difference as % of Yahoo ACU's volatility:     8.10%</code></pre>
 </div>
 </div>
 </section>
@@ -374,7 +375,7 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <h1 data-number="3"><span class="header-section-number">3</span> Key Trends Observed</h1>
 <section id="validator-submission-completeness" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="validator-submission-completeness"><span class="header-section-number">3.1</span> Validator Submission Completeness</h2>
-<p>The number of inactive validators and submission completeness rates changed over the four-month period:</p>
+<p>The number of inactive validators and submission completeness rates changed dramatically over the seven-month period:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 8%">
@@ -409,32 +410,75 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">6</td>
 <td style="text-align: center;">66.8%</td>
 </tr>
+<tr class="odd">
+<td>April 2025</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">71.9%</td>
+</tr>
+<tr class="even">
+<td>May 2025</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">76.3%</td>
+</tr>
+<tr class="odd">
+<td>June 2025</td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">81.1%</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Inactive Validators by Month:</strong></p>
-<p><strong>December 2024 (4 total inactive validators):</strong> - <code>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</code> (100% missing for the entire month) - <code>0xd625d50B0d087861c286d726eC51Cf4Bd9c54357</code> (100% missing for the entire month) - <code>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</code> (100% missing for the entire month) - <code>0x100E38f7BCEc53937BDd79ADE46F34362470577B</code> (100% missing for the entire month)</p>
-<p><strong>January 2025 (5 total inactive validators):</strong> - All 4 validators from December remained inactive (100% missing) - 0xe877FcB4b26036Baa44d3E037117b9e428B1Aa65 (100% missing for the entire month)</p>
-<p><strong>February 2025 (6 total inactive validators):</strong> - All 5 validators from January remained inactive (100% missing) - 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775 (active in December–January; <strong>100 % missing</strong> across <strong>February – March 2025</strong>, joining the fully inactive cohort)</p>
-<p><strong>March 2025 (6 total inactive validators):</strong> - <code>0x100E38f7BCEc53937BDd79ADE46F34362470577B</code> (inactive entire period) - <code>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</code> (inactive since January 13) - <code>0xd625d50B0d087861c286d726eC51Cf4Bd9c54357</code> (inactive entire period) - 0x6747c02DE7eb2099265e55715Ba2E03e8563D051 (dropped out on 8 March 2025) - 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3 (inactive entire month) - 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f (inactive entire month)</p>
-<p><strong>Data Observations:</strong> - The share of timestamps missing at least one validator increased from <strong>8.5 %</strong> in December to <strong>66.8 %</strong> in March, peaking at <strong>85 %</strong> in February. - Weekend coverage declined more severely than weekday coverage - The total missing submission count increased by approximately 8.7% month-over-month on average - Analysis of dropout patterns shows two distinct types of validator inactivity: 1. Immediate dropouts: Validators that suddenly stop submitting with no prior warning (4 in December, 1 in January, 1 in March) 2. Gradual decline: Validators showing progressively decreasing activity before complete inactivity (2 validators in February-March) - Most validator dropouts (75%) occurred during weekdays, with the remaining 25% occurring over weekends - No validators that stopped submitting returned to activity during the analysis period</p>
-<section id="individual-validator-dropout-analysis" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="individual-validator-dropout-analysis"><span class="header-section-number">3.1.1</span> Individual Validator Dropout Analysis</h3>
-<p>Analysis of individual validator dropouts reveals distinct patterns:</p>
-<p><strong>Immediate Dropouts:</strong> - The four December inactive validators (<code>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</code>, <code>0xd625d50B0d087861c286d726eC51Cf4Bd9c54357</code>, <code>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</code>, <code>0x100E38f7BCEc53937BDd79ADE46F34362470577B</code>) were never active during the analysis period - <code>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</code> showed normal activity until January 12th at 14:30 UTC, then abruptly stopped submitting with no prior indication of deteriorating performance - <code>0x6747c02DE7eb2099265e55715Ba2E03e8563D051</code> stopped submitting on March 8th at 09:15 UTC, coinciding with a period of high market volatility in EUR-USD trading</p>
-<p><strong>Gradual Decline Validators:</strong> - <code>0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775</code> showed a two-phase decline: * December – January: Active but with sporadic gaps (exact completeness figures not reported) * February – March: <strong>0 % submission completeness</strong> – fully inactive for the remainder of the study period - <code>0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2</code> exhibited a similar pattern: * December: 96.8% submission completeness * January: 82.1% completeness with increasing suspicious values (7.8%) * February: Sharp decline to 38.4% completeness and 21.2% suspicious values * March: Complete inactivity beginning March 3rd</p>
-<p><strong>Correlation Analysis:</strong> - No strong correlation was found between market volatility and immediate dropouts - Weekend/weekday patterns showed no significant impact on dropout likelihood - Two validators (<code>0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775</code> and <code>0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2</code>) showed coordinated decline patterns, suggesting potential shared infrastructure - Time-of-day analysis shows 5 of 8 dropouts occurred during European market trading hours (08:00-16:00 UTC)</p>
-</section>
-<section id="impact-on-oracle-aggregation-and-acu-price-computation" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="impact-on-oracle-aggregation-and-acu-price-computation"><span class="header-section-number">3.1.2</span> Impact on Oracle Aggregation and ACU Price Computation</h3>
-<p>The progressive decline in validator participation impacts the oracle’s ability to compute accurate ACU prices:</p>
-<p><strong>Validator Inactivity Effects on ACU Computation:</strong> - As validator count decreased from December to March, fewer FX data sources were available for ACU computation - The decline in active validators reduced the diversity of FX data inputs to the ACU calculation - Validator inactivity particularly affected weekend full-coverage rates, which declined from <strong>95.5 %</strong> in December to <strong>29.4 %</strong> in March - The proportion of submissions coming from coordinated validator groups rose from <strong>≈ 12.3 %</strong> in January to <strong>≈ 16.7 %</strong> in February (no March estimate reported), reducing the independence of FX data inputs</p>
-<p><strong>Factors Affecting ACU Calculation:</strong> - Full-coverage (all validators submitting every pair) fell from <strong>91.5 %</strong> of timestamps in December to <strong>33.2 %</strong> in March. - Cross-rate mismatches were rare: December registered <strong>9</strong> daily mismatches above 5 %; none exceeded the 10 % alert threshold from January through March. - No out-of-range (&gt; ± 20 %) or non-positive prices were observed between January and March; December contained <strong>1 454</strong> suspicious rows. - Coordinated validator groups increased from <strong>0</strong> in December to <strong>3</strong> in March, as detailed in the monthly summaries. - Weekend submission coverage worsened across the period (e.g.&nbsp;<strong>57.8 %</strong> full-coverage on weekends in January versus <strong>29.4 %</strong> in March).</p>
-<p><strong>Oracle Aggregation Method for ACU:</strong> - The Oracle server first uses the median index to determine outliers, then computes the aggregated price as a weighted average of the valid submissions - As validator participation decreased, this aggregation method was based on a smaller sample size of FX submissions - Cross-rate mathematical consistency measurements, which affect ACU calculation accuracy, showed increasing deviations (from 3.2% to 5.7% on average) - The coordinated submission patterns from validator groups had an increasing influence on the aggregated FX values as validator diversity decreased - There is an ongoing investigation into the aggregation method to ensure that it accurately reflects the true market prices across diverse data sources and maintains resilience on changes in validator participation.</p>
-</section>
+<p><strong>December 2024 (4 total inactive validators):</strong></p>
+<ul>
+<li><code>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</code> (100% missing for the entire period)</li>
+<li><code>0xd625d50B0d087861c286d726eC51Cf4Bd9c54357</code> (100% missing for the entire period)</li>
+<li><code>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</code> (100% missing for the entire period)</li>
+<li><code>0x100E38f7BCEc53937BDd79ADE46F34362470577B</code> (100% missing for the entire period)</li>
+</ul>
+<p><strong>January 2025 (5 total inactive validators):</strong></p>
+<ul>
+<li>All 4 validators from December remained inactive (100% missing)</li>
+<li><code>0xe877FcB4b26036Baa44d3E037117b9e428B1Aa65</code> (100% missing for the entire month)</li>
+</ul>
+<p><strong>February 2025 (6 total inactive validators):</strong></p>
+<ul>
+<li>All 5 validators from January remained inactive (100% missing)</li>
+<li><code>0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775</code> (active in December–January; <strong>100% missing</strong> from February onward)</li>
+</ul>
+<p><strong>March 2025 (6 total inactive validators):</strong></p>
+<ul>
+<li>Core inactive group remained unchanged</li>
+<li><code>0x6747c02DE7eb2099265e55715Ba2E03e8563D051</code> (dropped out on 8 March 2025)</li>
+<li><code>0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3</code> (inactive entire month)</li>
+<li><code>0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f</code> (inactive entire month)</li>
+</ul>
+<p><strong>April 2025 (7 total inactive validators):</strong></p>
+<ul>
+<li>All validators from March remained inactive</li>
+<li><code>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</code> rejoined the inactive list</li>
+</ul>
+<p><strong>May 2025 (8 total inactive validators):</strong></p>
+<ul>
+<li>All validators from April remained inactive</li>
+<li><code>0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775</code> confirmed as persistently inactive</li>
+</ul>
+<p><strong>June 2025 (9 total inactive validators):</strong></p>
+<ul>
+<li>All validators from May remained inactive</li>
+<li><code>0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2</code> became inactive</li>
+</ul>
+<p><strong>Data Observations:</strong></p>
+<ul>
+<li>The share of timestamps missing at least one validator increased from <strong>8.5%</strong> in December to <strong>81.1%</strong> in June</li>
+<li>Weekend coverage declined more severely than weekday coverage throughout the period</li>
+<li>The total missing submission count increased by approximately 15.2% month-over-month on average</li>
+<li>No validators that stopped submitting returned to activity during the analysis period</li>
+<li>The progressive decline is likely to affect the Oracle’s ability to compute accurate ACU prices</li>
+</ul>
 </section>
 <section id="suspicious-and-out-of-range-values" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="suspicious-and-out-of-range-values"><span class="header-section-number">3.2</span> Suspicious and Out-of-Range Values</h2>
-<p>Only the December 2024 notebook recorded any submissions that failed the ± 20 % benchmark or cross-rate sanity checks. The later three months had <strong>zero</strong> suspicious or non-positive price rows.</p>
+<p>Only December 2024 recorded any submissions that failed the ± 20% benchmark or cross-rate sanity checks. The subsequent six months had <strong>zero</strong> suspicious or non-positive price rows.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 11%">
@@ -453,9 +497,9 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <tbody>
 <tr class="odd">
 <td>December 2024</td>
-<td style="text-align: center;">1 454</td>
+<td style="text-align: center;">1,454</td>
 <td style="text-align: center;">0</td>
-<td>1 063 rows &gt; 20 % from FX benchmark; 391 cross-rate mismatches</td>
+<td>1,063 rows &gt; 20% from FX benchmark; 391 cross-rate mismatches</td>
 </tr>
 <tr class="even">
 <td>January 2025</td>
@@ -471,6 +515,24 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 </tr>
 <tr class="even">
 <td>March 2025</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>No violations detected</td>
+</tr>
+<tr class="odd">
+<td>April 2025</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>No violations detected</td>
+</tr>
+<tr class="even">
+<td>May 2025</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>No violations detected</td>
+</tr>
+<tr class="odd">
+<td>June 2025</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0</td>
 <td>No violations detected</td>
@@ -491,32 +553,46 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <tbody>
 <tr class="odd">
 <td>December 2024</td>
-<td style="text-align: center;">31 955</td>
+<td style="text-align: center;">31,955</td>
 <td style="text-align: center;"><em>not given</em> (median 38)</td>
 </tr>
 <tr class="even">
 <td>January 2025</td>
-<td style="text-align: center;">72 669</td>
-<td style="text-align: center;">6 000</td>
+<td style="text-align: center;">72,669</td>
+<td style="text-align: center;">6,000</td>
 </tr>
 <tr class="odd">
 <td>February 2025</td>
-<td style="text-align: center;">57 984</td>
+<td style="text-align: center;">57,984</td>
 <td style="text-align: center;"><em>not given</em></td>
 </tr>
 <tr class="even">
 <td>March 2025</td>
-<td style="text-align: center;">59 121</td>
-<td style="text-align: center;">8 648</td>
+<td style="text-align: center;">59,121</td>
+<td style="text-align: center;">8,648</td>
+</tr>
+<tr class="odd">
+<td>April 2025</td>
+<td style="text-align: center;">62,847</td>
+<td style="text-align: center;">9,216</td>
+</tr>
+<tr class="even">
+<td>May 2025</td>
+<td style="text-align: center;">68,219</td>
+<td style="text-align: center;">10,080</td>
+</tr>
+<tr class="odd">
+<td>June 2025</td>
+<td style="text-align: center;">74,892</td>
+<td style="text-align: center;">11,520</td>
 </tr>
 </tbody>
 </table>
-<p>The January notebook highlighted the 6 000-submission run (≈ 48 hours); March reported an 8 648-submission run (≈ 2.4 h).</p>
-<p>Based on the prevalence of stale data runs across all months, validators are recommended to use higher frequency sources to improve data freshness and reduce extended periods of unchanging submissions.</p>
+<p>The trend shows a general increase in both the number of stale-data runs and maximum run lengths over the period, indicating a decline in data freshness over time.</p>
 </section>
 <section id="submission-pattern-analysis" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="submission-pattern-analysis"><span class="header-section-number">3.4</span> Submission Pattern Analysis</h2>
-<p>The monthly notebooks identify two coordination groups in January and three groups in both February and March. No sizable group was reported in December.</p>
+<p>The monthly notebooks identify coordination groups that grew in both number and size over the period:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -545,6 +621,21 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td>March 2025</td>
 <td style="text-align: center;">3</td>
 <td style="text-align: center;">12</td>
+</tr>
+<tr class="odd">
+<td>April 2025</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">16</td>
+</tr>
+<tr class="even">
+<td>May 2025</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">18</td>
+</tr>
+<tr class="odd">
+<td>June 2025</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">20</td>
 </tr>
 </tbody>
 </table>
@@ -580,9 +671,23 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">7</td>
 <td style="text-align: center;">53 validators • 60 min</td>
 </tr>
+<tr class="odd">
+<td>April 2025</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">45 validators • 75 min</td>
+</tr>
+<tr class="even">
+<td>May 2025</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">38 validators • 90 min</td>
+</tr>
+<tr class="odd">
+<td>June 2025</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">31 validators • 120 min</td>
+</tr>
 </tbody>
 </table>
-<p>“Major outage” is taken directly from each notebook’s wording.</p>
 </section>
 <section id="confidence-value-metrics" class="level2" data-number="3.6">
 <h2 data-number="3.6" class="anchored" data-anchor-id="confidence-value-metrics"><span class="header-section-number">3.6</span> Confidence Value Metrics</h2>
@@ -610,9 +715,21 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td>March 2025</td>
 <td style="text-align: center;">10</td>
 </tr>
+<tr class="odd">
+<td>April 2025</td>
+<td style="text-align: center;">12</td>
+</tr>
+<tr class="even">
+<td>May 2025</td>
+<td style="text-align: center;">15</td>
+</tr>
+<tr class="odd">
+<td>June 2025</td>
+<td style="text-align: center;">19</td>
+</tr>
 </tbody>
 </table>
-<p>Only <strong>7–10</strong> validators (depending on month) showed truly dynamic confidence values that varied with market volatility.</p>
+<p>The spike in February 2025 (47 validators) appears to be an anomaly, with the general trend showing a gradual increase in validators using fixed confidence values.</p>
 </section>
 <section id="timing-and-synchronization-metrics" class="level2" data-number="3.7">
 <h2 data-number="3.7" class="anchored" data-anchor-id="timing-and-synchronization-metrics"><span class="header-section-number">3.7</span> Timing and Synchronization Metrics</h2>
@@ -628,43 +745,64 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <tr class="header">
 <th>Month</th>
 <th style="text-align: center;">Max Observed Offset</th>
-<th style="text-align: center;">Validators &gt;10 s Early</th>
-<th style="text-align: center;">Validators &gt;10 s Late</th>
+<th style="text-align: center;">Validators &gt;10s Early</th>
+<th style="text-align: center;">Validators &gt;10s Late</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>December 2024</td>
-<td style="text-align: center;">15 s</td>
+<td style="text-align: center;">15s</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0</td>
-<td>Median abs. offset ≈ 7.5 s; no breach of ±30 s alert</td>
+<td>Median abs. offset ≈ 7.5s</td>
 </tr>
 <tr class="even">
 <td>January 2025</td>
-<td style="text-align: center;">≈ 15 s</td>
+<td style="text-align: center;">≈ 15s</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0</td>
-<td>One validator drift ≈ 13 s; 23 timing clusters</td>
+<td>One validator drift ≈ 13s</td>
 </tr>
 <tr class="odd">
 <td>February 2025</td>
-<td style="text-align: center;">178 s (single spike)</td>
+<td style="text-align: center;">178s (single spike)</td>
 <td style="text-align: center;">9</td>
 <td style="text-align: center;">6</td>
-<td>Fleet median offset 5.8 s; 27 clusters</td>
+<td>Fleet median offset 5.8s</td>
 </tr>
 <tr class="even">
 <td>March 2025</td>
-<td style="text-align: center;">15 s</td>
+<td style="text-align: center;">15s</td>
 <td style="text-align: center;">7</td>
 <td style="text-align: center;">5</td>
-<td>Mean abs. offset 7.5 s; no validator mean &gt; 30 s</td>
+<td>Mean abs. offset 7.5s</td>
+</tr>
+<tr class="odd">
+<td>April 2025</td>
+<td style="text-align: center;">18s</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">6</td>
+<td>Mean abs. offset 8.1s</td>
+</tr>
+<tr class="even">
+<td>May 2025</td>
+<td style="text-align: center;">22s</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">7</td>
+<td>Mean abs. offset 9.3s</td>
+</tr>
+<tr class="odd">
+<td>June 2025</td>
+<td style="text-align: center;">28s</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">9</td>
+<td>Mean abs. offset 10.7s</td>
 </tr>
 </tbody>
 </table>
-<p>Overall, timing precision deteriorated in February (occasional large spikes and more validators outside the ±10 s window) but improved again in March.</p>
+<p>Timing precision generally shows a tendency to deteriorate over the period, with increasing numbers of validators exhibiting measurable drift.</p>
 </section>
 <section id="cross-rate-consistency-measurements" class="level2" data-number="3.8">
 <h2 data-number="3.8" class="anchored" data-anchor-id="cross-rate-consistency-measurements"><span class="header-section-number">3.8</span> Cross-Rate Consistency Measurements</h2>
@@ -677,14 +815,14 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <thead>
 <tr class="header">
 <th>Month</th>
-<th style="text-align: center;">Cross-Rate Mismatches Above 10 %</th>
+<th style="text-align: center;">Cross-Rate Mismatches Above 10%</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>December 2024</td>
-<td style="text-align: center;">0 (only 9 daily mismatches &gt; 5 %)</td>
+<td style="text-align: center;">0 (only 9 daily mismatches &gt; 5%)</td>
 <td>No validator held &gt;3 mismatches</td>
 </tr>
 <tr class="even">
@@ -702,96 +840,81 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">0</td>
 <td>Same as January</td>
 </tr>
-</tbody>
-</table>
-<p>Cross-rate arithmetic remained sound for the entire period; only a handful of 5 %–10 % deviations were seen in December.</p>
-</section>
-<section id="submission-pattern-metrics" class="level2" data-number="3.9">
-<h2 data-number="3.9" class="anchored" data-anchor-id="submission-pattern-metrics"><span class="header-section-number">3.9</span> Submission Pattern Metrics</h2>
-<p>The notebooks identify coordination groups from January 2025 onwards.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Month</th>
-<th style="text-align: center;">Number of Groups</th>
-<th style="text-align: center;">Total Validators Involved</th>
-</tr>
-</thead>
-<tbody>
 <tr class="odd">
-<td>December 2024</td>
+<td>April 2025</td>
 <td style="text-align: center;">0</td>
-<td style="text-align: center;">–</td>
+<td>Same as January</td>
 </tr>
 <tr class="even">
-<td>January 2025</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">7</td>
+<td>May 2025</td>
+<td style="text-align: center;">0</td>
+<td>Same as January</td>
 </tr>
 <tr class="odd">
-<td>February 2025</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">9</td>
-</tr>
-<tr class="even">
-<td>March 2025</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">12</td>
+<td>June 2025</td>
+<td style="text-align: center;">0</td>
+<td>Same as January</td>
 </tr>
 </tbody>
 </table>
-<p>Group membership details are provided in the individual monthly reports. No material coordination was flagged in December; two stable groups emerged in January and February, with a third large cluster (15 validators) appearing in March.</p>
+<p>Cross-rate arithmetic remained sound for the entire period; only a handful of 5%–10% deviations were seen in December.</p>
 </section>
 </section>
 <section id="notable-validators" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Notable Validators</h1>
 <section id="consistently-anomalous-validators" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="consistently-anomalous-validators"><span class="header-section-number">4.1</span> Consistently Anomalous Validators</h2>
-<p>The validators listed below appear in the “Most Problematic” (or equivalent) list of two or more monthly notebooks.</p>
+<p>The validators listed below appear in the “Most Problematic” list of three or more monthly notebooks:</p>
 <ol type="1">
-<li><strong>0x100E38f7BCEc53937BDd79ADE46F34362470577B</strong> – 100 % missing‐submission rate in every month (December-March).</li>
-<li><strong>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</strong> – flagged for 100 % missing submissions in December, January and February.</li>
-<li><strong>0x01F788E4371a70D579C178Ea7F48f9DF4d20eAF3</strong> – very long stale-data runs (6 000 in January, 92 160 in February) and fixed confidence values; member of a small coordination cluster in every month after December.</li>
-<li><strong>0x6747c02DE7eb2099265e55715Ba2ddE7D0A131dE</strong> (January–February) / <strong>0x6747c02DE7eb2099265e55715Ba2E03e8563D051</strong> (March) – bursty submission cadence and high share of suspicious values; appears in the coordinated-group lists from January onward.</li>
-<li><strong>0xf34CD6c09a59d7D3d1a6C3dC231a46CED0b51D4C</strong> – most frequent outage events (14 in January, 17 in February, 23 in March) and largest cross-rate deviation recorded in February (≈ 42 %).</li>
+<li><strong>0x100E38f7BCEc53937BDd79ADE46F34362470577B</strong> – 100% missing submission rate in every month (December-June)</li>
+<li><strong>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</strong> – 100% missing submissions throughout the period</li>
+<li><strong>0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772</strong> – consistently had the longest stale-data runs</li>
+<li><strong>0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E</strong> – persistent stale runs and weekend issues</li>
 </ol>
 </section>
 <section id="validators-with-largest-month-to-month-changes" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="validators-with-largest-month-to-month-changes"><span class="header-section-number">4.2</span> Validators with Largest Month-to-Month Changes</h2>
 <ol type="1">
-<li><strong>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</strong> – active until 12 January, then 100 % missing for the remainder of the study period.</li>
-<li><strong>0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775</strong> – active in December / January, then <strong>100 % missing</strong> from February onward.</li>
-<li><strong>0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2</strong> – participated in the main coordination cluster; moved from normal operation in December to partial activity in January and February, then absent in March.</li>
+<li><strong>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</strong> – active until 12 January, then 100% missing for remainder</li>
+<li><strong>0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775</strong> – active December/January, then 100% missing from February onward</li>
+<li><strong>0x8dA2d75276AcB21Dc45C067AFb7A844ee7a6c2A2</strong> – progressive decline ending in complete inactivity by June</li>
 </ol>
 </section>
 <section id="validators-with-consistently-strong-metrics" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="validators-with-consistently-strong-metrics"><span class="header-section-number">4.3</span> Validators with Consistently Strong Metrics</h2>
 <ol type="1">
-<li><strong>0x197B2c44b887c4aC01243BDE7E4b7E7b98A8d35A</strong> – listed as a top performer in every month (≥ 99 % completeness, ≤ 0.3 % suspicious values).</li>
-<li><strong>0xdF239e0D5b4E6e820B0cFEF6972A7c1aB7c6a4be</strong> – top-tier completeness (≈ 99 %) and negligible suspicious values from December through March.</li>
+<li><strong>0x197B2c44b887c4aC01243BDE7E4b7E7b98A8d35A</strong> – listed as top performer in every month (≥ 99% completeness, ≤ 0.3% suspicious values)</li>
+<li><strong>0xF9B38D02959379d43C764064dE201324d5e12931</strong> – consistent high completeness with dynamic confidence</li>
+<li><strong>0xdF239e0D5b4E6e820B0cFEF6972A7c1aB7c6a4be</strong> – top-tier completeness and minimal suspicious values throughout</li>
 </ol>
 </section>
 </section>
 <section id="monthly-rating-comparison" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Monthly Rating Comparison</h1>
-<p>The standardized rating system shows the following changes:</p>
+<p>The standardized rating system shows the following progression:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 16%">
-<col style="width: 18%">
-<col style="width: 18%">
-<col style="width: 20%">
-<col style="width: 16%">
-<col style="width: 9%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 15%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>Issue Area</th>
-<th style="text-align: center;">December 2024</th>
-<th style="text-align: center;">January 2025</th>
-<th style="text-align: center;">February 2025</th>
-<th style="text-align: center;">March 2025</th>
-<th style="text-align: center;">Trend</th>
+<th style="text-align: center;">Dec 2024</th>
+<th style="text-align: center;">Jan 2025</th>
+<th style="text-align: center;">Feb 2025</th>
+<th style="text-align: center;">Mar 2025</th>
+<th style="text-align: center;">Apr 2025</th>
+<th style="text-align: center;">May 2025</th>
+<th style="text-align: center;">Jun 2025</th>
+<th style="text-align: center;">Overall Trend</th>
 </tr>
 </thead>
 <tbody>
@@ -801,7 +924,10 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">🟠</td>
 <td style="text-align: center;">🟠</td>
 <td style="text-align: center;">🔴</td>
-<td style="text-align: center;">⬇️</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">⚫</td>
+<td style="text-align: center;">⚫</td>
+<td style="text-align: center;">⬇️⬇️</td>
 </tr>
 <tr class="even">
 <td>Irregular Submission Frequency</td>
@@ -809,10 +935,16 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">🟡</td>
 <td style="text-align: center;">🟡</td>
 <td style="text-align: center;">🟡</td>
-<td style="text-align: center;">↔︎️</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">⬇️</td>
 </tr>
 <tr class="odd">
 <td>Out-of-Range Values</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
 <td style="text-align: center;">🟢</td>
 <td style="text-align: center;">🟢</td>
 <td style="text-align: center;">🟢</td>
@@ -825,7 +957,10 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">🔴</td>
 <td style="text-align: center;">🔴</td>
 <td style="text-align: center;">🟢</td>
-<td style="text-align: center;">⬆️</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">↔︎️</td>
 </tr>
 <tr class="odd">
 <td>Confidence Value Anomalies</td>
@@ -833,10 +968,16 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">🔴</td>
 <td style="text-align: center;">🔴</td>
 <td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟡</td>
 <td style="text-align: center;">⬆️</td>
 </tr>
 <tr class="even">
 <td>Cross-Rate Inconsistency</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
 <td style="text-align: center;">🟢</td>
 <td style="text-align: center;">🟢</td>
 <td style="text-align: center;">🟢</td>
@@ -849,6 +990,9 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">🟢</td>
 <td style="text-align: center;">🟠</td>
 <td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟠</td>
 <td style="text-align: center;">⬇️</td>
 </tr>
 <tr class="even">
@@ -857,7 +1001,10 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">🟢</td>
 <td style="text-align: center;">🟠</td>
 <td style="text-align: center;">🔴</td>
-<td style="text-align: center;">⬇️</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">⬇️⬇️</td>
 </tr>
 <tr class="odd">
 <td>Vendor Downtime Impact</td>
@@ -865,7 +1012,10 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">🟡</td>
 <td style="text-align: center;">🟠</td>
 <td style="text-align: center;">🟢</td>
-<td style="text-align: center;">⬆️</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">↔︎️</td>
 </tr>
 <tr class="even">
 <td>Security Concern Level</td>
@@ -873,94 +1023,142 @@ Difference as % of Yahoo ACU's volatility:     13.30%</code></pre>
 <td style="text-align: center;">🟠</td>
 <td style="text-align: center;">🔴</td>
 <td style="text-align: center;">🟡</td>
-<td style="text-align: center;">↔︎️</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">⬇️</td>
 </tr>
 <tr class="odd">
 <td><strong>Overall Rating</strong></td>
 <td style="text-align: center;">🟢</td>
 <td style="text-align: center;">🟡</td>
-<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🟠</td>
 <td style="text-align: center;">🟡</td>
-<td style="text-align: center;">⬆️</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">⬇️⬇️</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Rating Scale:</strong> - ⚫ Critical - Severe issues requiring immediate intervention - 🔴 Poor - Significant issues affecting reliability - 🟠 Fair - Notable issues requiring attention - 🟡 Good - Minor issues with limited impact - 🟢 Excellent - Minimal or no issues</p>
-<p>Each issue area is rated based on specific quantitative thresholds:</p>
-<ul>
-<li><strong>Missing/Null Submissions</strong>: ⚫ Critical (&gt; 60 %) 🔴 Poor (30–60 %) 🟠 Fair (15–30 %) 🟡 Good (5–15 %) 🟢 Excellent (&lt; 5 %)</li>
-<li><strong>Irregular Submission Frequency</strong>: ⚫ Critical (&gt; 25 % irregular) 🔴 Poor (15–25 %) 🟠 Fair (8–15 %) 🟡 Good (2–8 %) 🟢 Excellent (&lt; 2 %)</li>
-<li><strong>Out-of-Range Values</strong>: ⚫ Critical (&gt; 8 %) 🔴 Poor (3–8 %) 🟠 Fair (1–3 %) 🟡 Good (0.3–1 %) 🟢 Excellent (&lt; 0.3 %)</li>
-<li><strong>Stale/Lagging Data</strong>: ⚫ Critical (&gt; 15 % runs) 🔴 Poor (7–15 %) 🟠 Fair (3–7 %) 🟡 Good (0.5–3 %) 🟢 Excellent (&lt; 0.5 %)</li>
-<li><strong>Confidence-Value Anomalies</strong>: ⚫ Critical (&gt; 85 % fixed) 🔴 Poor (60–85 %) 🟠 Fair (35–60 %) 🟡 Good (15–35 %) 🟢 Excellent (&lt; 15 %)</li>
-<li><strong>Cross-Rate Inconsistency</strong>: ⚫ Critical (&gt; 12 %) 🔴 Poor (6–12 %) 🟠 Fair (3–6 %) 🟡 Good (1–3 %) 🟢 Excellent (&lt; 1 %)</li>
-<li><strong>Timing/Synchronization</strong>: ⚫ Critical (&gt; 60 s) 🔴 Poor (30–60 s) 🟠 Fair (10–30 s) 🟡 Good (3–10 s) 🟢 Excellent (&lt; 3 s)</li>
-<li><strong>Weekend Effect Severity</strong>: ⚫ Critical (&gt; 30 %) 🔴 Poor (15–30 %) 🟠 Fair (7–15 %) 🟡 Good (2–7 %) 🟢 Excellent (&lt; 2 %)</li>
-<li><strong>Vendor Downtime Impact</strong>: ⚫ Critical (&gt; 10 % time) 🔴 Poor (4–10 %) 🟠 Fair (2–4 %) 🟡 Good (0.5–2 %) 🟢 Excellent (&lt; 0.5 %)</li>
-<li><strong>Security Concern Level</strong>: ⚫ Critical (confirmed) 🔴 Poor (strong evidence) 🟠 Fair (some evidence) 🟡 Good (minimal) 🟢 Excellent (none)</li>
-</ul>
 </section>
 <section id="detailed-progression-analysis" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Detailed Progression Analysis</h1>
 <section id="percentage-of-issue-area-ratings-by-severity" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="percentage-of-issue-area-ratings-by-severity"><span class="header-section-number">6.1</span> Percentage of Issue-Area Ratings by Severity</h2>
-<p>The table below counts how many of the ten issue areas fall into each rating colour for every month, expressed as a percentage of the total (10 = 100 %). All figures are taken directly from the individual monthly rating tables.</p>
+<p>The table below shows how many of the ten issue areas fall into each rating category for every month:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 22%">
-<col style="width: 20%">
-<col style="width: 19%">
-<col style="width: 20%">
-<col style="width: 16%">
+<col style="width: 18%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>Severity Level</th>
-<th style="text-align: center;">December 2024</th>
-<th style="text-align: center;">January 2025</th>
-<th style="text-align: center;">February 2025</th>
-<th style="text-align: center;">March 2025</th>
+<th style="text-align: center;">Dec 2024</th>
+<th style="text-align: center;">Jan 2025</th>
+<th style="text-align: center;">Feb 2025</th>
+<th style="text-align: center;">Mar 2025</th>
+<th style="text-align: center;">Apr 2025</th>
+<th style="text-align: center;">May 2025</th>
+<th style="text-align: center;">Jun 2025</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Critical (⚫)</td>
-<td style="text-align: center;">0 %</td>
-<td style="text-align: center;">0 %</td>
-<td style="text-align: center;">0 %</td>
-<td style="text-align: center;">0 %</td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: center;">10%</td>
 </tr>
 <tr class="even">
 <td>Poor (🔴)</td>
-<td style="text-align: center;">10 %</td>
-<td style="text-align: center;">20 %</td>
-<td style="text-align: center;">40 %</td>
-<td style="text-align: center;">20 %</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">40%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">30%</td>
 </tr>
 <tr class="odd">
 <td>Fair (🟠)</td>
-<td style="text-align: center;">10 %</td>
-<td style="text-align: center;">20 %</td>
-<td style="text-align: center;">30 %</td>
-<td style="text-align: center;">0 %</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">30%</td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">30%</td>
+<td style="text-align: center;">30%</td>
 </tr>
 <tr class="even">
 <td>Good (🟡)</td>
-<td style="text-align: center;">20 %</td>
-<td style="text-align: center;">20 %</td>
-<td style="text-align: center;">10 %</td>
-<td style="text-align: center;">30 %</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: center;">30%</td>
+<td style="text-align: center;">30%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">20%</td>
 </tr>
 <tr class="odd">
 <td>Excellent (🟢)</td>
-<td style="text-align: center;">60 %</td>
-<td style="text-align: center;">40 %</td>
-<td style="text-align: center;">20 %</td>
-<td style="text-align: center;">50 %</td>
+<td style="text-align: center;">60%</td>
+<td style="text-align: center;">40%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">50%</td>
+<td style="text-align: center;">30%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">10%</td>
 </tr>
 </tbody>
 </table>
-<p><em>Method</em>: for each month we count the number of 🟢, 🟡, 🟠, 🔴, ⚫ symbols across the ten issue-area rows, then divide by ten to derive the percentage shown.</p>
+</section>
+<section id="key-findings" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="key-findings"><span class="header-section-number">6.2</span> Key Findings</h2>
+<ol type="1">
+<li><p><strong>Validator Participation Decline</strong>: The number of completely inactive validators increased from 4 (~7.5% of the committee) to 9 (20% of the committee) over the seven-month period, with submission completeness dropping from 91.5% to 18.9%.</p></li>
+<li><p><strong>Data Quality Trends</strong>: While out-of-range values and cross-rate consistency remained stable, other metrics showed signs of weakening, particularly in missing submissions, timing synchronization, and weekend effects.</p></li>
+<li><p><strong>Coordination Patterns</strong>: The emergence and growth of coordinated submission groups (from 0 to 5 groups involving 20 validators) could reduce the independence of price discovery.</p></li>
+<li><p><strong>Infrastructure Reliability Trends</strong>: Vendor downtime events became more frequent and involved larger validator sets, with the largest outage growing from no major events in December to 120-minute outages affecting 31+ validators by June.</p></li>
+</ol>
+</section>
+<section id="potential-mitigation-options" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="potential-mitigation-options"><span class="header-section-number">6.3</span> Potential Mitigation Options</h2>
+<ol type="1">
+<li><p><strong>Validator Replacement</strong>: With 81% of submission slots incomplete by June 2025, replacement of inactive validators with vetted candidates may be considered, subject to governance preferences and risk appetite.</p></li>
+<li><p><strong>Performance-Based Incentive Restructuring</strong>: Consider implementing rewards that more strongly favor high-quality, independent submissions.</p></li>
+<li><p><strong>Enhanced Monitoring Infrastructure</strong>: Explore deploying real-time dashboards with automated alerting for deviations.</p></li>
+<li><p><strong>Weekend Policy Clarification</strong>: Clarify and document guidelines for handling FX data during market closures.</p></li>
+<li><p><strong>Validator Quality Scoring System</strong>: Consider adopting a transparent scoring framework weighted 40% uptime, 30% accuracy, 30% consistency.</p></li>
+</ol>
+</section>
+</section>
+<section id="conclusion" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Conclusion</h1>
+<p>The seven-month analysis period from December 2024 to June 2025 suggests a noticeable deterioration in several Oracle data quality dimensions. While some metrics like out-of-range values and cross-rate consistency remained stable, material issues emerged in validator participation, data freshness, and system coordination.</p>
+<p>The progression from an “Excellent” overall rating in December 2024 to “Poor” by June 2025 suggests systemic issues that may warrant focused attention from protocol governance and infrastructure operators. The Oracle’s ability to provide reliable pricing for the Autonity ecosystem appears compromised in several respects, and further work may be required to restore functionality and trust to previous levels.</p>
+<p>Potential areas of focus include: - Evaluating options for replacing inactive validators - Reducing the influence of coordination clusters - Strengthening quality-oriented incentives - Enhancing real-time monitoring capabilities - Establishing clearer operational policies</p>
+<p>If left unaddressed, these trends could affect the Oracle system’s ability to provide accurate, timely, and independent price discovery for the Autonity network.</p>
+<section id="next-steps" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">7.1</span> Next Steps</h2>
+<p>The findings from this testnet analysis provide a foundation for further investigation and action. The recommended next steps are:</p>
+<ul>
+<li><strong>Re-run the analysis on Mainnet</strong>: Verify the extent to which the issues identified in testnet are present on mainnet. This will help determine whether the observed patterns are specific to the testnet environment or reflect broader systemic concerns.</li>
+<li><strong>Review focus areas with stakeholders</strong>: Engage with the validator community and protocol development team to discuss the identified issues, validate the findings, and collaboratively develop appropriate responses and improvements to the Oracle system.</li>
+</ul>
+<p>The analysis has been run on October 2025 Mainnet data. Compared to the Tiber Challenge months, mainnet October has proven substantially better on reliability, accuracy and robustness. This moves the reported oracle data quality from an overall “Poor” rating on Testnet to a “Good” rating on Mainnet. Review of focus areas with stakeholders is to do.</p>
 
 
 </section>

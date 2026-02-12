@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Oracle Submission Analysis</title>
+<title>Oracle Submission Analysis - Summary of Key Findings (April 2025) – Oracle Submission Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,7 +104,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Oracle Submission Analysis</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary_2024_12.html">Reports</a></li><li class="breadcrumb-item"><a href="./summary_2025_04.html">Oracle Submission Analysis - Summary of Key Findings (April 2025)</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -151,7 +151,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary_2025_04.html" class="sidebar-item-text sidebar-link">
+  <a href="./summary_2025_04.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (April 2025)</span></a>
   </div>
 </li>
@@ -262,18 +262,46 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#analysis-overview" id="toc-analysis-overview" class="nav-link active" data-scroll-target="#analysis-overview">Analysis Overview</a></li>
-  <li><a href="#summary-reports" id="toc-summary-reports" class="nav-link" data-scroll-target="#summary-reports">Summary Reports</a></li>
-  <li><a href="#table-of-contents" id="toc-table-of-contents" class="nav-link" data-scroll-target="#table-of-contents">Table of Contents</a></li>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary"><span class="header-section-number">1</span> Executive Summary</a>
+  <ul class="collapse">
+  <li><a href="#overview-of-issues-analyzed" id="toc-overview-of-issues-analyzed" class="nav-link" data-scroll-target="#overview-of-issues-analyzed"><span class="header-section-number">1.1</span> Overview of Issues Analyzed</a></li>
+  </ul></li>
+  <li><a href="#key-findings" id="toc-key-findings" class="nav-link" data-scroll-target="#key-findings"><span class="header-section-number">2</span> Key Findings</a>
+  <ul class="collapse">
+  <li><a href="#missing-or-null-submissions" id="toc-missing-or-null-submissions" class="nav-link" data-scroll-target="#missing-or-null-submissions"><span class="header-section-number">2.1</span> Missing or Null Submissions</a></li>
+  <li><a href="#irregular-submission-frequency" id="toc-irregular-submission-frequency" class="nav-link" data-scroll-target="#irregular-submission-frequency"><span class="header-section-number">2.2</span> Irregular Submission Frequency</a></li>
+  <li><a href="#out-of-range-values" id="toc-out-of-range-values" class="nav-link" data-scroll-target="#out-of-range-values"><span class="header-section-number">2.3</span> Out-of-Range Values</a></li>
+  <li><a href="#stalelagging-data" id="toc-stalelagging-data" class="nav-link" data-scroll-target="#stalelagging-data"><span class="header-section-number">2.4</span> Stale/Lagging Data</a></li>
+  <li><a href="#confidence-value-anomalies" id="toc-confidence-value-anomalies" class="nav-link" data-scroll-target="#confidence-value-anomalies"><span class="header-section-number">2.5</span> Confidence Value Anomalies</a></li>
+  <li><a href="#cross-rate-inconsistency" id="toc-cross-rate-inconsistency" class="nav-link" data-scroll-target="#cross-rate-inconsistency"><span class="header-section-number">2.6</span> Cross-Rate Inconsistency</a></li>
+  <li><a href="#timingsynchronization-issues" id="toc-timingsynchronization-issues" class="nav-link" data-scroll-target="#timingsynchronization-issues"><span class="header-section-number">2.7</span> Timing/Synchronization Issues</a></li>
+  <li><a href="#weekendmarket-closure-effects" id="toc-weekendmarket-closure-effects" class="nav-link" data-scroll-target="#weekendmarket-closure-effects"><span class="header-section-number">2.8</span> Weekend/Market-Closure Effects</a></li>
+  <li><a href="#vendor-downtime-issues" id="toc-vendor-downtime-issues" class="nav-link" data-scroll-target="#vendor-downtime-issues"><span class="header-section-number">2.9</span> Vendor Downtime Issues</a></li>
+  <li><a href="#securitymalicious-behavior-indicators" id="toc-securitymalicious-behavior-indicators" class="nav-link" data-scroll-target="#securitymalicious-behavior-indicators"><span class="header-section-number">2.10</span> Security/Malicious Behavior Indicators</a></li>
+  </ul></li>
+  <li><a href="#notable-validators" id="toc-notable-validators" class="nav-link" data-scroll-target="#notable-validators"><span class="header-section-number">3</span> Notable Validators</a>
+  <ul class="collapse">
+  <li><a href="#highest-performing-validators" id="toc-highest-performing-validators" class="nav-link" data-scroll-target="#highest-performing-validators"><span class="header-section-number">3.1</span> Highest Performing Validators</a></li>
+  <li><a href="#most-problematic-validators" id="toc-most-problematic-validators" class="nav-link" data-scroll-target="#most-problematic-validators"><span class="header-section-number">3.2</span> Most Problematic Validators</a></li>
+  <li><a href="#validators-with-coordinated-behavior" id="toc-validators-with-coordinated-behavior" class="nav-link" data-scroll-target="#validators-with-coordinated-behavior"><span class="header-section-number">3.3</span> Validators with Coordinated Behavior</a></li>
+  </ul></li>
+  <li><a href="#implications-and-recommendations" id="toc-implications-and-recommendations" class="nav-link" data-scroll-target="#implications-and-recommendations"><span class="header-section-number">4</span> Implications and Recommendations</a>
+  <ul class="collapse">
+  <li><a href="#data-quality-concerns" id="toc-data-quality-concerns" class="nav-link" data-scroll-target="#data-quality-concerns"><span class="header-section-number">4.1</span> Data Quality Concerns</a></li>
+  <li><a href="#validator-performance" id="toc-validator-performance" class="nav-link" data-scroll-target="#validator-performance"><span class="header-section-number">4.2</span> Validator Performance</a></li>
+  <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations"><span class="header-section-number">4.3</span> Recommendations</a></li>
+  </ul></li>
+  <li><a href="#monthly-comparison-table" id="toc-monthly-comparison-table" class="nav-link" data-scroll-target="#monthly-comparison-table"><span class="header-section-number">5</span> Monthly Comparison Table</a></li>
+  <li><a href="#month-to-month-comparison" id="toc-month-to-month-comparison" class="nav-link" data-scroll-target="#month-to-month-comparison"><span class="header-section-number">6</span> Month-to-Month Comparison</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary_2024_12.html">Reports</a></li><li class="breadcrumb-item"><a href="./summary_2025_04.html">Oracle Submission Analysis - Summary of Key Findings (April 2025)</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Oracle Submission Analysis</h1>
+<h1 class="title">Oracle Submission Analysis - Summary of Key Findings (April 2025)</h1>
 </div>
 
 
@@ -290,37 +318,387 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Contains a collection of analyses on Autonity Oracle submissions. These analyses explore various issues affecting the reliability, accuracy, and security of Oracle price data. Navigate through the different notebooks using the sidebar.</p>
-<section id="analysis-overview" class="level2">
-<h2 class="anchored" data-anchor-id="analysis-overview">Analysis Overview</h2>
-<p>Examines critical issues in Oracle submissions from validators, focusing on data quality, reliability, synchronization, and potential security concerns. Each analysis includes detailed explanations, methods, findings, and supporting code.</p>
-</section>
-<section id="summary-reports" class="level2">
-<h2 class="anchored" data-anchor-id="summary-reports">Summary Reports</h2>
-<p><strong><a href="./summary_2024_12.html">December 2024 Summary Report</a></strong> - Comprehensive analysis of December 2024 Oracle submissions data with key findings, notable validators, and standardized quality ratings.</p>
-<p><strong><a href="./summary_2025_01.html">January 2025 Summary Report</a></strong> - Comprehensive analysis of January 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.</p>
-<p><strong><a href="./summary_2025_02.html">February 2025 Summary Report</a></strong> - Comprehensive analysis of February 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.</p>
-<p><strong><a href="./summary_2025_03.html">March 2025 Summary Report</a></strong> - Comprehensive analysis of March 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.</p>
-<p><strong><a href="./summary_2025_04.html">April 2025 Summary Report</a></strong> - Comprehensive analysis of April 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.</p>
-<p><strong><a href="./summary_2025_05.html">May 2025 Summary Report</a></strong> - Comprehensive analysis of May 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.</p>
-<p><strong><a href="./summary_2025_06.html">June 2025 Summary Report</a></strong> - Comprehensive analysis of June 2025 Oracle submissions data with key findings, notable validators, and standardized quality ratings.</p>
-<p><strong><a href="./summary_first_half.html">First Half Summary Report (December 2024 - March 2025)</a></strong> - Aggregated four-month analysis tracking trends and patterns in Oracle data submissions across ten issue areas, with quantitative metrics, validator performance statistics, and month-to-month comparisons.</p>
-<p><strong><a href="./summary_final.html">Summary Report</a></strong> - Aggregated analysis tracking trends and patterns in Oracle data submissions across ten issue areas, with quantitative metrics, validator performance statistics, and month-to-month comparisons.</p>
-</section>
-<section id="table-of-contents" class="level2">
-<h2 class="anchored" data-anchor-id="table-of-contents">Table of Contents</h2>
+<section id="executive-summary" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Executive Summary</h1>
+<p>This document provides a straightforward summary of the key findings from an analysis of Autonity Oracle submissions data from April 2025. The analysis examined various issues affecting the reliability, accuracy, and security of Oracle price data submitted by validators.</p>
+<section id="overview-of-issues-analyzed" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="overview-of-issues-analyzed"><span class="header-section-number">1.1</span> Overview of Issues Analyzed</h2>
+<p>The investigation covered ten distinct issue areas:</p>
 <ol type="1">
-<li><p><a href="./notebooks/issue_1.html">Issue 1: Missing or Null Submissions</a> - Analysis of validators with missing or null price submissions, including frequency patterns and impact on data aggregation.</p></li>
-<li><p><a href="./notebooks/issue_2.html">Issue 2: Irregular Submission Frequency</a> - Investigation of validators with abnormal submission intervals, including extremely frequent or delayed submissions.</p></li>
-<li><p><a href="./notebooks/issue_3.html">Issue 3: Out-of-Range / Suspicious Values</a> - Detection of abnormally large, zero, negative, or off-market price submissions compared to real FX data.</p></li>
-<li><p><a href="./notebooks/issue_4.html">Issue 4: Stale / Lagging Data</a> - Analysis of validators submitting identical prices for prolonged periods or failing to update prices despite market changes.</p></li>
-<li><p><a href="./notebooks/issue_5.html">Issue 5: Confidence Value Anomalies</a> - Examination of confidence metrics submitted alongside prices, focusing on fixed values and correlation with market volatility.</p></li>
-<li><p><a href="./notebooks/issue_6.html">Issue 6: Cross-Rate Inconsistency</a> - Assessment of mathematical consistency between Autonity token prices (NTN-ATN * ATN-USD ≈ NTN-USD).</p></li>
-<li><p><a href="./notebooks/issue_7.html">Issue 7: Timing / Synchronization Issues</a> - Analysis of timestamp disparities between validators, identifying those consistently submitting early or late.</p></li>
-<li><p><a href="./notebooks/issue_8.html">Issue 8: Weekend / Market Closure Effects</a> - Investigation of validator behavior during weekend FX market closures and comparison with benchmark data.</p></li>
-<li><p><a href="./notebooks/issue_9.html">Issue 9: Vendor Downtime or API Rate-Limits</a> - Detection of abrupt stoppages and zero-value submissions, particularly when occurring across multiple validators.</p></li>
-<li><p><a href="./notebooks/issue_10.html">Issue 10: Possible Security / Malicious Behavior</a> - Investigation of potential collusion, Sybil attacks, or price manipulation patterns among validators.</p></li>
+<li><strong>Missing or Null Submissions</strong>: Examining validators that failed to submit price data</li>
+<li><strong>Irregular Submission Frequency</strong>: Analyzing abnormal timing patterns in submissions</li>
+<li><strong>Out-of-Range Values</strong>: Detecting suspicious price values compared to benchmarks</li>
+<li><strong>Stale/Lagging Data</strong>: Identifying validators that fail to update prices when markets move</li>
+<li><strong>Confidence Value Anomalies</strong>: Examining issues with confidence metrics</li>
+<li><strong>Cross-Rate Inconsistency</strong>: Assessing mathematical consistency across token prices</li>
+<li><strong>Timing/Synchronization Issues</strong>: Analyzing timestamp disparities between validators</li>
+<li><strong>Weekend/Market-Closure Effects</strong>: Investigating behavior during market closures</li>
+<li><strong>Vendor Downtime</strong>: Detecting submission stoppages</li>
+<li><strong>Security/Malicious Behavior</strong>: Looking for potential manipulation patterns</li>
 </ol>
+</section>
+</section>
+<section id="key-findings" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Key Findings</h1>
+<section id="missing-or-null-submissions" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="missing-or-null-submissions"><span class="header-section-number">2.1</span> Missing or Null Submissions</h2>
+<ul>
+<li><strong>Seven validators</strong> had 100% missing-submission rates:
+<ul>
+<li>0x100E38f7BCEc53937BDd79ADE46F34362470577B</li>
+<li>0x26E2724dBD14Fbd52be430B97043AA4c83F05852</li>
+<li>0xd625d50B0d087861c286d726eC51Cf4Bd9c54357</li>
+<li>0x6747c02DE7eb2099265e55715Ba2E03e8563D051</li>
+<li>0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3</li>
+<li>0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f</li>
+<li>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</li>
+</ul></li>
+<li><strong>Average daily full-coverage (ALL-FX mode)</strong>: <strong>28.1%</strong></li>
+<li>Weekend full-coverage <strong>24.2%</strong> vs weekday <strong>30.8%</strong></li>
+<li>Approximately <strong>89,280 submission timestamps</strong> were analyzed; <strong>≈ 71.9%</strong> of validator-slot combinations were missing at least one pair</li>
+</ul>
+</section>
+<section id="irregular-submission-frequency" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="irregular-submission-frequency"><span class="header-section-number">2.2</span> Irregular Submission Frequency</h2>
+<ul>
+<li>Submission counts ranged from <strong>0 to 2,880 per day</strong> (expected 2,880)</li>
+<li><strong>10 validators</strong> maintained ≥ 99% cadence for the whole month</li>
+<li><strong>9 validators</strong> exhibited gaps exceeding 2h</li>
+<li><strong>≈ 11.2% of all submissions</strong> occurred outside the expected 30-second interval</li>
+<li>Intervals within a <strong>±5% tolerance band</strong> around the 30-second target (0.475–0.525 min) were counted as <strong>on-schedule</strong></li>
+<li>The median daily submission count across active validators was <strong>2,698</strong></li>
+</ul>
+</section>
+<section id="out-of-range-values" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="out-of-range-values"><span class="header-section-number">2.3</span> Out-of-Range Values</h2>
+<ul>
+<li><strong>0 suspicious price submissions</strong> were detected within the ± 20% benchmark threshold
+<ul>
+<li>No non-positive values and <strong>no cross-rate inconsistencies</strong> above 10%</li>
+</ul></li>
+</ul>
+</section>
+<section id="stalelagging-data" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="stalelagging-data"><span class="header-section-number">2.4</span> Stale/Lagging Data</h2>
+<ul>
+<li><strong>62,847 stale-data runs</strong> were detected. Each run is defined as <strong>≥ 30 identical consecutive submissions</strong> for a given pair</li>
+<li>The longest run spanned <strong>9,216 consecutive submissions</strong> (~ 2.56h)</li>
+<li><strong>0 lagging windows</strong> were observed in which price moved ≥ 5% within 60 min</li>
+</ul>
+</section>
+<section id="confidence-value-anomalies" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="confidence-value-anomalies"><span class="header-section-number">2.5</span> Confidence Value Anomalies</h2>
+<ul>
+<li><strong>12 validators</strong> supplied fixed confidence values (up from 10 in March)</li>
+<li><strong>195 validator-pair combinations</strong> showed <strong>near-zero correlation</strong> (&lt; 0.1) between confidence and price change</li>
+<li>For this analysis, an <em>anomalous</em> confidence metric is one that is either <strong>fixed (zero variance)</strong> or <strong>poorly correlated (&lt; 0.1)</strong> with underlying price moves</li>
+<li>Autonity token pairs remained heavily fixed at <strong>confidence = 100</strong></li>
+</ul>
+</section>
+<section id="cross-rate-inconsistency" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="cross-rate-inconsistency"><span class="header-section-number">2.6</span> Cross-Rate Inconsistency</h2>
+<ul>
+<li><strong>0 mismatches</strong> exceeded the 10% tolerance – all ATN/NTN cross-checks passed</li>
+</ul>
+</section>
+<section id="timingsynchronization-issues" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="timingsynchronization-issues"><span class="header-section-number">2.7</span> Timing/Synchronization Issues</h2>
+<ul>
+<li>Time drift between validators ranged from <strong>0.6s</strong> (best) to <strong>18s</strong> (worst)</li>
+<li>The <strong>mean absolute offset</strong> across the fleet was <strong>8.1s</strong>; no validator’s mean exceeded <strong>30s</strong></li>
+<li><strong>8 validators</strong> consistently submitted <strong>≥ 10s early</strong>, while <strong>6 validators</strong> were <strong>≥ 10s late</strong> relative to the round median</li>
+</ul>
+</section>
+<section id="weekendmarket-closure-effects" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="weekendmarket-closure-effects"><span class="header-section-number">2.8</span> Weekend/Market-Closure Effects</h2>
+<ul>
+<li>Weekend submissions totalled <strong>1,987,234 rows</strong> (<strong>46.7%</strong> of all data) – inconsistent with closed FX markets</li>
+<li>Weekend full-coverage was <strong>6.6 pp lower</strong> than weekdays (24.2% vs 30.8%)</li>
+<li>Stale-run frequency was noticeably higher on weekends, and prices were generally carried forward from Friday closes</li>
+</ul>
+</section>
+<section id="vendor-downtime-issues" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="vendor-downtime-issues"><span class="header-section-number">2.9</span> Vendor Downtime Issues</h2>
+<ul>
+<li><strong>8 isolated outage events</strong> plus <strong>one cluster of 45 validators</strong> (15 Apr 14:30 UTC, ~ 75 min)</li>
+<li><strong>Cumulative downtime &lt; 0.7%</strong> – slight deterioration versus March</li>
+</ul>
+</section>
+<section id="securitymalicious-behavior-indicators" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="securitymalicious-behavior-indicators"><span class="header-section-number">2.10</span> Security/Malicious Behavior Indicators</h2>
+<ul>
+<li><strong>3,512 validator-pair overlap events</strong> (≥ 75% identical prices) were flagged</li>
+<li><strong>No multi-validator extreme-outlier events</strong> were observed in April</li>
+</ul>
+</section>
+</section>
+<section id="notable-validators" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Notable Validators</h1>
+<section id="highest-performing-validators" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="highest-performing-validators"><span class="header-section-number">3.1</span> Highest Performing Validators</h2>
+<ol type="1">
+<li><strong>0x197B2c44b887c4aC01243BDE7E4b7E7b98A8d35A</strong><br>
+– 99.5% completeness • 0 flagged values • avg 0.15% deviation • dynamic confidence</li>
+<li><strong>0xF9B38D02959379d43C764064dE201324d5e12931</strong><br>
+– 99.8% completeness • dynamic confidence • zero downtime</li>
+<li><strong>0x23b4Be9536F93b8D550214912fD0e38417Ff7209</strong><br>
+– 99.7% completeness • avg 0.19% benchmark deviation • robust timing</li>
+</ol>
+</section>
+<section id="most-problematic-validators" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="most-problematic-validators"><span class="header-section-number">3.2</span> Most Problematic Validators</h2>
+<ol type="1">
+<li><strong>0x100E38f7BCEc53937BDd79ADE46F34362470577B</strong> – 100% missing</li>
+<li><strong>0x3fe573552E14a0FC11Da25E43Fef11e16a785068</strong> – 100% missing</li>
+<li><strong>0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f</strong> – 100% missing</li>
+<li><strong>0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772</strong> – longest stale-run (9,216)</li>
+<li><strong>0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E</strong> – multiple stale runs &gt; 6,100; weekend ratio 59%</li>
+</ol>
+</section>
+<section id="validators-with-coordinated-behavior" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="validators-with-coordinated-behavior"><span class="header-section-number">3.3</span> Validators with Coordinated Behavior</h2>
+<p><strong>Cluster 1</strong> (NTN-ATN, 16 validators) – ≥ 18k identical overlaps<br>
+<strong>Cluster 2</strong> (ATN-USD, 9 validators) – ≥ 91k identical overlaps<br>
+<strong>Cluster 3</strong> (AUD-USD, 3 validators) – near-perfect mirroring</p>
+</section>
+</section>
+<section id="implications-and-recommendations" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Implications and Recommendations</h1>
+<section id="data-quality-concerns" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="data-quality-concerns"><span class="header-section-number">4.1</span> Data Quality Concerns</h2>
+<ul>
+<li>Coverage gaps remain the dominant issue (71.9% of slots incomplete)</li>
+<li>Stale pricing is still prevalent (62,847 runs)</li>
+<li>Weekend pricing behavior conflicts with real-world FX market closures</li>
+</ul>
+</section>
+<section id="validator-performance" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="validator-performance"><span class="header-section-number">4.2</span> Validator Performance</h2>
+<ul>
+<li>Top-10 validators: <strong>≈ 1.9%</strong> problematic submissions<br>
+</li>
+<li>Bottom-10 validators: <strong>≈ 47.8%</strong> problematic submissions</li>
+</ul>
+</section>
+<section id="recommendations" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="recommendations"><span class="header-section-number">4.3</span> Recommendations</h2>
+<ol type="1">
+<li><strong>Stricter value-range checks</strong> – automatically reject submissions deviating &gt; 20% from the rolling median and enforce cross-rate consistency within 5%</li>
+<li><strong>Minimum uptime requirements</strong> – target ≥ 95% submission completeness (≥ 2,736 submissions per day) with penalties for chronic under-performance</li>
+<li><strong>Dynamic confidence guidelines</strong> – require validators to use at least three distinct confidence values that correlate with market volatility</li>
+<li><strong>Validator quality score</strong> – weight <strong>40% uptime</strong>, <strong>30% accuracy to benchmark</strong>, <strong>30% consistency</strong> and publish scores to incentivize improvements</li>
+<li><strong>Real-time monitoring</strong> – deploy alerts for deviations &gt; 10% from the median and dashboard views of hourly data-quality metrics</li>
+<li><strong>Focused reviews</strong> – prioritize investigation of the worst-performing validators and coordination clusters</li>
+</ol>
+</section>
+</section>
+<section id="monthly-comparison-table" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Monthly Comparison Table</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 20%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Issue Area</th>
+<th style="text-align: center;">Rating</th>
+<th>Scale Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Missing/Null Submissions</td>
+<td style="text-align: center;">🔴</td>
+<td>⚫ Critical (&gt; 60%) 🔴 Poor (30–60%) 🟠 Fair (15–30%) 🟡 Good (5–15%) 🟢 Excellent (&lt; 5%)</td>
+</tr>
+<tr class="even">
+<td>Irregular Submission Frequency</td>
+<td style="text-align: center;">🟠</td>
+<td>⚫ Critical (&gt; 25% irregular) 🔴 Poor (15–25%) 🟠 Fair (8–15%) 🟡 Good (2–8%) 🟢 Excellent (&lt; 2%)</td>
+</tr>
+<tr class="odd">
+<td>Out-of-Range Values</td>
+<td style="text-align: center;">🟢</td>
+<td>⚫ Critical (&gt; 8%) 🔴 Poor (3–8%) 🟠 Fair (1–3%) 🟡 Good (0.3–1%) 🟢 Excellent (&lt; 0.3%)</td>
+</tr>
+<tr class="even">
+<td>Stale/Lagging Data</td>
+<td style="text-align: center;">🟢</td>
+<td>⚫ Critical (&gt; 15% runs) 🔴 Poor (7–15%) 🟠 Fair (3–7%) 🟡 Good (0.5–3%) 🟢 Excellent (&lt; 0.5%)</td>
+</tr>
+<tr class="odd">
+<td>Confidence Value Anomalies</td>
+<td style="text-align: center;">🟢</td>
+<td>⚫ Critical (&gt; 85% fixed) 🔴 Poor (60–85%) 🟠 Fair (35–60%) 🟡 Good (15–35%) 🟢 Excellent (&lt; 15%)</td>
+</tr>
+<tr class="even">
+<td>Cross-Rate Inconsistency</td>
+<td style="text-align: center;">🟢</td>
+<td>⚫ Critical (&gt; 12%) 🔴 Poor (6–12%) 🟠 Fair (3–6%) 🟡 Good (1–3%) 🟢 Excellent (&lt; 1%)</td>
+</tr>
+<tr class="odd">
+<td>Timing/Synchronization</td>
+<td style="text-align: center;">🟠</td>
+<td>⚫ Critical (&gt; 60s) 🔴 Poor (30–60s) 🟠 Fair (10–30s) 🟡 Good (3–10s) 🟢 Excellent (&lt; 3s)</td>
+</tr>
+<tr class="even">
+<td>Weekend/Market-Closure Effects</td>
+<td style="text-align: center;">🔴</td>
+<td>⚫ Critical (&gt; 30%) 🔴 Poor (15–30%) 🟠 Fair (7–15%) 🟡 Good (2–7%) 🟢 Excellent (&lt; 2%)</td>
+</tr>
+<tr class="odd">
+<td>Vendor Downtime Impact</td>
+<td style="text-align: center;">🟢</td>
+<td>⚫ Critical (&gt; 10% time) 🔴 Poor (4–10%) 🟠 Fair (2–4%) 🟡 Good (0.5–2%) 🟢 Excellent (&lt; 0.5%)</td>
+</tr>
+<tr class="even">
+<td>Security Concern Level</td>
+<td style="text-align: center;">🟡</td>
+<td>⚫ Critical (confirmed) 🔴 Poor (strong evidence) 🟠 Fair (some evidence) 🟡 Good (minimal) 🟢 Excellent (none)</td>
+</tr>
+<tr class="odd">
+<td><strong>Overall Rating</strong></td>
+<td style="text-align: center;">🟡</td>
+<td>⚫ Critical 🔴 Poor 🟠 Fair 🟡 Good 🟢 Excellent</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="month-to-month-comparison" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Month-to-Month Comparison</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Issue Area</th>
+<th style="text-align: center;">December 2024</th>
+<th style="text-align: center;">January 2025</th>
+<th style="text-align: center;">February 2025</th>
+<th style="text-align: center;">March 2025</th>
+<th style="text-align: center;">April 2025</th>
+<th style="text-align: center;">Trend</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Missing/Null Submissions</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="even">
+<td>Irregular Submission Frequency</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">⬇️</td>
+</tr>
+<tr class="odd">
+<td>Out-of-Range Values</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="even">
+<td>Stale/Lagging Data</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="odd">
+<td>Confidence Value Anomalies</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="even">
+<td>Cross-Rate Inconsistency</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="odd">
+<td>Timing/Synchronization</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">⬇️</td>
+</tr>
+<tr class="even">
+<td>Weekend/Market-Closure Effects</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="odd">
+<td>Vendor Downtime Impact</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="even">
+<td>Security Concern Level</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🔴</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+<tr class="odd">
+<td><strong>Overall Rating</strong></td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟠</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">↔︎️</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Changes</strong></p>
+<ul>
+<li>Missing/Null Submissions remained <strong>Poor</strong> with a seventh validator becoming fully inactive</li>
+<li>Irregular Submission Frequency deteriorated to <strong>Fair</strong> with 11.2% of submissions outside the expected interval</li>
+<li>Timing/Synchronization worsened to <strong>Fair</strong> with increased drift between validators</li>
+<li>Stale/Lagging Data remains <strong>Excellent</strong> despite increased stale run counts</li>
+<li>Overall rating remained <strong>Good</strong> with relatively stable performance across most metrics</li>
+</ul>
 
 
 </section>

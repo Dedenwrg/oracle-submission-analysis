@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-283d813e9a11428b00dc78d5a810a4dc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d41974b8c531fc798e187f5f45875d69.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -188,8 +188,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../summary_2025_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (April 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (May 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (June 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../summary_first_half.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oracle Submission Data Analysis Report (December 2024 - March 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_final.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Data Analysis Report</span></a>
   </div>
 </li>
       </ul>
@@ -347,14 +371,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Compare Oracle weekend submissions to minute-level FX data from Yahoo Finance to see if validators’ behaviors align with real market data.</li>
 </ol>
 <p>Below is the script performing this analysis:</p>
-<div id="fef49d6f" class="cell" data-execution_count="1">
+<div id="9a07a723" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="45f706aa" class="cell" data-execution_count="2">
+<div id="35b546a0" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_and_preprocess_submissions(submission_glob: <span class="bu">str</span>) <span class="op">-&gt;</span> pl.DataFrame:</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads Oracle Submission CSVs and returns a Polars DataFrame.</span></span>
@@ -377,81 +401,112 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_yahoo_finance_data(directory_pattern: <span class="bu">str</span>, pair_label: <span class="bu">str</span>) <span class="op">-&gt;</span> pl.DataFrame:</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads Yahoo Finance CSVs and returns a Polars DataFrame.</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    files <span class="op">=</span> <span class="bu">sorted</span>(glob.glob(directory_pattern))</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> files:</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"No Yahoo CSVs found: </span><span class="sc">{</span>directory_pattern<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    lf <span class="op">=</span> pl.concat(</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        [pl.scan_csv(f, has_header<span class="op">=</span><span class="va">False</span>, skip_rows<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>                     new_columns<span class="op">=</span>[<span class="st">"Datetime"</span>,<span class="st">"Close"</span>,<span class="st">"High"</span>,<span class="st">"Low"</span>,<span class="st">"Open"</span>,<span class="st">"Volume"</span>],</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                     try_parse_dates<span class="op">=</span><span class="va">True</span>) <span class="cf">for</span> f <span class="kw">in</span> files]</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    ).sort(<span class="st">"Datetime"</span>).select([</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"Datetime"</span>).alias(<span class="st">"timestamp_benchmark"</span>),</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"Close"</span>).alias(<span class="st">"benchmark_close"</span>)</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    ])</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">    Handles minor schema variations across files.</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    files <span class="op">=</span> <span class="bu">sorted</span>(glob.glob(directory_pattern))</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> files:</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"No Yahoo CSVs found: </span><span class="sc">{</span>directory_pattern<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _scan_one_yf_csv(path: <span class="bu">str</span>) <span class="op">-&gt;</span> pl.LazyFrame:</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        candidate_schemas <span class="op">=</span> [</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>            [<span class="st">"Datetime"</span>, <span class="st">"Adj Close"</span>, <span class="st">"Close"</span>, <span class="st">"High"</span>, <span class="st">"Low"</span>, <span class="st">"Open"</span>, <span class="st">"Volume"</span>],</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>            [<span class="st">"Datetime"</span>, <span class="st">"Close"</span>, <span class="st">"High"</span>, <span class="st">"Low"</span>, <span class="st">"Open"</span>, <span class="st">"Volume"</span>],</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>            [<span class="st">"Datetime"</span>, <span class="st">"Price"</span>, <span class="st">"Adj Close"</span>, <span class="st">"Close"</span>, <span class="st">"High"</span>, <span class="st">"Low"</span>, <span class="st">"Open"</span>, <span class="st">"Volume"</span>],</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>            [<span class="st">"Datetime"</span>, <span class="st">"Price"</span>, <span class="st">"Close"</span>, <span class="st">"High"</span>, <span class="st">"Low"</span>, <span class="st">"Open"</span>, <span class="st">"Volume"</span>],</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        ]</span>
 <span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> lf.collect().with_columns(pl.lit(pair_label).alias(<span class="st">"symbol"</span>))</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_all_fx_benchmarks() <span class="op">-&gt;</span> <span class="bu">dict</span>[<span class="bu">str</span>, pl.DataFrame]:</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads FX data from Yahoo Finance.</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    patterns <span class="op">=</span> {</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">"AUD-USD"</span>: <span class="st">"../yahoo-finance/data/AUDUSD/AUDUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">"CAD-USD"</span>: <span class="st">"../yahoo-finance/data/CADUSD/CADUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">"EUR-USD"</span>: <span class="st">"../yahoo-finance/data/EURUSD/EURUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">"GBP-USD"</span>: <span class="st">"../yahoo-finance/data/GBPUSD/GBPUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">"JPY-USD"</span>: <span class="st">"../yahoo-finance/data/JPYUSD/JPYUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">"SEK-USD"</span>: <span class="st">"../yahoo-finance/data/SEKUSD/SEKUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {pair: load_yahoo_finance_data(pattern, pair) <span class="cf">for</span> pair, pattern <span class="kw">in</span> patterns.items()}</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> analyze_weekend_market_closure_issues(</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    submission_glob: <span class="bu">str</span>,</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    fx_pairs: <span class="bu">list</span>[<span class="bu">str</span>],</span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    yahoo_data_dict: <span class="bu">dict</span>[<span class="bu">str</span>, pl.DataFrame],</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="co">    Main analysis function.</span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    df_sub <span class="op">=</span> load_and_preprocess_submissions(submission_glob)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        last_err: <span class="pp">Exception</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> cols <span class="kw">in</span> candidate_schemas:</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>            <span class="cf">try</span>:</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>                lf_local <span class="op">=</span> pl.scan_csv(</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>                    path,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>                    has_header<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>                    skip_rows<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>                    new_columns<span class="op">=</span>cols,</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>                    try_parse_dates<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="st">"Close"</span> <span class="kw">not</span> <span class="kw">in</span> lf_local.columns <span class="kw">and</span> <span class="st">"Price"</span> <span class="kw">in</span> lf_local.columns:</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>                    lf_local <span class="op">=</span> lf_local.rename({<span class="st">"Price"</span>: <span class="st">"Close"</span>})</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Normalize schema &amp; dtypes (only keep needed columns)</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>                lf_local <span class="op">=</span> (</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>                    lf_local.select([<span class="st">"Datetime"</span>, <span class="st">"Close"</span>])  <span class="co"># drop extras to avoid concat schema issues</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>                    .with_columns([</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>                        pl.col(<span class="st">"Datetime"</span>).cast(pl.Utf8).<span class="bu">str</span>.strptime(pl.Datetime, strict<span class="op">=</span><span class="va">False</span>).alias(<span class="st">"Datetime"</span>),</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>                        pl.col(<span class="st">"Close"</span>).cast(pl.Float64).alias(<span class="st">"Close"</span>),</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>                    ])</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> lf_local</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>            <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>                last_err <span class="op">=</span> e</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> last_err <span class="cf">if</span> last_err <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> <span class="pp">RuntimeError</span>(<span class="st">"Failed to parse Yahoo CSV"</span>)</span>
 <span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    fx_cols <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> fx_pairs <span class="cf">if</span> c <span class="kw">in</span> df_sub.columns]</span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    df_sub <span class="op">=</span> df_sub.with_columns(</span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>        pl.fold(<span class="va">False</span>, <span class="kw">lambda</span> acc, x: acc <span class="op">|</span> x, [pl.col(c).is_not_null() <span class="cf">for</span> c <span class="kw">in</span> fx_cols]).alias(<span class="st">"any_fx_submitted"</span>)</span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    lf <span class="op">=</span> pl.concat([_scan_one_yf_csv(f) <span class="cf">for</span> f <span class="kw">in</span> files]).sort(<span class="st">"Datetime"</span>).select([</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"Datetime"</span>).alias(<span class="st">"timestamp_benchmark"</span>),</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"Close"</span>).alias(<span class="st">"benchmark_close"</span>)</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    ])</span>
 <span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    df_agg_day <span class="op">=</span> df_sub.group_by([<span class="st">"date_only"</span>,<span class="st">"weekday_num"</span>]).agg([</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"any_fx_submitted"</span>).<span class="bu">sum</span>().alias(<span class="st">"num_submissions"</span>),</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"any_fx_submitted"</span>).<span class="bu">sum</span>().alias(<span class="st">"num_fx_submissions"</span>)</span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    ]).sort(<span class="st">"date_only"</span>)</span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    yahoo_weekend_info <span class="op">=</span> {}</span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pair, df_yahoo <span class="kw">in</span> yahoo_data_dict.items():</span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>        df_y <span class="op">=</span> df_yahoo.with_columns([</span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"timestamp_benchmark"</span>).cast(pl.Date).alias(<span class="st">"date_only"</span>),</span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"timestamp_benchmark"</span>).dt.weekday().alias(<span class="st">"weekday_num"</span>)</span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>        ]).group_by([<span class="st">"date_only"</span>,<span class="st">"weekday_num"</span>]).agg([</span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>            pl.count(<span class="st">"benchmark_close"</span>).alias(<span class="st">"count_quotes"</span>),</span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"benchmark_close"</span>).<span class="bu">max</span>() <span class="op">-</span> pl.col(<span class="st">"benchmark_close"</span>).<span class="bu">min</span>()).alias(<span class="st">"range_close"</span>)</span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        ])</span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>        yahoo_weekend_info[pair] <span class="op">=</span> df_y</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> lf.collect().with_columns(pl.lit(pair_label).alias(<span class="st">"symbol"</span>))</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_all_fx_benchmarks() <span class="op">-&gt;</span> <span class="bu">dict</span>[<span class="bu">str</span>, pl.DataFrame]:</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads FX data from Yahoo Finance.</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>    patterns <span class="op">=</span> {</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>        <span class="st">"AUD-USD"</span>: <span class="st">"../yahoo-finance/data/AUDUSD/AUDUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>        <span class="st">"CAD-USD"</span>: <span class="st">"../yahoo-finance/data/CADUSD/CADUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>        <span class="st">"EUR-USD"</span>: <span class="st">"../yahoo-finance/data/EURUSD/EURUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>        <span class="st">"GBP-USD"</span>: <span class="st">"../yahoo-finance/data/GBPUSD/GBPUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>        <span class="st">"JPY-USD"</span>: <span class="st">"../yahoo-finance/data/JPYUSD/JPYUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>        <span class="st">"SEK-USD"</span>: <span class="st">"../yahoo-finance/data/SEKUSD/SEKUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {pair: load_yahoo_finance_data(pattern, pair) <span class="cf">for</span> pair, pattern <span class="kw">in</span> patterns.items()}</span>
 <span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>    weekend_rows <span class="op">=</span> df_agg_day.<span class="bu">filter</span>(pl.col(<span class="st">"weekday_num"</span>) <span class="op">&gt;=</span> <span class="dv">5</span>)</span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>    weekday_rows <span class="op">=</span> df_agg_day.<span class="bu">filter</span>(pl.col(<span class="st">"weekday_num"</span>) <span class="op">&lt;</span> <span class="dv">5</span>)</span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> {</span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_submissions_raw"</span>: df_sub,</span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_submissions_day_agg"</span>: df_agg_day,</span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>        <span class="st">"weekend_total_submissions"</span>: weekend_rows[<span class="st">"num_submissions"</span>].<span class="bu">sum</span>(),</span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>        <span class="st">"weekday_total_submissions"</span>: weekday_rows[<span class="st">"num_submissions"</span>].<span class="bu">sum</span>(),</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>        <span class="st">"yahoo_weekend_info"</span>: yahoo_weekend_info</span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> analyze_weekend_market_closure_issues(</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>    submission_glob: <span class="bu">str</span>,</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>    fx_pairs: <span class="bu">list</span>[<span class="bu">str</span>],</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>    yahoo_data_dict: <span class="bu">dict</span>[<span class="bu">str</span>, pl.DataFrame],</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a><span class="co">    Main analysis function.</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    df_sub <span class="op">=</span> load_and_preprocess_submissions(submission_glob)</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    fx_cols <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> fx_pairs <span class="cf">if</span> c <span class="kw">in</span> df_sub.columns]</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    df_sub <span class="op">=</span> df_sub.with_columns(</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>        pl.fold(<span class="va">False</span>, <span class="kw">lambda</span> acc, x: acc <span class="op">|</span> x, [pl.col(c).is_not_null() <span class="cf">for</span> c <span class="kw">in</span> fx_cols]).alias(<span class="st">"any_fx_submitted"</span>)</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    df_agg_day <span class="op">=</span> df_sub.group_by([<span class="st">"date_only"</span>,<span class="st">"weekday_num"</span>]).agg([</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"any_fx_submitted"</span>).<span class="bu">sum</span>().alias(<span class="st">"num_submissions"</span>),</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"any_fx_submitted"</span>).<span class="bu">sum</span>().alias(<span class="st">"num_fx_submissions"</span>)</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>    ]).sort(<span class="st">"date_only"</span>)</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>    yahoo_weekend_info <span class="op">=</span> {}</span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pair, df_yahoo <span class="kw">in</span> yahoo_data_dict.items():</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>        df_y <span class="op">=</span> df_yahoo.with_columns([</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"timestamp_benchmark"</span>).cast(pl.Date).alias(<span class="st">"date_only"</span>),</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"timestamp_benchmark"</span>).dt.weekday().alias(<span class="st">"weekday_num"</span>)</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>        ]).group_by([<span class="st">"date_only"</span>,<span class="st">"weekday_num"</span>]).agg([</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>            pl.count(<span class="st">"benchmark_close"</span>).alias(<span class="st">"count_quotes"</span>),</span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"benchmark_close"</span>).<span class="bu">max</span>() <span class="op">-</span> pl.col(<span class="st">"benchmark_close"</span>).<span class="bu">min</span>()).alias(<span class="st">"range_close"</span>)</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>        ])</span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>        yahoo_weekend_info[pair] <span class="op">=</span> df_y</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>    weekend_rows <span class="op">=</span> df_agg_day.<span class="bu">filter</span>(pl.col(<span class="st">"weekday_num"</span>) <span class="op">&gt;=</span> <span class="dv">5</span>)</span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>    weekday_rows <span class="op">=</span> df_agg_day.<span class="bu">filter</span>(pl.col(<span class="st">"weekday_num"</span>) <span class="op">&lt;</span> <span class="dv">5</span>)</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> {</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_submissions_raw"</span>: df_sub,</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_submissions_day_agg"</span>: df_agg_day,</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>        <span class="st">"weekend_total_submissions"</span>: weekend_rows[<span class="st">"num_submissions"</span>].<span class="bu">sum</span>(),</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>        <span class="st">"weekday_total_submissions"</span>: weekday_rows[<span class="st">"num_submissions"</span>].<span class="bu">sum</span>(),</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>        <span class="st">"yahoo_weekend_info"</span>: yahoo_weekend_info</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="0ebeba8a" class="cell" data-execution_count="3">
+<div id="c3f9df41" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fx_cols <span class="op">=</span> [</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"AUD-USD Price"</span>,<span class="st">"CAD-USD Price"</span>,<span class="st">"EUR-USD Price"</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"GBP-USD Price"</span>,<span class="st">"JPY-USD Price"</span>,<span class="st">"SEK-USD Price"</span></span>
@@ -471,7 +526,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="what-are-the-results">8.4 What are the results?</h3>
 <p>Below are the results, interpretation and key insights from the analysis.</p>
 <p><strong>Daily Submission Patterns (Weekend vs.&nbsp;Weekday)</strong></p>
-<div id="702e1fb5" class="cell" data-execution_count="4">
+<div id="668fffa9" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_daily <span class="op">=</span> results[<span class="st">"df_submissions_day_agg"</span>]</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df_daily</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
@@ -510,7 +565,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="354948a5" class="cell" data-execution_count="5">
+<div id="04890854" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>weekend_total <span class="op">=</span> results[<span class="st">"weekend_total_submissions"</span>]</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>weekday_total <span class="op">=</span> results[<span class="st">"weekday_total_submissions"</span>]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -534,7 +589,7 @@ Very low weekend submissions suggest validators typically avoid weekend updates,
 </div>
 </div>
 <p>Yahoo Finance Weekend Patterns (FX benchmarks)</p>
-<div id="4282e346" class="cell" data-execution_count="6">
+<div id="45792cb6" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>yahoo_info <span class="op">=</span> results[<span class="st">"yahoo_weekend_info"</span>]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> pair, df_y <span class="kw">in</span> yahoo_info.items():</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">FX Pair: </span><span class="sc">{</span>pair<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -558,7 +613,7 @@ FX Pair: AUD-USD</code></pre>
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (67, 4)</small>
+<small>shape: (153, 4)</small>
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
@@ -576,77 +631,77 @@ FX Pair: AUD-USD</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2025-01-23</td>
-<td>4</td>
-<td>1420</td>
-<td>0.004371</td>
-</tr>
-<tr class="even">
-<td>2025-02-03</td>
+<td>2025-03-03</td>
 <td>1</td>
-<td>1417</td>
-<td>0.01459</td>
-</tr>
-<tr class="odd">
-<td>2025-02-26</td>
-<td>3</td>
-<td>1413</td>
-<td>0.005379</td>
+<td>1427</td>
+<td>0.004663</td>
 </tr>
 <tr class="even">
-<td>2025-01-01</td>
-<td>3</td>
-<td>775</td>
-<td>0.000863</td>
-</tr>
-<tr class="odd">
-<td>2025-01-14</td>
+<td>2025-06-10</td>
 <td>2</td>
-<td>1419</td>
-<td>0.00404</td>
-</tr>
-<tr class="even">
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
+<td>1327</td>
+<td>0.004179</td>
 </tr>
 <tr class="odd">
-<td>2025-02-06</td>
+<td>2025-01-16</td>
 <td>4</td>
-<td>1429</td>
-<td>0.003325</td>
+<td>1405</td>
+<td>0.004792</td>
 </tr>
 <tr class="even">
-<td>2025-02-04</td>
-<td>2</td>
-<td>1423</td>
-<td>0.00879</td>
+<td>2025-01-09</td>
+<td>4</td>
+<td>1426</td>
+<td>0.003974</td>
 </tr>
 <tr class="odd">
-<td>2025-03-17</td>
-<td>1</td>
-<td>1394</td>
-<td>0.006952</td>
+<td>2025-06-08</td>
+<td>7</td>
+<td>59</td>
+<td>0.00041</td>
 </tr>
 <tr class="even">
-<td>2025-03-21</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>2025-03-27</td>
+<td>4</td>
+<td>1390</td>
+<td>0.00312</td>
+</tr>
+<tr class="even">
+<td>2024-12-19</td>
+<td>4</td>
+<td>1440</td>
+<td>0.006369</td>
+</tr>
+<tr class="odd">
+<td>2025-06-06</td>
 <td>5</td>
-<td>1279</td>
-<td>0.004681</td>
+<td>1183</td>
+<td>0.003702</td>
+</tr>
+<tr class="even">
+<td>2025-06-09</td>
+<td>1</td>
+<td>1350</td>
+<td>0.003991</td>
 </tr>
 <tr class="odd">
-<td>2025-01-06</td>
-<td>1</td>
-<td>1421</td>
-<td>0.008117</td>
+<td>2025-04-30</td>
+<td>3</td>
+<td>1352</td>
+<td>0.005958</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Total weekend Yahoo quotes: 17130
+<pre><code>Total weekend Yahoo quotes: 35753
 Yahoo data shows unexpected weekend activity for AUD-USD.
 
 FX Pair: CAD-USD</code></pre>
@@ -659,7 +714,7 @@ FX Pair: CAD-USD</code></pre>
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (67, 4)</small>
+<small>shape: (153, 4)</small>
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
@@ -677,77 +732,77 @@ FX Pair: CAD-USD</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2025-02-07</td>
-<td>5</td>
-<td>1320</td>
-<td>0.003655</td>
-</tr>
-<tr class="even">
-<td>2025-01-14</td>
+<td>2025-05-06</td>
 <td>2</td>
-<td>1438</td>
-<td>0.003208</td>
-</tr>
-<tr class="odd">
-<td>2025-01-24</td>
-<td>5</td>
-<td>1316</td>
-<td>0.00343</td>
+<td>1429</td>
+<td>0.004838</td>
 </tr>
 <tr class="even">
-<td>2025-02-24</td>
-<td>1</td>
-<td>1437</td>
-<td>0.004905</td>
-</tr>
-<tr class="odd">
-<td>2025-01-22</td>
-<td>3</td>
-<td>1433</td>
-<td>0.004933</td>
-</tr>
-<tr class="even">
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-</tr>
-<tr class="odd">
-<td>2025-03-19</td>
-<td>3</td>
-<td>1431</td>
-<td>0.002657</td>
-</tr>
-<tr class="even">
-<td>2025-02-25</td>
+<td>2025-05-13</td>
 <td>2</td>
-<td>1437</td>
-<td>0.003831</td>
+<td>1430</td>
+<td>0.00472</td>
 </tr>
 <tr class="odd">
-<td>2025-03-13</td>
+<td>2025-02-06</td>
 <td>4</td>
-<td>1431</td>
-<td>0.004449</td>
+<td>1436</td>
+<td>0.003326</td>
 </tr>
 <tr class="even">
-<td>2025-01-07</td>
-<td>2</td>
-<td>1437</td>
-<td>0.003622</td>
+<td>2025-01-06</td>
+<td>1</td>
+<td>1433</td>
+<td>0.007922</td>
 </tr>
 <tr class="odd">
-<td>2025-03-26</td>
+<td>2025-05-14</td>
 <td>3</td>
-<td>1431</td>
-<td>0.003906</td>
+<td>1423</td>
+<td>0.004269</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>2025-04-03</td>
+<td>4</td>
+<td>1426</td>
+<td>0.011381</td>
+</tr>
+<tr class="even">
+<td>2025-04-16</td>
+<td>3</td>
+<td>1432</td>
+<td>0.005426</td>
+</tr>
+<tr class="odd">
+<td>2024-12-25</td>
+<td>3</td>
+<td>1140</td>
+<td>0.000938</td>
+</tr>
+<tr class="even">
+<td>2025-03-21</td>
+<td>5</td>
+<td>1308</td>
+<td>0.002942</td>
+</tr>
+<tr class="odd">
+<td>2025-04-06</td>
+<td>7</td>
+<td>60</td>
+<td>0.001258</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Total weekend Yahoo quotes: 17175
+<pre><code>Total weekend Yahoo quotes: 36879
 Yahoo data shows unexpected weekend activity for CAD-USD.
 
 FX Pair: EUR-USD</code></pre>
@@ -760,7 +815,7 @@ FX Pair: EUR-USD</code></pre>
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (67, 4)</small>
+<small>shape: (157, 4)</small>
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
@@ -778,77 +833,77 @@ FX Pair: EUR-USD</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
+<td>2024-12-20</td>
+<td>5</td>
+<td>1350</td>
+<td>0.010164</td>
+</tr>
+<tr class="even">
+<td>2025-03-05</td>
+<td>3</td>
+<td>1429</td>
+<td>0.019356</td>
+</tr>
+<tr class="odd">
+<td>2025-05-08</td>
+<td>4</td>
+<td>1426</td>
+<td>0.012336</td>
+</tr>
+<tr class="even">
+<td>2025-04-23</td>
+<td>3</td>
+<td>1417</td>
+<td>0.013202</td>
+</tr>
+<tr class="odd">
+<td>2025-04-09</td>
+<td>3</td>
+<td>1415</td>
+<td>0.016967</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>2025-04-28</td>
+<td>1</td>
+<td>1426</td>
+<td>0.009327</td>
+</tr>
+<tr class="even">
+<td>2025-02-06</td>
+<td>4</td>
+<td>1430</td>
+<td>0.004958</td>
+</tr>
+<tr class="odd">
+<td>2025-05-15</td>
+<td>4</td>
+<td>1427</td>
+<td>0.005648</td>
+</tr>
+<tr class="even">
+<td>2025-04-01</td>
+<td>2</td>
+<td>1418</td>
+<td>0.005139</td>
+</tr>
+<tr class="odd">
 <td>2025-03-03</td>
 <td>1</td>
 <td>1432</td>
 <td>0.010915</td>
-</tr>
-<tr class="even">
-<td>2025-02-25</td>
-<td>2</td>
-<td>1435</td>
-<td>0.006496</td>
-</tr>
-<tr class="odd">
-<td>2025-02-14</td>
-<td>5</td>
-<td>1337</td>
-<td>0.006594</td>
-</tr>
-<tr class="even">
-<td>2025-01-10</td>
-<td>5</td>
-<td>1343</td>
-<td>0.009174</td>
-</tr>
-<tr class="odd">
-<td>2025-01-14</td>
-<td>2</td>
-<td>1432</td>
-<td>0.00697</td>
-</tr>
-<tr class="even">
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-</tr>
-<tr class="odd">
-<td>2025-02-20</td>
-<td>4</td>
-<td>1426</td>
-<td>0.008542</td>
-</tr>
-<tr class="even">
-<td>2025-03-12</td>
-<td>3</td>
-<td>1426</td>
-<td>0.005234</td>
-</tr>
-<tr class="odd">
-<td>2025-03-20</td>
-<td>4</td>
-<td>1418</td>
-<td>0.010044</td>
-</tr>
-<tr class="even">
-<td>2024-12-31</td>
-<td>2</td>
-<td>1360</td>
-<td>0.008092</td>
-</tr>
-<tr class="odd">
-<td>2025-01-13</td>
-<td>1</td>
-<td>1430</td>
-<td>0.009629</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Total weekend Yahoo quotes: 17283
+<pre><code>Total weekend Yahoo quotes: 38597
 Yahoo data shows unexpected weekend activity for EUR-USD.
 
 FX Pair: GBP-USD</code></pre>
@@ -861,7 +916,7 @@ FX Pair: GBP-USD</code></pre>
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (67, 4)</small>
+<small>shape: (153, 4)</small>
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
@@ -879,77 +934,77 @@ FX Pair: GBP-USD</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2025-03-30</td>
-<td>7</td>
-<td>60</td>
-<td>0.001004</td>
+<td>2025-05-28</td>
+<td>3</td>
+<td>1389</td>
+<td>0.010306</td>
 </tr>
 <tr class="even">
-<td>2025-03-28</td>
-<td>5</td>
-<td>1286</td>
-<td>0.004609</td>
-</tr>
-<tr class="odd">
-<td>2025-01-17</td>
-<td>5</td>
-<td>1340</td>
-<td>0.008279</td>
-</tr>
-<tr class="even">
-<td>2025-02-20</td>
-<td>4</td>
-<td>1426</td>
-<td>0.009328</td>
-</tr>
-<tr class="odd">
-<td>2025-03-11</td>
-<td>2</td>
+<td>2025-03-31</td>
+<td>1</td>
 <td>1427</td>
-<td>0.009181</td>
-</tr>
-<tr class="even">
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
+<td>0.008294</td>
 </tr>
 <tr class="odd">
-<td>2025-01-07</td>
+<td>2025-02-11</td>
 <td>2</td>
-<td>1436</td>
-<td>0.010181</td>
+<td>1424</td>
+<td>0.011795</td>
 </tr>
 <tr class="even">
-<td>2025-03-24</td>
-<td>1</td>
-<td>1429</td>
-<td>0.007713</td>
+<td>2025-06-04</td>
+<td>3</td>
+<td>1410</td>
+<td>0.007719</td>
 </tr>
 <tr class="odd">
-<td>2025-02-24</td>
-<td>1</td>
-<td>1429</td>
-<td>0.007763</td>
+<td>2025-05-13</td>
+<td>2</td>
+<td>1425</td>
+<td>0.013841</td>
 </tr>
 <tr class="even">
-<td>2025-03-03</td>
-<td>1</td>
-<td>1432</td>
-<td>0.013331</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
 </tr>
 <tr class="odd">
-<td>2024-12-30</td>
-<td>1</td>
-<td>1432</td>
-<td>0.009888</td>
+<td>2025-02-19</td>
+<td>3</td>
+<td>1428</td>
+<td>0.006633</td>
+</tr>
+<tr class="even">
+<td>2025-04-17</td>
+<td>4</td>
+<td>1427</td>
+<td>0.007311</td>
+</tr>
+<tr class="odd">
+<td>2025-03-21</td>
+<td>5</td>
+<td>1271</td>
+<td>0.008026</td>
+</tr>
+<tr class="even">
+<td>2025-03-18</td>
+<td>2</td>
+<td>1424</td>
+<td>0.005696</td>
+</tr>
+<tr class="odd">
+<td>2025-06-26</td>
+<td>4</td>
+<td>1394</td>
+<td>0.009173</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Total weekend Yahoo quotes: 17283
+<pre><code>Total weekend Yahoo quotes: 37247
 Yahoo data shows unexpected weekend activity for GBP-USD.
 
 FX Pair: JPY-USD</code></pre>
@@ -962,7 +1017,7 @@ FX Pair: JPY-USD</code></pre>
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (67, 4)</small>
+<small>shape: (153, 4)</small>
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
@@ -980,34 +1035,34 @@ FX Pair: JPY-USD</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2025-03-10</td>
+<td>2025-06-13</td>
+<td>5</td>
+<td>1260</td>
+<td>0.000078</td>
+</tr>
+<tr class="even">
+<td>2025-02-17</td>
 <td>1</td>
-<td>1422</td>
-<td>0.000052</td>
-</tr>
-<tr class="even">
-<td>2025-01-01</td>
-<td>3</td>
-<td>301</td>
-<td>0.000027</td>
-</tr>
-<tr class="odd">
-<td>2025-03-20</td>
-<td>4</td>
-<td>1426</td>
-<td>0.000034</td>
-</tr>
-<tr class="even">
-<td>2025-03-13</td>
-<td>4</td>
-<td>1432</td>
-<td>0.000043</td>
-</tr>
-<tr class="odd">
-<td>2025-02-05</td>
-<td>3</td>
 <td>1437</td>
-<td>0.000095</td>
+<td>0.000036</td>
+</tr>
+<tr class="odd">
+<td>2025-02-10</td>
+<td>1</td>
+<td>1435</td>
+<td>0.000041</td>
+</tr>
+<tr class="even">
+<td>2025-01-09</td>
+<td>4</td>
+<td>1435</td>
+<td>0.00003</td>
+</tr>
+<tr class="odd">
+<td>2025-06-03</td>
+<td>2</td>
+<td>1430</td>
+<td>0.00008</td>
 </tr>
 <tr class="even">
 <td>…</td>
@@ -1016,41 +1071,41 @@ FX Pair: JPY-USD</code></pre>
 <td>…</td>
 </tr>
 <tr class="odd">
-<td>2025-03-12</td>
-<td>3</td>
-<td>1435</td>
-<td>0.000058</td>
+<td>2025-04-06</td>
+<td>7</td>
+<td>60</td>
+<td>0.000026</td>
 </tr>
 <tr class="even">
-<td>2025-02-03</td>
+<td>2025-01-27</td>
 <td>1</td>
 <td>1438</td>
-<td>0.000077</td>
+<td>0.000104</td>
 </tr>
 <tr class="odd">
-<td>2025-02-13</td>
-<td>4</td>
-<td>1435</td>
-<td>0.000082</td>
+<td>2025-02-26</td>
+<td>3</td>
+<td>1429</td>
+<td>0.000055</td>
 </tr>
 <tr class="even">
-<td>2025-02-18</td>
-<td>2</td>
-<td>1435</td>
-<td>0.000033</td>
+<td>2025-04-23</td>
+<td>3</td>
+<td>1426</td>
+<td>0.000098</td>
 </tr>
 <tr class="odd">
-<td>2025-02-11</td>
-<td>2</td>
-<td>1432</td>
-<td>0.000046</td>
+<td>2025-06-02</td>
+<td>1</td>
+<td>1435</td>
+<td>0.000065</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Total weekend Yahoo quotes: 17162
+<pre><code>Total weekend Yahoo quotes: 36848
 Yahoo data shows unexpected weekend activity for JPY-USD.
 
 FX Pair: SEK-USD</code></pre>
@@ -1063,7 +1118,7 @@ FX Pair: SEK-USD</code></pre>
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (67, 4)</small>
+<small>shape: (152, 4)</small>
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
@@ -1081,82 +1136,82 @@ FX Pair: SEK-USD</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2025-01-03</td>
-<td>5</td>
-<td>1315</td>
-<td>0.000458</td>
-</tr>
-<tr class="even">
-<td>2025-03-06</td>
-<td>4</td>
-<td>1427</td>
-<td>0.001217</td>
-</tr>
-<tr class="odd">
-<td>2025-02-25</td>
-<td>2</td>
-<td>1437</td>
-<td>0.000916</td>
-</tr>
-<tr class="even">
-<td>2025-03-27</td>
-<td>4</td>
-<td>1438</td>
-<td>0.000981</td>
-</tr>
-<tr class="odd">
-<td>2025-01-23</td>
-<td>4</td>
-<td>1372</td>
-<td>0.000476</td>
-</tr>
-<tr class="even">
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-</tr>
-<tr class="odd">
-<td>2025-03-04</td>
-<td>2</td>
-<td>1437</td>
-<td>0.001738</td>
-</tr>
-<tr class="even">
-<td>2025-01-30</td>
-<td>4</td>
-<td>1374</td>
-<td>0.00073</td>
-</tr>
-<tr class="odd">
-<td>2025-01-29</td>
-<td>3</td>
-<td>1403</td>
-<td>0.000508</td>
-</tr>
-<tr class="even">
-<td>2025-03-26</td>
-<td>3</td>
-<td>1428</td>
-<td>0.000589</td>
-</tr>
-<tr class="odd">
-<td>2025-03-17</td>
+<td>2025-04-14</td>
 <td>1</td>
-<td>1433</td>
-<td>0.000778</td>
+<td>1428</td>
+<td>0.001712</td>
+</tr>
+<tr class="even">
+<td>2025-02-21</td>
+<td>5</td>
+<td>1319</td>
+<td>0.000349</td>
+</tr>
+<tr class="odd">
+<td>2025-02-11</td>
+<td>2</td>
+<td>1430</td>
+<td>0.00081</td>
+</tr>
+<tr class="even">
+<td>2025-06-11</td>
+<td>3</td>
+<td>1314</td>
+<td>0.000889</td>
+</tr>
+<tr class="odd">
+<td>2025-06-16</td>
+<td>1</td>
+<td>1439</td>
+<td>0.000979</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>2025-03-13</td>
+<td>4</td>
+<td>1432</td>
+<td>0.001576</td>
+</tr>
+<tr class="even">
+<td>2025-02-18</td>
+<td>2</td>
+<td>1435</td>
+<td>0.000395</td>
+</tr>
+<tr class="odd">
+<td>2025-04-30</td>
+<td>3</td>
+<td>1350</td>
+<td>0.000803</td>
+</tr>
+<tr class="even">
+<td>2025-04-23</td>
+<td>3</td>
+<td>1426</td>
+<td>0.001898</td>
+</tr>
+<tr class="odd">
+<td>2025-01-13</td>
+<td>1</td>
+<td>1359</td>
+<td>0.00088</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Total weekend Yahoo quotes: 17153
+<pre><code>Total weekend Yahoo quotes: 36791
 Yahoo data shows unexpected weekend activity for SEK-USD.</code></pre>
 </div>
 </div>
 <p><strong>List of all Validators and their Weekend Submission Ratios</strong></p>
-<div id="8300c770" class="cell" data-execution_count="7">
+<div id="6c52c59c" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_sub_raw <span class="op">=</span> results[<span class="st">"df_submissions_raw"</span>]</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>df_validator_weekend <span class="op">=</span> (</span>
@@ -1184,66 +1239,66 @@ Yahoo data shows unexpected weekend activity for SEK-USD.</code></pre>
 <span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"weekend_submission_ratio=</span><span class="sc">{</span>row[<span class="st">'weekend_submission_ratio'</span>]<span class="sc">:.2f}</span><span class="ss">"</span></span>
 <span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Validator 0xfD97FB8835d25740A2Da27c69762D74F6A931858: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x9d28e40E9Ec4789f9A0D17e421F76D8D0868EA44: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x22A76e194A49c9e5508Cd4A3E1cD555D088ECB08: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xD9fDab408dF7Ae751691BeC2efE3b713ba3f9C36: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x7232e75a8bFd8c9ab002BB3A00eAa885BC72A6dd: total_submissions=2877, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x19E356ebC20283fc74AF0BA4C179502A1F62fA7B: total_submissions=2833, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x6747c02DE7eb2099265e55715Ba2E03e8563D051: total_submissions=2840, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x358488a4EdCA493FCD87610dcd50c62c8A3Dd658: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x1476A65D7B5739dE1805d5130441A94022Ee49fe: total_submissions=2462, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x100E38f7BCEc53937BDd79ADE46F34362470577B: total_submissions=2876, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x527192F3D2408C84087607b7feE1d0f907821E17: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xcdEed21b471b0Dc54faF74480A0E700fCc42a7b6: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x23b4Be9536F93b8D550214912fD0e38417Ff7209: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x00a96aaED75015Bb44cED878D927dcb15ec1FF54: total_submissions=2866, weekend_submissions=0, weekend_submission_ratio=0.00
+<pre><code>Validator 0xd61a48b0e11B0Dc6b7Bd713B1012563c52591BAA: total_submissions=2873, weekend_submissions=0, weekend_submission_ratio=0.00
 Validator 0x551f3300FCFE0e392178b3542c009948008B2a9F: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xC1F9acAF1824F6C906b35A0D2584D6E25077C7f5: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xDF2D0052ea56A860443039619f6DAe4434bc0Ac4: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x5603caFE3313D0cf56Fd4bE4A2f606dD6E43F8Eb: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x197B2c44b887c4aC01243BDE7E4bBa8bd95BC3a8: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x718361fc3637199F24a2437331677D6B89a40519: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xE4686A4C6E63A8ab51B458c52EB779AEcf0B74f7: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xF9B38D02959379d43C764064dE201324d5e12931: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x4cD134001EEF0843B9c69Ba9569d11fDcF4bd495: total_submissions=2823, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x984A46Ec685Bb41A7BBb2bc39f80C78410ff4057: total_submissions=2877, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
 Validator 0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x791A7F840ac11841cCB0FaA968B2e3a0Db930fCe: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x3fe573552E14a0FC11Da25E43Fef11e16a785068: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x2928FE5b911BCAf837cAd93eB9626E86a189f1dd: total_submissions=2829, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xDCA5DFF3D42f2db3C18dBE823380A0A81db49A7E: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x8584A78A9b94f332A34BBf24D2AF83367Da31894: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x24915749B793375a8C93090AF19928aFF1CAEcb6: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x26E2724dBD14Fbd52be430B97043AA4c83F05852: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xBBf36374eb23968F25aecAEbb97BF3118f3c2fEC: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x8f91e0ADF8065C3fFF92297267E02DF32C2978FF: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357: total_submissions=2856, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xbfDcAF35f52F9ef423ac8F2621F9eef8be6dEd17: total_submissions=2833, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xd61a48b0e11B0Dc6b7Bd713B1012563c52591BAA: total_submissions=2873, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xBE287C82A786218E008FF97320b08244BE4A282c: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x94d28f08Ff81A80f4716C0a8EfC6CAC2Ec74d09E: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x383A3c437d3F12f60E5fC990119468D3561EfBfc: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x3AaF7817618728ffEF81898E11A3171C33faAE41: total_submissions=2874, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xdF239e0D5b4E6e820B0cFEF6972A90893c2073AB: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x831B837C3DA1B6c2AB68a690206bDfF368877E19: total_submissions=2863, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x1Be7f70BCf8393a7e4A5BcC66F6f15d6e35cfBBC: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x59031767f20EA8F4a3d90d33aB0DAA2ca469Fd9a: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xcf716b3930d7cf6f2ADAD90A27c39fDc9D643BBd: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x01F788E4371a70D579C178Ea7F48E04e8B2CD743: total_submissions=2837, weekend_submissions=0, weekend_submission_ratio=0.00
 Validator 0x6a395dE946c0493157404E2b1947493c633f569E: total_submissions=2874, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x36142A4f36974e2935192A1111C39330aA296D3C: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x99E2B4B27BDe92b42D04B6CF302cF564D2C13b74: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x5E17e837DcBa2728C94f95c38fA8a47CB9C8818F: total_submissions=2876, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xEf0Ba5e345C2C3937df5667A870Aae5105CAa3a5: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x9C7dAABb5101623340C925CFD6fF74088ff5672e: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0x64F83c2538A646A550Ad9bEEb63427a377359DEE: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
 Validator 0xf34CD6c09a59d7D3d1a6C3dC231a7834E5615D6A: total_submissions=2834, weekend_submissions=0, weekend_submission_ratio=0.00
-Validator 0xf10f56Bf0A28E0737c7e6bB0aF92f3DDad34aE6a: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00</code></pre>
+Validator 0x100E38f7BCEc53937BDd79ADE46F34362470577B: total_submissions=2876, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xfD97FB8835d25740A2Da27c69762D74F6A931858: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x1476A65D7B5739dE1805d5130441A94022Ee49fe: total_submissions=2462, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x00a96aaED75015Bb44cED878D927dcb15ec1FF54: total_submissions=2866, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xBE287C82A786218E008FF97320b08244BE4A282c: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x9C7dAABb5101623340C925CFD6fF74088ff5672e: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357: total_submissions=2856, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x358488a4EdCA493FCD87610dcd50c62c8A3Dd658: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x2928FE5b911BCAf837cAd93eB9626E86a189f1dd: total_submissions=2829, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xC1F9acAF1824F6C906b35A0D2584D6E25077C7f5: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x5E17e837DcBa2728C94f95c38fA8a47CB9C8818F: total_submissions=2876, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x6747c02DE7eb2099265e55715Ba2E03e8563D051: total_submissions=2840, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x24915749B793375a8C93090AF19928aFF1CAEcb6: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xcf716b3930d7cf6f2ADAD90A27c39fDc9D643BBd: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x99E2B4B27BDe92b42D04B6CF302cF564D2C13b74: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x8584A78A9b94f332A34BBf24D2AF83367Da31894: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xF9B38D02959379d43C764064dE201324d5e12931: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x383A3c437d3F12f60E5fC990119468D3561EfBfc: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x26E2724dBD14Fbd52be430B97043AA4c83F05852: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xDCA5DFF3D42f2db3C18dBE823380A0A81db49A7E: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x527192F3D2408C84087607b7feE1d0f907821E17: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x59031767f20EA8F4a3d90d33aB0DAA2ca469Fd9a: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xE4686A4C6E63A8ab51B458c52EB779AEcf0B74f7: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x64F83c2538A646A550Ad9bEEb63427a377359DEE: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x01F788E4371a70D579C178Ea7F48E04e8B2CD743: total_submissions=2837, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x718361fc3637199F24a2437331677D6B89a40519: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x197B2c44b887c4aC01243BDE7E4bBa8bd95BC3a8: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x5603caFE3313D0cf56Fd4bE4A2f606dD6E43F8Eb: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xf10f56Bf0A28E0737c7e6bB0aF92f3DDad34aE6a: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xDF2D0052ea56A860443039619f6DAe4434bc0Ac4: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xEf0Ba5e345C2C3937df5667A870Aae5105CAa3a5: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x22A76e194A49c9e5508Cd4A3E1cD555D088ECB08: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x19E356ebC20283fc74AF0BA4C179502A1F62fA7B: total_submissions=2833, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x984A46Ec685Bb41A7BBb2bc39f80C78410ff4057: total_submissions=2877, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x1Be7f70BCf8393a7e4A5BcC66F6f15d6e35cfBBC: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x3fe573552E14a0FC11Da25E43Fef11e16a785068: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x8f91e0ADF8065C3fFF92297267E02DF32C2978FF: total_submissions=2879, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xBBf36374eb23968F25aecAEbb97BF3118f3c2fEC: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x9d28e40E9Ec4789f9A0D17e421F76D8D0868EA44: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x791A7F840ac11841cCB0FaA968B2e3a0Db930fCe: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xD9fDab408dF7Ae751691BeC2efE3b713ba3f9C36: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x23b4Be9536F93b8D550214912fD0e38417Ff7209: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x36142A4f36974e2935192A1111C39330aA296D3C: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x831B837C3DA1B6c2AB68a690206bDfF368877E19: total_submissions=2863, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x7232e75a8bFd8c9ab002BB3A00eAa885BC72A6dd: total_submissions=2877, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xbfDcAF35f52F9ef423ac8F2621F9eef8be6dEd17: total_submissions=2833, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x3AaF7817618728ffEF81898E11A3171C33faAE41: total_submissions=2874, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x4cD134001EEF0843B9c69Ba9569d11fDcF4bd495: total_submissions=2823, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xdF239e0D5b4E6e820B0cFEF6972A90893c2073AB: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0xcdEed21b471b0Dc54faF74480A0E700fCc42a7b6: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00
+Validator 0x94d28f08Ff81A80f4716C0a8EfC6CAC2Ec74d09E: total_submissions=2880, weekend_submissions=0, weekend_submission_ratio=0.00</code></pre>
 </div>
 </div>
 <p>Please note, <code>total_submissions</code> represents the total number of individual price-update rows this validator sent during the study period. <code>weekend_submissions</code> is how many of those rows were posted on Saturdays or Sundays. <code>weekend_submission_ratio</code> is the proportion of weekend submissions (0 – 1 scale); higher values indicate the validator updates more frequently on weekends relative to weekdays.</p>

@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-283d813e9a11428b00dc78d5a810a4dc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d41974b8c531fc798e187f5f45875d69.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -188,8 +188,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../summary_2025_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (April 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (May 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (June 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../summary_first_half.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oracle Submission Data Analysis Report (December 2024 - March 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_final.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Data Analysis Report</span></a>
   </div>
 </li>
       </ul>
@@ -349,14 +373,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Detect simultaneous extreme outliers, i.e.&nbsp;multiple validators submitting extreme prices at the same timestamps.</li>
 </ol>
 <p>Below is the full analysis script:</p>
-<div id="345d55ca" class="cell" data-execution_count="1">
+<div id="e69f32ac" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="95d31ccb" class="cell" data-execution_count="2">
+<div id="284c95f7" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_and_preprocess_submissions(submission_glob: <span class="bu">str</span>) <span class="op">-&gt;</span> pl.DataFrame:</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads Oracle Submission CSVs and returns a Polars DataFrame.</span></span>
@@ -625,7 +649,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-266"><a href="#cb2-266" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_extreme_outliers"</span>: df_extreme_groups,</span>
 <span id="cb2-267"><a href="#cb2-267" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="02f46af0" class="cell" data-execution_count="3">
+<div id="51276ab9" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> analyze_possible_security_malicious_behavior(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    submission_glob<span class="op">=</span><span class="st">"../submission-data/Oracle_Submission_*.csv"</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    identical_match_threshold<span class="op">=</span><span class="fl">1e-9</span>,</span>
@@ -641,7 +665,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Below are the results extracted from the analysis.</p>
 <section id="suspicious-validator-pairs-collusion" class="level4">
 <h4 class="anchored" data-anchor-id="suspicious-validator-pairs-collusion">Suspicious Validator Pairs (Collusion)</h4>
-<div id="29bb2f42" class="cell" data-execution_count="4">
+<div id="73df93e3" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_pairs <span class="op">=</span> results[<span class="st">"df_suspicious_pairs"</span>]</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total suspicious validator pairs found: </span><span class="sc">{</span>df_pairs<span class="sc">.</span>height<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -810,7 +834,7 @@ Pair (0x23b4Be95..., 0x7232e75a...) in NTN-ATN Price Decimal: 100.0% identical s
 </section>
 <section id="simultaneous-extreme-outliers" class="level4">
 <h4 class="anchored" data-anchor-id="simultaneous-extreme-outliers">Simultaneous Extreme Outliers</h4>
-<div id="1fbe7d54" class="cell" data-execution_count="5">
+<div id="779b3b64" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_outliers <span class="op">=</span> results[<span class="st">"df_extreme_outliers"</span>]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total timestamps with simultaneous extreme outliers: </span><span class="sc">{</span>df_outliers<span class="sc">.</span>height<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -836,7 +860,7 @@ No simultaneous extreme outliers detected.</code></pre>
 <li>Multiple validators simultaneously posting extreme prices may indicate coordinated manipulation attempts, especially if this coincides with critical network events.</li>
 </ul>
 <p><strong>List of all Validators and their Collusion and Extreme Event Counts</strong></p>
-<div id="489a251e" class="cell" data-execution_count="6">
+<div id="4c0ad3b6" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>all_validators <span class="op">=</span> (</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    results[<span class="st">"df_all_submissions"</span>]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    .select(pl.col(<span class="st">"Validator Address"</span>))</span>
@@ -919,66 +943,66 @@ No simultaneous extreme outliers detected.</code></pre>
 <span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"extreme_event_count=</span><span class="sc">{</span>row[<span class="st">'extreme_event_count'</span>]<span class="sc">}</span><span class="ss">, "</span></span>
 <span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Validator 0x5E17e837DcBa2728C94f95c38fA8a47CB9C8818F: collusion_score=129756, extreme_event_count=0, 
-Validator 0x99E2B4B27BDe92b42D04B6CF302cF564D2C13b74: collusion_score=474593, extreme_event_count=0, 
+<pre><code>Validator 0x1476A65D7B5739dE1805d5130441A94022Ee49fe: collusion_score=122800, extreme_event_count=0, 
+Validator 0xC1F9acAF1824F6C906b35A0D2584D6E25077C7f5: collusion_score=462504, extreme_event_count=0, 
+Validator 0x9C7dAABb5101623340C925CFD6fF74088ff5672e: collusion_score=352372, extreme_event_count=0, 
+Validator 0x26E2724dBD14Fbd52be430B97043AA4c83F05852: collusion_score=0, extreme_event_count=0, 
+Validator 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357: collusion_score=0, extreme_event_count=0, 
+Validator 0x551f3300FCFE0e392178b3542c009948008B2a9F: collusion_score=121079, extreme_event_count=0, 
+Validator 0xF9B38D02959379d43C764064dE201324d5e12931: collusion_score=99775, extreme_event_count=0, 
+Validator 0x6a395dE946c0493157404E2b1947493c633f569E: collusion_score=230559, extreme_event_count=0, 
+Validator 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775: collusion_score=153863, extreme_event_count=0, 
+Validator 0x59031767f20EA8F4a3d90d33aB0DAA2ca469Fd9a: collusion_score=370536, extreme_event_count=0, 
+Validator 0x8584A78A9b94f332A34BBf24D2AF83367Da31894: collusion_score=375412, extreme_event_count=0, 
+Validator 0x8f91e0ADF8065C3fFF92297267E02DF32C2978FF: collusion_score=198999, extreme_event_count=0, 
+Validator 0x1Be7f70BCf8393a7e4A5BcC66F6f15d6e35cfBBC: collusion_score=234904, extreme_event_count=0, 
+Validator 0x718361fc3637199F24a2437331677D6B89a40519: collusion_score=198477, extreme_event_count=0, 
 Validator 0xBE287C82A786218E008FF97320b08244BE4A282c: collusion_score=81266, extreme_event_count=0, 
-Validator 0xfD97FB8835d25740A2Da27c69762D74F6A931858: collusion_score=0, extreme_event_count=0, 
-Validator 0x3AaF7817618728ffEF81898E11A3171C33faAE41: collusion_score=191682, extreme_event_count=0, 
-Validator 0x19E356ebC20283fc74AF0BA4C179502A1F62fA7B: collusion_score=293853, extreme_event_count=0, 
+Validator 0xd61a48b0e11B0Dc6b7Bd713B1012563c52591BAA: collusion_score=0, extreme_event_count=0, 
+Validator 0xDCA5DFF3D42f2db3C18dBE823380A0A81db49A7E: collusion_score=235349, extreme_event_count=0, 
+Validator 0x64F83c2538A646A550Ad9bEEb63427a377359DEE: collusion_score=485482, extreme_event_count=0, 
+Validator 0x358488a4EdCA493FCD87610dcd50c62c8A3Dd658: collusion_score=479593, extreme_event_count=0, 
+Validator 0xEf0Ba5e345C2C3937df5667A870Aae5105CAa3a5: collusion_score=233435, extreme_event_count=0, 
+Validator 0x197B2c44b887c4aC01243BDE7E4bBa8bd95BC3a8: collusion_score=410755, extreme_event_count=0, 
+Validator 0x01F788E4371a70D579C178Ea7F48E04e8B2CD743: collusion_score=370885, extreme_event_count=0, 
+Validator 0x7232e75a8bFd8c9ab002BB3A00eAa885BC72A6dd: collusion_score=171506, extreme_event_count=0, 
+Validator 0x22A76e194A49c9e5508Cd4A3E1cD555D088ECB08: collusion_score=134674, extreme_event_count=0, 
+Validator 0x4cD134001EEF0843B9c69Ba9569d11fDcF4bd495: collusion_score=193803, extreme_event_count=0, 
+Validator 0xcf716b3930d7cf6f2ADAD90A27c39fDc9D643BBd: collusion_score=459177, extreme_event_count=0, 
+Validator 0x5603caFE3313D0cf56Fd4bE4A2f606dD6E43F8Eb: collusion_score=387994, extreme_event_count=0, 
+Validator 0xdF239e0D5b4E6e820B0cFEF6972A90893c2073AB: collusion_score=0, extreme_event_count=0, 
+Validator 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f: collusion_score=345889, extreme_event_count=0, 
+Validator 0x383A3c437d3F12f60E5fC990119468D3561EfBfc: collusion_score=271531, extreme_event_count=0, 
 Validator 0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E: collusion_score=267909, extreme_event_count=0, 
 Validator 0x3fe573552E14a0FC11Da25E43Fef11e16a785068: collusion_score=0, extreme_event_count=0, 
-Validator 0x6747c02DE7eb2099265e55715Ba2E03e8563D051: collusion_score=347841, extreme_event_count=0, 
-Validator 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357: collusion_score=0, extreme_event_count=0, 
-Validator 0xD9fDab408dF7Ae751691BeC2efE3b713ba3f9C36: collusion_score=377924, extreme_event_count=0, 
-Validator 0xBBf36374eb23968F25aecAEbb97BF3118f3c2fEC: collusion_score=296645, extreme_event_count=0, 
-Validator 0x5603caFE3313D0cf56Fd4bE4A2f606dD6E43F8Eb: collusion_score=387994, extreme_event_count=0, 
-Validator 0x00a96aaED75015Bb44cED878D927dcb15ec1FF54: collusion_score=362523, extreme_event_count=0, 
-Validator 0x2928FE5b911BCAf837cAd93eB9626E86a189f1dd: collusion_score=469769, extreme_event_count=0, 
-Validator 0x197B2c44b887c4aC01243BDE7E4bBa8bd95BC3a8: collusion_score=410755, extreme_event_count=0, 
-Validator 0xbfDcAF35f52F9ef423ac8F2621F9eef8be6dEd17: collusion_score=370736, extreme_event_count=0, 
-Validator 0x718361fc3637199F24a2437331677D6B89a40519: collusion_score=198477, extreme_event_count=0, 
-Validator 0x383A3c437d3F12f60E5fC990119468D3561EfBfc: collusion_score=271531, extreme_event_count=0, 
-Validator 0xC1F9acAF1824F6C906b35A0D2584D6E25077C7f5: collusion_score=462504, extreme_event_count=0, 
-Validator 0x551f3300FCFE0e392178b3542c009948008B2a9F: collusion_score=121079, extreme_event_count=0, 
-Validator 0x1Be7f70BCf8393a7e4A5BcC66F6f15d6e35cfBBC: collusion_score=234904, extreme_event_count=0, 
-Validator 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f: collusion_score=345889, extreme_event_count=0, 
-Validator 0x9d28e40E9Ec4789f9A0D17e421F76D8D0868EA44: collusion_score=120326, extreme_event_count=0, 
-Validator 0x6a395dE946c0493157404E2b1947493c633f569E: collusion_score=230559, extreme_event_count=0, 
-Validator 0xF9B38D02959379d43C764064dE201324d5e12931: collusion_score=99775, extreme_event_count=0, 
 Validator 0x36142A4f36974e2935192A1111C39330aA296D3C: collusion_score=198115, extreme_event_count=0, 
-Validator 0x64F83c2538A646A550Ad9bEEb63427a377359DEE: collusion_score=485482, extreme_event_count=0, 
-Validator 0x527192F3D2408C84087607b7feE1d0f907821E17: collusion_score=237648, extreme_event_count=0, 
-Validator 0x831B837C3DA1B6c2AB68a690206bDfF368877E19: collusion_score=193907, extreme_event_count=0, 
-Validator 0xE4686A4C6E63A8ab51B458c52EB779AEcf0B74f7: collusion_score=237330, extreme_event_count=0, 
+Validator 0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772: collusion_score=149343, extreme_event_count=0, 
+Validator 0xD9fDab408dF7Ae751691BeC2efE3b713ba3f9C36: collusion_score=377924, extreme_event_count=0, 
+Validator 0x94d28f08Ff81A80f4716C0a8EfC6CAC2Ec74d09E: collusion_score=209762, extreme_event_count=0, 
+Validator 0x5E17e837DcBa2728C94f95c38fA8a47CB9C8818F: collusion_score=129756, extreme_event_count=0, 
+Validator 0x99E2B4B27BDe92b42D04B6CF302cF564D2C13b74: collusion_score=474593, extreme_event_count=0, 
+Validator 0x3AaF7817618728ffEF81898E11A3171C33faAE41: collusion_score=191682, extreme_event_count=0, 
 Validator 0xcdEed21b471b0Dc54faF74480A0E700fCc42a7b6: collusion_score=360901, extreme_event_count=0, 
-Validator 0x01F788E4371a70D579C178Ea7F48E04e8B2CD743: collusion_score=370885, extreme_event_count=0, 
-Validator 0x9C7dAABb5101623340C925CFD6fF74088ff5672e: collusion_score=352372, extreme_event_count=0, 
-Validator 0xDF2D0052ea56A860443039619f6DAe4434bc0Ac4: collusion_score=252893, extreme_event_count=0, 
-Validator 0x100E38f7BCEc53937BDd79ADE46F34362470577B: collusion_score=0, extreme_event_count=0, 
-Validator 0x24915749B793375a8C93090AF19928aFF1CAEcb6: collusion_score=492750, extreme_event_count=0, 
-Validator 0x22A76e194A49c9e5508Cd4A3E1cD555D088ECB08: collusion_score=134674, extreme_event_count=0, 
-Validator 0xd61a48b0e11B0Dc6b7Bd713B1012563c52591BAA: collusion_score=0, extreme_event_count=0, 
-Validator 0xcf716b3930d7cf6f2ADAD90A27c39fDc9D643BBd: collusion_score=459177, extreme_event_count=0, 
-Validator 0x26E2724dBD14Fbd52be430B97043AA4c83F05852: collusion_score=0, extreme_event_count=0, 
-Validator 0x59031767f20EA8F4a3d90d33aB0DAA2ca469Fd9a: collusion_score=370536, extreme_event_count=0, 
-Validator 0x791A7F840ac11841cCB0FaA968B2e3a0Db930fCe: collusion_score=491488, extreme_event_count=0, 
+Validator 0x00a96aaED75015Bb44cED878D927dcb15ec1FF54: collusion_score=362523, extreme_event_count=0, 
 Validator 0xf34CD6c09a59d7D3d1a6C3dC231a7834E5615D6A: collusion_score=352975, extreme_event_count=0, 
+Validator 0x527192F3D2408C84087607b7feE1d0f907821E17: collusion_score=237648, extreme_event_count=0, 
+Validator 0x19E356ebC20283fc74AF0BA4C179502A1F62fA7B: collusion_score=293853, extreme_event_count=0, 
+Validator 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3: collusion_score=36576, extreme_event_count=0, 
+Validator 0xbfDcAF35f52F9ef423ac8F2621F9eef8be6dEd17: collusion_score=370736, extreme_event_count=0, 
+Validator 0x6747c02DE7eb2099265e55715Ba2E03e8563D051: collusion_score=347841, extreme_event_count=0, 
+Validator 0xDF2D0052ea56A860443039619f6DAe4434bc0Ac4: collusion_score=252893, extreme_event_count=0, 
+Validator 0x2928FE5b911BCAf837cAd93eB9626E86a189f1dd: collusion_score=469769, extreme_event_count=0, 
+Validator 0x24915749B793375a8C93090AF19928aFF1CAEcb6: collusion_score=492750, extreme_event_count=0, 
+Validator 0x831B837C3DA1B6c2AB68a690206bDfF368877E19: collusion_score=193907, extreme_event_count=0, 
+Validator 0xBBf36374eb23968F25aecAEbb97BF3118f3c2fEC: collusion_score=296645, extreme_event_count=0, 
+Validator 0xfD97FB8835d25740A2Da27c69762D74F6A931858: collusion_score=0, extreme_event_count=0, 
 Validator 0x984A46Ec685Bb41A7BBb2bc39f80C78410ff4057: collusion_score=497570, extreme_event_count=0, 
 Validator 0xf10f56Bf0A28E0737c7e6bB0aF92f3DDad34aE6a: collusion_score=489844, extreme_event_count=0, 
-Validator 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3: collusion_score=36576, extreme_event_count=0, 
-Validator 0xEf0Ba5e345C2C3937df5667A870Aae5105CAa3a5: collusion_score=233435, extreme_event_count=0, 
-Validator 0x358488a4EdCA493FCD87610dcd50c62c8A3Dd658: collusion_score=479593, extreme_event_count=0, 
-Validator 0x1476A65D7B5739dE1805d5130441A94022Ee49fe: collusion_score=122800, extreme_event_count=0, 
-Validator 0x4cD134001EEF0843B9c69Ba9569d11fDcF4bd495: collusion_score=193803, extreme_event_count=0, 
-Validator 0x8f91e0ADF8065C3fFF92297267E02DF32C2978FF: collusion_score=198999, extreme_event_count=0, 
-Validator 0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772: collusion_score=149343, extreme_event_count=0, 
-Validator 0x7232e75a8bFd8c9ab002BB3A00eAa885BC72A6dd: collusion_score=171506, extreme_event_count=0, 
-Validator 0x8584A78A9b94f332A34BBf24D2AF83367Da31894: collusion_score=375412, extreme_event_count=0, 
-Validator 0xdF239e0D5b4E6e820B0cFEF6972A90893c2073AB: collusion_score=0, extreme_event_count=0, 
-Validator 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775: collusion_score=153863, extreme_event_count=0, 
-Validator 0x94d28f08Ff81A80f4716C0a8EfC6CAC2Ec74d09E: collusion_score=209762, extreme_event_count=0, 
-Validator 0xDCA5DFF3D42f2db3C18dBE823380A0A81db49A7E: collusion_score=235349, extreme_event_count=0, 
-Validator 0x23b4Be9536F93b8D550214912fD0e38417Ff7209: collusion_score=491123, extreme_event_count=0, </code></pre>
+Validator 0x9d28e40E9Ec4789f9A0D17e421F76D8D0868EA44: collusion_score=120326, extreme_event_count=0, 
+Validator 0xE4686A4C6E63A8ab51B458c52EB779AEcf0B74f7: collusion_score=237330, extreme_event_count=0, 
+Validator 0x100E38f7BCEc53937BDd79ADE46F34362470577B: collusion_score=0, extreme_event_count=0, 
+Validator 0x23b4Be9536F93b8D550214912fD0e38417Ff7209: collusion_score=491123, extreme_event_count=0, 
+Validator 0x791A7F840ac11841cCB0FaA968B2e3a0Db930fCe: collusion_score=491488, extreme_event_count=0, </code></pre>
 </div>
 </div>
 <p>Please note, <code>collusion_score</code> is the sum of times a validator appears in “high-matching” submissions (i.e.&nbsp;near-identical prices) with another validator (high <code>collusion_score</code> doesn’t necessarily mean malicious behaviour). <code>extreme_event_count</code> counts the number of times a validator posts an extreme outlier price (compared to the median price) at the same timestamp as other outliers.</p>

@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-283d813e9a11428b00dc78d5a810a4dc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d41974b8c531fc798e187f5f45875d69.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -185,8 +185,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../summary_2025_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (April 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (May 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (June 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../summary_first_half.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oracle Submission Data Analysis Report (December 2024 - March 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_final.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Data Analysis Report</span></a>
   </div>
 </li>
       </ul>
@@ -363,7 +387,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Check weekend vs.&nbsp;weekday patterns by labeling days Monday=0 through Sunday=6, then aggregating coverage differences over weekends (Saturday=5, Sunday=6) vs.&nbsp;weekdays.</li>
 </ol>
 <p>Below is the script to perform the analysis:</p>
-<div id="383f83d4" class="cell" data-execution_count="1">
+<div id="f3049043" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statistics</span>
@@ -371,7 +395,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="69a2fbd9" class="cell" data-execution_count="2">
+<div id="240081ba" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_and_preprocess(submission_glob: <span class="bu">str</span>):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads Oracle Submission CSVs and returns a Polars DataFrame.</span></span>
@@ -669,7 +693,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-295"><a href="#cb2-295" aria-hidden="true" tabindex="-1"></a>        },</span>
 <span id="cb2-296"><a href="#cb2-296" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="35ebe43c" class="cell" data-execution_count="3">
+<div id="39a205a8" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> analyze_missing_submissions_both_modes(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    submission_glob<span class="op">=</span><span class="st">"../submission-data/Oracle_Submission_*.csv"</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -681,7 +705,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Below are directly reference outcomes from the <code>results</code> dictionary obtained by executing the analysis. The results shown will automatically update when re-running this notebook with new or updated datasets.</p>
 <p><strong>Daily Coverage Analysis</strong></p>
 <p><strong>ALL-FX Mode</strong></p>
-<div id="609aabae" class="cell" data-execution_count="4">
+<div id="38ae2970" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display daily coverage for ALL-FX mode</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"ALL"</span>][<span class="st">"df_day_coverage"</span>]</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -699,7 +723,7 @@ Coverage is reasonably good, indicating validators frequently submit complete da
 </div>
 <p>The table and statistics above summarize how frequently all validators submitted complete data each day.</p>
 <p><strong>ANY-FX Mode</strong></p>
-<div id="0c4b2c9b" class="cell" data-execution_count="5">
+<div id="ac78efa0" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display daily coverage for ANY-FX mode</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"ANY"</span>][<span class="st">"df_day_coverage"</span>]</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -722,7 +746,7 @@ The small difference suggests that validators typically provide complete submiss
 </div>
 <p>This comparison highlights the impact of submission requirements (complete vs.&nbsp;partial) on coverage.</p>
 <p><strong>Weekend vs.&nbsp;Weekday Coverage</strong></p>
-<div id="3d190fbe" class="cell" data-execution_count="6">
+<div id="cb3d1567" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>weekend_cov <span class="op">=</span> results[<span class="st">"ALL"</span>][<span class="st">"weekend_info"</span>][<span class="st">"weekend_fraction_full_cov"</span>] <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>weekday_cov <span class="op">=</span> results[<span class="st">"ALL"</span>][<span class="st">"weekend_info"</span>][<span class="st">"weekday_fraction_full_cov"</span>] <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Weekend coverage: </span><span class="sc">{</span>weekend_cov<span class="sc">:.1f}</span><span class="ss">%, Weekday coverage: </span><span class="sc">{</span>weekday_cov<span class="sc">:.1f}</span><span class="ss">%"</span>)</span>
@@ -739,7 +763,7 @@ Significantly better coverage on weekdays; validators might be inactive or less 
 </div>
 </div>
 <p><strong>List of all Validators and their Missing Rates</strong></p>
-<div id="42ba8162" class="cell" data-execution_count="7">
+<div id="ca395dea" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_all_missing <span class="op">=</span> results[<span class="st">"ALL"</span>][<span class="st">"df_validator_missing"</span>]</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> df_all_missing.iter_rows(named<span class="op">=</span><span class="va">True</span>):</span>
@@ -771,46 +795,46 @@ Validator 0x984A46Ec685Bb41A7BBb2bc39f80C78410ff4057: total=2877, missing=3, fra
 Validator 0x1476A65D7B5739dE1805d5130441A94022Ee49fe: total=2462, missing=1, fraction_missing=0.0%
 Validator 0x00a96aaED75015Bb44cED878D927dcb15ec1FF54: total=2866, missing=1, fraction_missing=0.0%
 Validator 0x7232e75a8bFd8c9ab002BB3A00eAa885BC72A6dd: total=2877, missing=1, fraction_missing=0.0%
-Validator 0xEf0Ba5e345C2C3937df5667A870Aae5105CAa3a5: total=2879, missing=1, fraction_missing=0.0%
 Validator 0xBE287C82A786218E008FF97320b08244BE4A282c: total=2879, missing=1, fraction_missing=0.0%
-Validator 0x8f91e0ADF8065C3fFF92297267E02DF32C2978FF: total=2879, missing=1, fraction_missing=0.0%
 Validator 0xDF2D0052ea56A860443039619f6DAe4434bc0Ac4: total=2879, missing=1, fraction_missing=0.0%
-Validator 0x23b4Be9536F93b8D550214912fD0e38417Ff7209: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x551f3300FCFE0e392178b3542c009948008B2a9F: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x59031767f20EA8F4a3d90d33aB0DAA2ca469Fd9a: total=2880, missing=0, fraction_missing=0.0%
-Validator 0xD9fDab408dF7Ae751691BeC2efE3b713ba3f9C36: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x1Be7f70BCf8393a7e4A5BcC66F6f15d6e35cfBBC: total=2880, missing=0, fraction_missing=0.0%
-Validator 0xBBf36374eb23968F25aecAEbb97BF3118f3c2fEC: total=2880, missing=0, fraction_missing=0.0%
-Validator 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3: total=2880, missing=0, fraction_missing=0.0%
-Validator 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775: total=2879, missing=0, fraction_missing=0.0%
-Validator 0x3AaF7817618728ffEF81898E11A3171C33faAE41: total=2874, missing=0, fraction_missing=0.0%
-Validator 0xcdEed21b471b0Dc54faF74480A0E700fCc42a7b6: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x94d28f08Ff81A80f4716C0a8EfC6CAC2Ec74d09E: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x99E2B4B27BDe92b42D04B6CF302cF564D2C13b74: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x24915749B793375a8C93090AF19928aFF1CAEcb6: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x383A3c437d3F12f60E5fC990119468D3561EfBfc: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x22A76e194A49c9e5508Cd4A3E1cD555D088ECB08: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x9d28e40E9Ec4789f9A0D17e421F76D8D0868EA44: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x8f91e0ADF8065C3fFF92297267E02DF32C2978FF: total=2879, missing=1, fraction_missing=0.0%
+Validator 0xEf0Ba5e345C2C3937df5667A870Aae5105CAa3a5: total=2879, missing=1, fraction_missing=0.0%
 Validator 0xf10f56Bf0A28E0737c7e6bB0aF92f3DDad34aE6a: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x64F83c2538A646A550Ad9bEEb63427a377359DEE: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x9C7dAABb5101623340C925CFD6fF74088ff5672e: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x791A7F840ac11841cCB0FaA968B2e3a0Db930fCe: total=2880, missing=0, fraction_missing=0.0%
 Validator 0x527192F3D2408C84087607b7feE1d0f907821E17: total=2880, missing=0, fraction_missing=0.0%
-Validator 0xcf716b3930d7cf6f2ADAD90A27c39fDc9D643BBd: total=2880, missing=0, fraction_missing=0.0%
-Validator 0xfD97FB8835d25740A2Da27c69762D74F6A931858: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772: total=2880, missing=0, fraction_missing=0.0%
-Validator 0xDCA5DFF3D42f2db3C18dBE823380A0A81db49A7E: total=2880, missing=0, fraction_missing=0.0%
-Validator 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x197B2c44b887c4aC01243BDE7E4bBa8bd95BC3a8: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x718361fc3637199F24a2437331677D6B89a40519: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x358488a4EdCA493FCD87610dcd50c62c8A3Dd658: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x36142A4f36974e2935192A1111C39330aA296D3C: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E: total=2880, missing=0, fraction_missing=0.0%
-Validator 0xF9B38D02959379d43C764064dE201324d5e12931: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x5603caFE3313D0cf56Fd4bE4A2f606dD6E43F8Eb: total=2880, missing=0, fraction_missing=0.0%
-Validator 0xE4686A4C6E63A8ab51B458c52EB779AEcf0B74f7: total=2880, missing=0, fraction_missing=0.0%
+Validator 0xc5B9d978715F081E226cb28bADB7Ba4cde5f9775: total=2879, missing=0, fraction_missing=0.0%
+Validator 0xD9fDab408dF7Ae751691BeC2efE3b713ba3f9C36: total=2880, missing=0, fraction_missing=0.0%
 Validator 0xC1F9acAF1824F6C906b35A0D2584D6E25077C7f5: total=2880, missing=0, fraction_missing=0.0%
-Validator 0x8584A78A9b94f332A34BBf24D2AF83367Da31894: total=2879, missing=0, fraction_missing=0.0%</code></pre>
+Validator 0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x358488a4EdCA493FCD87610dcd50c62c8A3Dd658: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x9d28e40E9Ec4789f9A0D17e421F76D8D0868EA44: total=2880, missing=0, fraction_missing=0.0%
+Validator 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x551f3300FCFE0e392178b3542c009948008B2a9F: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x24915749B793375a8C93090AF19928aFF1CAEcb6: total=2880, missing=0, fraction_missing=0.0%
+Validator 0xcf716b3930d7cf6f2ADAD90A27c39fDc9D643BBd: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x99E2B4B27BDe92b42D04B6CF302cF564D2C13b74: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x197B2c44b887c4aC01243BDE7E4bBa8bd95BC3a8: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x3AaF7817618728ffEF81898E11A3171C33faAE41: total=2874, missing=0, fraction_missing=0.0%
+Validator 0x59031767f20EA8F4a3d90d33aB0DAA2ca469Fd9a: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x64F83c2538A646A550Ad9bEEb63427a377359DEE: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x94d28f08Ff81A80f4716C0a8EfC6CAC2Ec74d09E: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x5603caFE3313D0cf56Fd4bE4A2f606dD6E43F8Eb: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x23b4Be9536F93b8D550214912fD0e38417Ff7209: total=2880, missing=0, fraction_missing=0.0%
+Validator 0xDCA5DFF3D42f2db3C18dBE823380A0A81db49A7E: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x9C7dAABb5101623340C925CFD6fF74088ff5672e: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x383A3c437d3F12f60E5fC990119468D3561EfBfc: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x1Be7f70BCf8393a7e4A5BcC66F6f15d6e35cfBBC: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x36142A4f36974e2935192A1111C39330aA296D3C: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x718361fc3637199F24a2437331677D6B89a40519: total=2880, missing=0, fraction_missing=0.0%
+Validator 0xF9B38D02959379d43C764064dE201324d5e12931: total=2880, missing=0, fraction_missing=0.0%
+Validator 0xfD97FB8835d25740A2Da27c69762D74F6A931858: total=2880, missing=0, fraction_missing=0.0%
+Validator 0xBBf36374eb23968F25aecAEbb97BF3118f3c2fEC: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x22A76e194A49c9e5508Cd4A3E1cD555D088ECB08: total=2880, missing=0, fraction_missing=0.0%
+Validator 0x8584A78A9b94f332A34BBf24D2AF83367Da31894: total=2879, missing=0, fraction_missing=0.0%
+Validator 0x791A7F840ac11841cCB0FaA968B2e3a0Db930fCe: total=2880, missing=0, fraction_missing=0.0%
+Validator 0xE4686A4C6E63A8ab51B458c52EB779AEcf0B74f7: total=2880, missing=0, fraction_missing=0.0%
+Validator 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3: total=2880, missing=0, fraction_missing=0.0%
+Validator 0xcdEed21b471b0Dc54faF74480A0E700fCc42a7b6: total=2880, missing=0, fraction_missing=0.0%</code></pre>
 </div>
 </div>
 <p>Please note, <code>total</code> is the number of timestamp slots at which this validator was expected to submit. <code>missing</code> indicates how many of those slots were unfilled (i.e.&nbsp;the validator did not provide the required data for that timestamp). <code>fraction_missing</code> is the percentage of timestamps that were missing out of the total encountered.</p>

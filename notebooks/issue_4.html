@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-283d813e9a11428b00dc78d5a810a4dc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d41974b8c531fc798e187f5f45875d69.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -188,8 +188,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../summary_2025_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (April 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (May 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_2025_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Analysis - Summary of Key Findings (June 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../summary_first_half.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oracle Submission Data Analysis Report (December 2024 - March 2025)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../summary_final.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oracle Submission Data Analysis Report</span></a>
   </div>
 </li>
       </ul>
@@ -348,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Detecting lagging data (market moves significantly, validator’s submission barely changes within 60-minute windows).</li>
 </ul>
 <p>Below is the Python script to perform the analysis:</p>
-<div id="5f24c357" class="cell" data-execution_count="1">
+<div id="60e84807" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> List, Dict</span>
@@ -356,7 +380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="c49399d0" class="cell" data-execution_count="2">
+<div id="9244d7c8" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_and_preprocess_submissions(submission_glob: <span class="bu">str</span>) <span class="op">-&gt;</span> pl.DataFrame:</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads Oracle Submission CSVs and returns a Polars DataFrame.</span></span>
@@ -390,371 +414,396 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_yahoo_finance_data(directory_pattern: <span class="bu">str</span>, pair_label: <span class="bu">str</span>) <span class="op">-&gt;</span> pl.DataFrame:</span>
 <span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads Yahoo Finance CSVs and returns a Polars DataFrame.</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    files <span class="op">=</span> <span class="bu">sorted</span>(glob.glob(directory_pattern))</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> files:</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"No Yahoo Finance CSV files found: </span><span class="sc">{</span>directory_pattern<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    lf_list <span class="op">=</span> []</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> f <span class="kw">in</span> files:</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        lf_temp <span class="op">=</span> pl.scan_csv(</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>            f,</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            has_header<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>            skip_rows<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>            new_columns<span class="op">=</span>[<span class="st">"Datetime"</span>, <span class="st">"Close"</span>, <span class="st">"High"</span>, <span class="st">"Low"</span>, <span class="st">"Open"</span>, <span class="st">"Volume"</span>],</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>            try_parse_dates<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        lf_list.append(lf_temp)</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    lf <span class="op">=</span> pl.concat(lf_list).sort(<span class="st">"Datetime"</span>).select(</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        [</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"Datetime"</span>).alias(<span class="st">"timestamp_benchmark"</span>),</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"Close"</span>).alias(<span class="st">"benchmark_close"</span>),</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        ]</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> lf.collect().with_columns(pl.lit(pair_label).alias(<span class="st">"symbol"</span>))</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_all_fx_benchmarks() <span class="op">-&gt;</span> Dict[<span class="bu">str</span>, pl.DataFrame]:</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads FX data from Yahoo Finance.</span></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    mapping <span class="op">=</span> {</span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">"AUD-USD"</span>: <span class="st">"../yahoo-finance/data/AUDUSD/AUDUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">"CAD-USD"</span>: <span class="st">"../yahoo-finance/data/CADUSD/CADUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">"EUR-USD"</span>: <span class="st">"../yahoo-finance/data/EURUSD/EURUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">"GBP-USD"</span>: <span class="st">"../yahoo-finance/data/GBPUSD/GBPUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        <span class="st">"JPY-USD"</span>: <span class="st">"../yahoo-finance/data/JPYUSD/JPYUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        <span class="st">"SEK-USD"</span>: <span class="st">"../yahoo-finance/data/SEKUSD/SEKUSD=X_1m_*.csv"</span>,</span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> {}</span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pair_label, pattern <span class="kw">in</span> mapping.items():</span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>        df_pair <span class="op">=</span> load_yahoo_finance_data(pattern, pair_label)</span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>        result[pair_label] <span class="op">=</span> df_pair</span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result</span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> detect_stale_data(</span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>    df: pl.DataFrame,</span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>    price_cols: List[<span class="bu">str</span>],</span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    max_consecutive_threshold: <span class="bu">int</span> <span class="op">=</span> <span class="dv">30</span>,</span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>    stale_tolerance: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1e-9</span>  <span class="co"># Tolerance for float comparison</span></span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> pl.DataFrame:</span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="co">    Identifies potential stale data when the same price is repeated for</span></span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="co">    at least max_consecutive_threshold intervals, allowing small float tolerance.</span></span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a><span class="co">    Skips any rows with None in the relevant price columns to avoid TypeError.</span></span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>    suspicious_frames <span class="op">=</span> []</span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    df_local <span class="op">=</span> df.clone()</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    new_cols <span class="op">=</span> []</span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> price_cols:</span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">" Price Decimal"</span>)</span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>        new_cols.append((pl.col(pc).cast(pl.Float64) <span class="op">/</span> <span class="fl">1e18</span>).alias(dec_col))</span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    df_local <span class="op">=</span> df_local.with_columns(new_cols)</span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> price_cols:</span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">" Price Decimal"</span>)</span>
-<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> dec_col <span class="kw">in</span> df_local.columns:</span>
-<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>            df_local <span class="op">=</span> df_local.<span class="bu">filter</span>(pl.col(dec_col).is_not_null())</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co">    Handles minor schema variations across files.</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    files <span class="op">=</span> <span class="bu">sorted</span>(glob.glob(directory_pattern))</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> files:</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"No Yahoo Finance CSV files found: </span><span class="sc">{</span>directory_pattern<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _scan_one_yf_csv(path: <span class="bu">str</span>) <span class="op">-&gt;</span> pl.LazyFrame:</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        candidate_schemas <span class="op">=</span> [</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>            [<span class="st">"Datetime"</span>, <span class="st">"Adj Close"</span>, <span class="st">"Close"</span>, <span class="st">"High"</span>, <span class="st">"Low"</span>, <span class="st">"Open"</span>, <span class="st">"Volume"</span>],</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            [<span class="st">"Datetime"</span>, <span class="st">"Close"</span>, <span class="st">"High"</span>, <span class="st">"Low"</span>, <span class="st">"Open"</span>, <span class="st">"Volume"</span>],</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>            [<span class="st">"Datetime"</span>, <span class="st">"Price"</span>, <span class="st">"Adj Close"</span>, <span class="st">"Close"</span>, <span class="st">"High"</span>, <span class="st">"Low"</span>, <span class="st">"Open"</span>, <span class="st">"Volume"</span>],</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>            [<span class="st">"Datetime"</span>, <span class="st">"Price"</span>, <span class="st">"Close"</span>, <span class="st">"High"</span>, <span class="st">"Low"</span>, <span class="st">"Open"</span>, <span class="st">"Volume"</span>],</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        last_err: <span class="pp">Exception</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> cols <span class="kw">in</span> candidate_schemas:</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>            <span class="cf">try</span>:</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>                lf_local <span class="op">=</span> pl.scan_csv(</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>                    path,</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>                    has_header<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>                    skip_rows<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>                    new_columns<span class="op">=</span>cols,</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>                    try_parse_dates<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="st">"Close"</span> <span class="kw">not</span> <span class="kw">in</span> lf_local.columns <span class="kw">and</span> <span class="st">"Price"</span> <span class="kw">in</span> lf_local.columns:</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>                    lf_local <span class="op">=</span> lf_local.rename({<span class="st">"Price"</span>: <span class="st">"Close"</span>})</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Normalize schema &amp; dtypes (only keep needed columns)</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>                lf_local <span class="op">=</span> (</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>                    lf_local.select([<span class="st">"Datetime"</span>, <span class="st">"Close"</span>])  <span class="co"># drop extras to avoid concat schema issues</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>                    .with_columns([</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>                        pl.col(<span class="st">"Datetime"</span>).cast(pl.Utf8).<span class="bu">str</span>.strptime(pl.Datetime, strict<span class="op">=</span><span class="va">False</span>).alias(<span class="st">"Datetime"</span>),</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>                        pl.col(<span class="st">"Close"</span>).cast(pl.Float64).alias(<span class="st">"Close"</span>),</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>                    ])</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> lf_local</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>            <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>                last_err <span class="op">=</span> e</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> last_err <span class="cf">if</span> last_err <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> <span class="pp">RuntimeError</span>(<span class="st">"Failed to parse Yahoo CSV"</span>)</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>    lf <span class="op">=</span> pl.concat([_scan_one_yf_csv(f) <span class="cf">for</span> f <span class="kw">in</span> files])</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>    lf <span class="op">=</span> lf.sort(<span class="st">"Datetime"</span>).select(</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>        [</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"Datetime"</span>).alias(<span class="st">"timestamp_benchmark"</span>),</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"Close"</span>).alias(<span class="st">"benchmark_close"</span>),</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> lf.collect().with_columns(pl.lit(pair_label).alias(<span class="st">"symbol"</span>))</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_all_fx_benchmarks() <span class="op">-&gt;</span> Dict[<span class="bu">str</span>, pl.DataFrame]:</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="co">    Loads FX data from Yahoo Finance.</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>    mapping <span class="op">=</span> {</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>        <span class="st">"AUD-USD"</span>: <span class="st">"../yahoo-finance/data/AUDUSD/AUDUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>        <span class="st">"CAD-USD"</span>: <span class="st">"../yahoo-finance/data/CADUSD/CADUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>        <span class="st">"EUR-USD"</span>: <span class="st">"../yahoo-finance/data/EURUSD/EURUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>        <span class="st">"GBP-USD"</span>: <span class="st">"../yahoo-finance/data/GBPUSD/GBPUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>        <span class="st">"JPY-USD"</span>: <span class="st">"../yahoo-finance/data/JPYUSD/JPYUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>        <span class="st">"SEK-USD"</span>: <span class="st">"../yahoo-finance/data/SEKUSD/SEKUSD=X_1m_*.csv"</span>,</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> {}</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pair_label, pattern <span class="kw">in</span> mapping.items():</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>        df_pair <span class="op">=</span> load_yahoo_finance_data(pattern, pair_label)</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>        result[pair_label] <span class="op">=</span> df_pair</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> price_cols:</span>
-<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">" Price Decimal"</span>)</span>
-<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> dec_col <span class="kw">not</span> <span class="kw">in</span> df_local.columns:</span>
-<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>        df_sub <span class="op">=</span> (</span>
-<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>            df_local.select([<span class="st">"Validator Address"</span>, <span class="st">"Timestamp_dt"</span>, dec_col])</span>
-<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>            .<span class="bu">filter</span>(pl.col(<span class="st">"Validator Address"</span>).is_not_null())</span>
-<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>            .sort([<span class="st">"Validator Address"</span>, <span class="st">"Timestamp_dt"</span>])</span>
-<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>        df_list <span class="op">=</span> df_sub.to_dicts()</span>
-<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>        suspicious_records <span class="op">=</span> []</span>
-<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> df_list:</span>
-<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>        current_run_price <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>        current_run_start_idx <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>        current_run_len <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>        current_validator <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> finalize_run(run_val, start_i, end_i, run_len):</span>
-<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>            start_ts <span class="op">=</span> df_list[start_i][<span class="st">"Timestamp_dt"</span>]</span>
-<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>            end_ts <span class="op">=</span> df_list[end_i][<span class="st">"Timestamp_dt"</span>]</span>
-<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>            vaddr <span class="op">=</span> df_list[start_i][<span class="st">"Validator Address"</span>]</span>
-<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> {</span>
-<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Validator Address"</span>: vaddr,</span>
-<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>                <span class="st">"price_col"</span>: pc,</span>
-<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>                <span class="st">"repeated_value"</span>: run_val,</span>
-<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>                <span class="st">"start_timestamp"</span>: start_ts,</span>
-<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>                <span class="st">"end_timestamp"</span>: end_ts,</span>
-<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>                <span class="st">"run_length"</span>: run_len,</span>
-<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>            }</span>
-<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i, row <span class="kw">in</span> <span class="bu">enumerate</span>(df_list):</span>
-<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>            vaddr <span class="op">=</span> row[<span class="st">"Validator Address"</span>]</span>
-<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a>            price_val <span class="op">=</span> row[dec_col]</span>
-<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (current_validator <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>) <span class="kw">and</span> (vaddr <span class="op">!=</span> current_validator):</span>
-<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> current_run_len <span class="op">&gt;=</span> max_consecutive_threshold:</span>
-<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>                    rec <span class="op">=</span> finalize_run(current_run_price, current_run_start_idx, i <span class="op">-</span> <span class="dv">1</span>, current_run_len)</span>
-<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>                    suspicious_records.append(rec)</span>
-<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>                current_run_price <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>                current_run_start_idx <span class="op">=</span> i</span>
-<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>                current_run_len <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>                current_validator <span class="op">=</span> vaddr</span>
-<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (</span>
-<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>                current_run_price <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span></span>
-<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>                <span class="kw">and</span> vaddr <span class="op">==</span> current_validator</span>
-<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>                <span class="kw">and</span> <span class="bu">abs</span>(price_val <span class="op">-</span> current_run_price) <span class="op">&lt;</span> stale_tolerance</span>
-<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>            ):</span>
-<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>                current_run_len <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
-<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> current_run_len <span class="op">&gt;=</span> max_consecutive_threshold:</span>
-<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>                    rec <span class="op">=</span> finalize_run(current_run_price, current_run_start_idx, i <span class="op">-</span> <span class="dv">1</span>, current_run_len)</span>
-<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>                    suspicious_records.append(rec)</span>
-<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a>                </span>
-<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a>                current_run_price <span class="op">=</span> price_val</span>
-<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>                current_run_start_idx <span class="op">=</span> i</span>
-<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>                current_run_len <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>                current_validator <span class="op">=</span> vaddr</span>
-<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> current_run_len <span class="op">&gt;=</span> max_consecutive_threshold:</span>
-<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a>            rec <span class="op">=</span> finalize_run(current_run_price, current_run_start_idx, <span class="bu">len</span>(df_list) <span class="op">-</span> <span class="dv">1</span>, current_run_len)</span>
-<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>            suspicious_records.append(rec)</span>
-<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> suspicious_records:</span>
-<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>            df_sus <span class="op">=</span> pl.DataFrame(suspicious_records)</span>
-<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a>            suspicious_frames.append(df_sus)</span>
-<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> suspicious_frames:</span>
-<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pl.concat(suspicious_frames, how<span class="op">=</span><span class="st">"vertical"</span>)</span>
-<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pl.DataFrame(</span>
-<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a>            {</span>
-<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Validator Address"</span>: [],</span>
-<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a>                <span class="st">"price_col"</span>: [],</span>
-<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a>                <span class="st">"repeated_value"</span>: [],</span>
-<span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a>                <span class="st">"start_timestamp"</span>: [],</span>
-<span id="cb2-185"><a href="#cb2-185" aria-hidden="true" tabindex="-1"></a>                <span class="st">"end_timestamp"</span>: [],</span>
-<span id="cb2-186"><a href="#cb2-186" aria-hidden="true" tabindex="-1"></a>                <span class="st">"run_length"</span>: [],</span>
-<span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a>            }</span>
-<span id="cb2-188"><a href="#cb2-188" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-189"><a href="#cb2-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-190"><a href="#cb2-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-191"><a href="#cb2-191" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> detect_lagging_data(</span>
-<span id="cb2-192"><a href="#cb2-192" aria-hidden="true" tabindex="-1"></a>    df_oracle: pl.DataFrame,</span>
-<span id="cb2-193"><a href="#cb2-193" aria-hidden="true" tabindex="-1"></a>    fx_benchmarks: Dict[<span class="bu">str</span>, pl.DataFrame],</span>
-<span id="cb2-194"><a href="#cb2-194" aria-hidden="true" tabindex="-1"></a>    fx_pairs: List[<span class="bu">str</span>],</span>
-<span id="cb2-195"><a href="#cb2-195" aria-hidden="true" tabindex="-1"></a>    lag_threshold: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span id="cb2-196"><a href="#cb2-196" aria-hidden="true" tabindex="-1"></a>    time_window_minutes: <span class="bu">int</span> <span class="op">=</span> <span class="dv">60</span></span>
-<span id="cb2-197"><a href="#cb2-197" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> pl.DataFrame:</span>
-<span id="cb2-198"><a href="#cb2-198" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb2-199"><a href="#cb2-199" aria-hidden="true" tabindex="-1"></a><span class="co">    Compare each validator's reported FX price vs. Yahoo's benchmark.</span></span>
-<span id="cb2-200"><a href="#cb2-200" aria-hidden="true" tabindex="-1"></a><span class="co">    Now uses a forward as-of join to find the price 'at or after' (T + time_window_minutes).</span></span>
-<span id="cb2-201"><a href="#cb2-201" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb2-202"><a href="#cb2-202" aria-hidden="true" tabindex="-1"></a>    df_local <span class="op">=</span> df_oracle.clone()</span>
-<span id="cb2-203"><a href="#cb2-203" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> fx_pairs:</span>
-<span id="cb2-204"><a href="#cb2-204" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">" Price Decimal"</span>)</span>
-<span id="cb2-205"><a href="#cb2-205" aria-hidden="true" tabindex="-1"></a>        df_local <span class="op">=</span> df_local.with_columns(</span>
-<span id="cb2-206"><a href="#cb2-206" aria-hidden="true" tabindex="-1"></a>            (pl.col(pc).cast(pl.Float64) <span class="op">/</span> <span class="fl">1e18</span>).alias(dec_col)</span>
-<span id="cb2-207"><a href="#cb2-207" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a>    suspicious_frames <span class="op">=</span> []</span>
-<span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> fx_pairs:</span>
-<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>        base_label <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">""</span>)</span>
-<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> base_label <span class="op">+</span> <span class="st">" Price Decimal"</span></span>
-<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> dec_col <span class="kw">not</span> <span class="kw">in</span> df_local.columns:</span>
-<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> base_label <span class="kw">not</span> <span class="kw">in</span> fx_benchmarks:</span>
-<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a>        df_sub <span class="op">=</span> df_local.select([<span class="st">"Timestamp_dt"</span>, <span class="st">"Validator Address"</span>, dec_col]).<span class="bu">filter</span>(</span>
-<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"Validator Address"</span>).is_not_null()</span>
-<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a>        df_sub <span class="op">=</span> df_sub.with_columns(</span>
-<span id="cb2-223"><a href="#cb2-223" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"Timestamp_dt"</span>).dt.truncate(<span class="st">"1m"</span>).alias(<span class="st">"ts_minute"</span>)</span>
-<span id="cb2-224"><a href="#cb2-224" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-225"><a href="#cb2-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-226"><a href="#cb2-226" aria-hidden="true" tabindex="-1"></a>        lf_sub <span class="op">=</span> (</span>
-<span id="cb2-227"><a href="#cb2-227" aria-hidden="true" tabindex="-1"></a>            df_sub.lazy()</span>
-<span id="cb2-228"><a href="#cb2-228" aria-hidden="true" tabindex="-1"></a>            .group_by([<span class="st">"ts_minute"</span>, <span class="st">"Validator Address"</span>])</span>
-<span id="cb2-229"><a href="#cb2-229" aria-hidden="true" tabindex="-1"></a>            .agg(pl.col(dec_col).last().alias(<span class="st">"price_decimal"</span>))</span>
-<span id="cb2-230"><a href="#cb2-230" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-231"><a href="#cb2-231" aria-hidden="true" tabindex="-1"></a>        df_val_prices <span class="op">=</span> lf_sub.collect().sort([<span class="st">"Validator Address"</span>, <span class="st">"ts_minute"</span>])</span>
-<span id="cb2-232"><a href="#cb2-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-233"><a href="#cb2-233" aria-hidden="true" tabindex="-1"></a>        df_val_prices_future <span class="op">=</span> df_val_prices.with_columns(</span>
-<span id="cb2-234"><a href="#cb2-234" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"ts_minute"</span>) <span class="op">+</span> pl.duration(minutes<span class="op">=</span>time_window_minutes)).alias(<span class="st">"ts_future"</span>)</span>
-<span id="cb2-235"><a href="#cb2-235" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-236"><a href="#cb2-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-237"><a href="#cb2-237" aria-hidden="true" tabindex="-1"></a>        left_lf <span class="op">=</span> df_val_prices_future.lazy().sort([<span class="st">"Validator Address"</span>, <span class="st">"ts_minute"</span>])</span>
-<span id="cb2-238"><a href="#cb2-238" aria-hidden="true" tabindex="-1"></a>        right_lf <span class="op">=</span> (</span>
-<span id="cb2-239"><a href="#cb2-239" aria-hidden="true" tabindex="-1"></a>            df_val_prices_future.lazy()</span>
-<span id="cb2-240"><a href="#cb2-240" aria-hidden="true" tabindex="-1"></a>            .select([</span>
-<span id="cb2-241"><a href="#cb2-241" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"Validator Address"</span>),</span>
-<span id="cb2-242"><a href="#cb2-242" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"ts_minute"</span>).alias(<span class="st">"ts_minute_future"</span>),</span>
-<span id="cb2-243"><a href="#cb2-243" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"price_decimal"</span>).alias(<span class="st">"price_decimal_future"</span>),</span>
-<span id="cb2-244"><a href="#cb2-244" aria-hidden="true" tabindex="-1"></a>            ])</span>
-<span id="cb2-245"><a href="#cb2-245" aria-hidden="true" tabindex="-1"></a>            .sort([<span class="st">"Validator Address"</span>, <span class="st">"ts_minute_future"</span>])</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> detect_stale_data(</span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>    df: pl.DataFrame,</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>    price_cols: List[<span class="bu">str</span>],</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>    max_consecutive_threshold: <span class="bu">int</span> <span class="op">=</span> <span class="dv">30</span>,</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>    stale_tolerance: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1e-9</span>  <span class="co"># Tolerance for float comparison</span></span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> pl.DataFrame:</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a><span class="co">    Identifies potential stale data when the same price is repeated for</span></span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a><span class="co">    at least max_consecutive_threshold intervals, allowing small float tolerance.</span></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a><span class="co">    Skips any rows with None in the relevant price columns to avoid TypeError.</span></span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>    suspicious_frames <span class="op">=</span> []</span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>    df_local <span class="op">=</span> df.clone()</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>    new_cols <span class="op">=</span> []</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> price_cols:</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">" Price Decimal"</span>)</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>        new_cols.append((pl.col(pc).cast(pl.Float64) <span class="op">/</span> <span class="fl">1e18</span>).alias(dec_col))</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>    df_local <span class="op">=</span> df_local.with_columns(new_cols)</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> price_cols:</span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">" Price Decimal"</span>)</span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> dec_col <span class="kw">in</span> df_local.columns:</span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>            df_local <span class="op">=</span> df_local.<span class="bu">filter</span>(pl.col(dec_col).is_not_null())</span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> price_cols:</span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">" Price Decimal"</span>)</span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> dec_col <span class="kw">not</span> <span class="kw">in</span> df_local.columns:</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>        df_sub <span class="op">=</span> (</span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>            df_local.select([<span class="st">"Validator Address"</span>, <span class="st">"Timestamp_dt"</span>, dec_col])</span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>            .<span class="bu">filter</span>(pl.col(<span class="st">"Validator Address"</span>).is_not_null())</span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>            .sort([<span class="st">"Validator Address"</span>, <span class="st">"Timestamp_dt"</span>])</span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>        df_list <span class="op">=</span> df_sub.to_dicts()</span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a>        suspicious_records <span class="op">=</span> []</span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> df_list:</span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>        current_run_price <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>        current_run_start_idx <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>        current_run_len <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>        current_validator <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> finalize_run(run_val, start_i, end_i, run_len):</span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>            start_ts <span class="op">=</span> df_list[start_i][<span class="st">"Timestamp_dt"</span>]</span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>            end_ts <span class="op">=</span> df_list[end_i][<span class="st">"Timestamp_dt"</span>]</span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>            vaddr <span class="op">=</span> df_list[start_i][<span class="st">"Validator Address"</span>]</span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> {</span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Validator Address"</span>: vaddr,</span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>                <span class="st">"price_col"</span>: pc,</span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>                <span class="st">"repeated_value"</span>: run_val,</span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>                <span class="st">"start_timestamp"</span>: start_ts,</span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>                <span class="st">"end_timestamp"</span>: end_ts,</span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>                <span class="st">"run_length"</span>: run_len,</span>
+<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i, row <span class="kw">in</span> <span class="bu">enumerate</span>(df_list):</span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>            vaddr <span class="op">=</span> row[<span class="st">"Validator Address"</span>]</span>
+<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>            price_val <span class="op">=</span> row[dec_col]</span>
+<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (current_validator <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>) <span class="kw">and</span> (vaddr <span class="op">!=</span> current_validator):</span>
+<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> current_run_len <span class="op">&gt;=</span> max_consecutive_threshold:</span>
+<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>                    rec <span class="op">=</span> finalize_run(current_run_price, current_run_start_idx, i <span class="op">-</span> <span class="dv">1</span>, current_run_len)</span>
+<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a>                    suspicious_records.append(rec)</span>
+<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a>                current_run_price <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>                current_run_start_idx <span class="op">=</span> i</span>
+<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a>                current_run_len <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a>                current_validator <span class="op">=</span> vaddr</span>
+<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (</span>
+<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>                current_run_price <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span></span>
+<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a>                <span class="kw">and</span> vaddr <span class="op">==</span> current_validator</span>
+<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a>                <span class="kw">and</span> <span class="bu">abs</span>(price_val <span class="op">-</span> current_run_price) <span class="op">&lt;</span> stale_tolerance</span>
+<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a>            ):</span>
+<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a>                current_run_len <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> current_run_len <span class="op">&gt;=</span> max_consecutive_threshold:</span>
+<span id="cb2-185"><a href="#cb2-185" aria-hidden="true" tabindex="-1"></a>                    rec <span class="op">=</span> finalize_run(current_run_price, current_run_start_idx, i <span class="op">-</span> <span class="dv">1</span>, current_run_len)</span>
+<span id="cb2-186"><a href="#cb2-186" aria-hidden="true" tabindex="-1"></a>                    suspicious_records.append(rec)</span>
+<span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb2-188"><a href="#cb2-188" aria-hidden="true" tabindex="-1"></a>                current_run_price <span class="op">=</span> price_val</span>
+<span id="cb2-189"><a href="#cb2-189" aria-hidden="true" tabindex="-1"></a>                current_run_start_idx <span class="op">=</span> i</span>
+<span id="cb2-190"><a href="#cb2-190" aria-hidden="true" tabindex="-1"></a>                current_run_len <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-191"><a href="#cb2-191" aria-hidden="true" tabindex="-1"></a>                current_validator <span class="op">=</span> vaddr</span>
+<span id="cb2-192"><a href="#cb2-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-193"><a href="#cb2-193" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> current_run_len <span class="op">&gt;=</span> max_consecutive_threshold:</span>
+<span id="cb2-194"><a href="#cb2-194" aria-hidden="true" tabindex="-1"></a>            rec <span class="op">=</span> finalize_run(current_run_price, current_run_start_idx, <span class="bu">len</span>(df_list) <span class="op">-</span> <span class="dv">1</span>, current_run_len)</span>
+<span id="cb2-195"><a href="#cb2-195" aria-hidden="true" tabindex="-1"></a>            suspicious_records.append(rec)</span>
+<span id="cb2-196"><a href="#cb2-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-197"><a href="#cb2-197" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> suspicious_records:</span>
+<span id="cb2-198"><a href="#cb2-198" aria-hidden="true" tabindex="-1"></a>            df_sus <span class="op">=</span> pl.DataFrame(suspicious_records)</span>
+<span id="cb2-199"><a href="#cb2-199" aria-hidden="true" tabindex="-1"></a>            suspicious_frames.append(df_sus)</span>
+<span id="cb2-200"><a href="#cb2-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-201"><a href="#cb2-201" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> suspicious_frames:</span>
+<span id="cb2-202"><a href="#cb2-202" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pl.concat(suspicious_frames, how<span class="op">=</span><span class="st">"vertical"</span>)</span>
+<span id="cb2-203"><a href="#cb2-203" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-204"><a href="#cb2-204" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pl.DataFrame(</span>
+<span id="cb2-205"><a href="#cb2-205" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb2-206"><a href="#cb2-206" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Validator Address"</span>: [],</span>
+<span id="cb2-207"><a href="#cb2-207" aria-hidden="true" tabindex="-1"></a>                <span class="st">"price_col"</span>: [],</span>
+<span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a>                <span class="st">"repeated_value"</span>: [],</span>
+<span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a>                <span class="st">"start_timestamp"</span>: [],</span>
+<span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a>                <span class="st">"end_timestamp"</span>: [],</span>
+<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a>                <span class="st">"run_length"</span>: [],</span>
+<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> detect_lagging_data(</span>
+<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a>    df_oracle: pl.DataFrame,</span>
+<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a>    fx_benchmarks: Dict[<span class="bu">str</span>, pl.DataFrame],</span>
+<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a>    fx_pairs: List[<span class="bu">str</span>],</span>
+<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a>    lag_threshold: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a>    time_window_minutes: <span class="bu">int</span> <span class="op">=</span> <span class="dv">60</span></span>
+<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> pl.DataFrame:</span>
+<span id="cb2-223"><a href="#cb2-223" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-224"><a href="#cb2-224" aria-hidden="true" tabindex="-1"></a><span class="co">    Compare each validator's reported FX price vs. Yahoo's benchmark.</span></span>
+<span id="cb2-225"><a href="#cb2-225" aria-hidden="true" tabindex="-1"></a><span class="co">    Now uses a forward as-of join to find the price 'at or after' (T + time_window_minutes).</span></span>
+<span id="cb2-226"><a href="#cb2-226" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-227"><a href="#cb2-227" aria-hidden="true" tabindex="-1"></a>    df_local <span class="op">=</span> df_oracle.clone()</span>
+<span id="cb2-228"><a href="#cb2-228" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> fx_pairs:</span>
+<span id="cb2-229"><a href="#cb2-229" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">" Price Decimal"</span>)</span>
+<span id="cb2-230"><a href="#cb2-230" aria-hidden="true" tabindex="-1"></a>        df_local <span class="op">=</span> df_local.with_columns(</span>
+<span id="cb2-231"><a href="#cb2-231" aria-hidden="true" tabindex="-1"></a>            (pl.col(pc).cast(pl.Float64) <span class="op">/</span> <span class="fl">1e18</span>).alias(dec_col)</span>
+<span id="cb2-232"><a href="#cb2-232" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-233"><a href="#cb2-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-234"><a href="#cb2-234" aria-hidden="true" tabindex="-1"></a>    suspicious_frames <span class="op">=</span> []</span>
+<span id="cb2-235"><a href="#cb2-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-236"><a href="#cb2-236" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pc <span class="kw">in</span> fx_pairs:</span>
+<span id="cb2-237"><a href="#cb2-237" aria-hidden="true" tabindex="-1"></a>        base_label <span class="op">=</span> pc.replace(<span class="st">" Price"</span>, <span class="st">""</span>)</span>
+<span id="cb2-238"><a href="#cb2-238" aria-hidden="true" tabindex="-1"></a>        dec_col <span class="op">=</span> base_label <span class="op">+</span> <span class="st">" Price Decimal"</span></span>
+<span id="cb2-239"><a href="#cb2-239" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> dec_col <span class="kw">not</span> <span class="kw">in</span> df_local.columns:</span>
+<span id="cb2-240"><a href="#cb2-240" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb2-241"><a href="#cb2-241" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> base_label <span class="kw">not</span> <span class="kw">in</span> fx_benchmarks:</span>
+<span id="cb2-242"><a href="#cb2-242" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb2-243"><a href="#cb2-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-244"><a href="#cb2-244" aria-hidden="true" tabindex="-1"></a>        df_sub <span class="op">=</span> df_local.select([<span class="st">"Timestamp_dt"</span>, <span class="st">"Validator Address"</span>, dec_col]).<span class="bu">filter</span>(</span>
+<span id="cb2-245"><a href="#cb2-245" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"Validator Address"</span>).is_not_null()</span>
 <span id="cb2-246"><a href="#cb2-246" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-247"><a href="#cb2-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-248"><a href="#cb2-248" aria-hidden="true" tabindex="-1"></a>        joined_lf <span class="op">=</span> left_lf.join_asof(</span>
-<span id="cb2-249"><a href="#cb2-249" aria-hidden="true" tabindex="-1"></a>            right_lf,</span>
-<span id="cb2-250"><a href="#cb2-250" aria-hidden="true" tabindex="-1"></a>            left_on<span class="op">=</span><span class="st">"ts_future"</span>,</span>
-<span id="cb2-251"><a href="#cb2-251" aria-hidden="true" tabindex="-1"></a>            right_on<span class="op">=</span><span class="st">"ts_minute_future"</span>,</span>
-<span id="cb2-252"><a href="#cb2-252" aria-hidden="true" tabindex="-1"></a>            on<span class="op">=</span><span class="st">"Validator Address"</span>,</span>
-<span id="cb2-253"><a href="#cb2-253" aria-hidden="true" tabindex="-1"></a>            strategy<span class="op">=</span><span class="st">"forward"</span>,</span>
-<span id="cb2-254"><a href="#cb2-254" aria-hidden="true" tabindex="-1"></a>            suffix<span class="op">=</span><span class="st">"_r"</span></span>
+<span id="cb2-247"><a href="#cb2-247" aria-hidden="true" tabindex="-1"></a>        df_sub <span class="op">=</span> df_sub.with_columns(</span>
+<span id="cb2-248"><a href="#cb2-248" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"Timestamp_dt"</span>).dt.truncate(<span class="st">"1m"</span>).alias(<span class="st">"ts_minute"</span>)</span>
+<span id="cb2-249"><a href="#cb2-249" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-250"><a href="#cb2-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-251"><a href="#cb2-251" aria-hidden="true" tabindex="-1"></a>        lf_sub <span class="op">=</span> (</span>
+<span id="cb2-252"><a href="#cb2-252" aria-hidden="true" tabindex="-1"></a>            df_sub.lazy()</span>
+<span id="cb2-253"><a href="#cb2-253" aria-hidden="true" tabindex="-1"></a>            .group_by([<span class="st">"ts_minute"</span>, <span class="st">"Validator Address"</span>])</span>
+<span id="cb2-254"><a href="#cb2-254" aria-hidden="true" tabindex="-1"></a>            .agg(pl.col(dec_col).last().alias(<span class="st">"price_decimal"</span>))</span>
 <span id="cb2-255"><a href="#cb2-255" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-256"><a href="#cb2-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-257"><a href="#cb2-257" aria-hidden="true" tabindex="-1"></a>        df_joined <span class="op">=</span> joined_lf.collect().with_columns(</span>
-<span id="cb2-258"><a href="#cb2-258" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"price_decimal"</span>).alias(<span class="st">"price_now"</span>)</span>
-<span id="cb2-259"><a href="#cb2-259" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-260"><a href="#cb2-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-261"><a href="#cb2-261" aria-hidden="true" tabindex="-1"></a>        df_joined <span class="op">=</span> df_joined.with_columns(</span>
-<span id="cb2-262"><a href="#cb2-262" aria-hidden="true" tabindex="-1"></a>            pl.when(</span>
-<span id="cb2-263"><a href="#cb2-263" aria-hidden="true" tabindex="-1"></a>                (pl.col(<span class="st">"price_decimal_future"</span>).is_not_null())</span>
-<span id="cb2-264"><a href="#cb2-264" aria-hidden="true" tabindex="-1"></a>                <span class="op">&amp;</span> (pl.col(<span class="st">"price_decimal_future"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb2-265"><a href="#cb2-265" aria-hidden="true" tabindex="-1"></a>                <span class="op">&amp;</span> (pl.col(<span class="st">"price_now"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb2-266"><a href="#cb2-266" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb2-267"><a href="#cb2-267" aria-hidden="true" tabindex="-1"></a>            .then((pl.col(<span class="st">"price_decimal_future"</span>) <span class="op">-</span> pl.col(<span class="st">"price_now"</span>)) <span class="op">/</span> pl.col(<span class="st">"price_now"</span>))</span>
-<span id="cb2-268"><a href="#cb2-268" aria-hidden="true" tabindex="-1"></a>            .otherwise(<span class="va">None</span>)</span>
-<span id="cb2-269"><a href="#cb2-269" aria-hidden="true" tabindex="-1"></a>            .alias(<span class="st">"validator_pct_change"</span>)</span>
-<span id="cb2-270"><a href="#cb2-270" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-271"><a href="#cb2-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-272"><a href="#cb2-272" aria-hidden="true" tabindex="-1"></a>        df_bench <span class="op">=</span> fx_benchmarks[base_label]</span>
-<span id="cb2-273"><a href="#cb2-273" aria-hidden="true" tabindex="-1"></a>        df_bench <span class="op">=</span> df_bench.with_columns(</span>
-<span id="cb2-274"><a href="#cb2-274" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"timestamp_benchmark"</span>).dt.truncate(<span class="st">"1m"</span>).alias(<span class="st">"ts_minute_bench"</span>)</span>
-<span id="cb2-275"><a href="#cb2-275" aria-hidden="true" tabindex="-1"></a>        ).sort(<span class="st">"ts_minute_bench"</span>)</span>
-<span id="cb2-276"><a href="#cb2-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-277"><a href="#cb2-277" aria-hidden="true" tabindex="-1"></a>        lf_bench_now <span class="op">=</span> (</span>
-<span id="cb2-278"><a href="#cb2-278" aria-hidden="true" tabindex="-1"></a>            df_bench.lazy()</span>
-<span id="cb2-279"><a href="#cb2-279" aria-hidden="true" tabindex="-1"></a>            .group_by(<span class="st">"ts_minute_bench"</span>)</span>
-<span id="cb2-280"><a href="#cb2-280" aria-hidden="true" tabindex="-1"></a>            .agg(pl.col(<span class="st">"benchmark_close"</span>).last().alias(<span class="st">"bench_price"</span>))</span>
-<span id="cb2-281"><a href="#cb2-281" aria-hidden="true" tabindex="-1"></a>            .sort(<span class="st">"ts_minute_bench"</span>)</span>
-<span id="cb2-282"><a href="#cb2-282" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-283"><a href="#cb2-283" aria-hidden="true" tabindex="-1"></a>        df_bench_now <span class="op">=</span> lf_bench_now.collect().with_columns(</span>
-<span id="cb2-284"><a href="#cb2-284" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"ts_minute_bench"</span>) <span class="op">+</span> pl.duration(minutes<span class="op">=</span>time_window_minutes)).alias(<span class="st">"ts_future_bench"</span>)</span>
-<span id="cb2-285"><a href="#cb2-285" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-286"><a href="#cb2-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-287"><a href="#cb2-287" aria-hidden="true" tabindex="-1"></a>        df_bench_future <span class="op">=</span> df_bench_now.select([</span>
-<span id="cb2-288"><a href="#cb2-288" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"ts_minute_bench"</span>).alias(<span class="st">"ts_minute_bench_future"</span>),</span>
-<span id="cb2-289"><a href="#cb2-289" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"bench_price"</span>).alias(<span class="st">"bench_price_future"</span>),</span>
-<span id="cb2-290"><a href="#cb2-290" aria-hidden="true" tabindex="-1"></a>        ]).sort(<span class="st">"ts_minute_bench_future"</span>)</span>
-<span id="cb2-291"><a href="#cb2-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-292"><a href="#cb2-292" aria-hidden="true" tabindex="-1"></a>        ldf_bench_now <span class="op">=</span> df_bench_now.lazy().sort(<span class="st">"ts_minute_bench"</span>)</span>
-<span id="cb2-293"><a href="#cb2-293" aria-hidden="true" tabindex="-1"></a>        ldf_bench_future <span class="op">=</span> df_bench_future.lazy()</span>
-<span id="cb2-294"><a href="#cb2-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-295"><a href="#cb2-295" aria-hidden="true" tabindex="-1"></a>        ldf_bench_joined <span class="op">=</span> ldf_bench_now.join_asof(</span>
-<span id="cb2-296"><a href="#cb2-296" aria-hidden="true" tabindex="-1"></a>            ldf_bench_future,</span>
-<span id="cb2-297"><a href="#cb2-297" aria-hidden="true" tabindex="-1"></a>            left_on<span class="op">=</span><span class="st">"ts_future_bench"</span>,</span>
-<span id="cb2-298"><a href="#cb2-298" aria-hidden="true" tabindex="-1"></a>            right_on<span class="op">=</span><span class="st">"ts_minute_bench_future"</span>,</span>
-<span id="cb2-299"><a href="#cb2-299" aria-hidden="true" tabindex="-1"></a>            strategy<span class="op">=</span><span class="st">"forward"</span>,</span>
-<span id="cb2-300"><a href="#cb2-300" aria-hidden="true" tabindex="-1"></a>            suffix<span class="op">=</span><span class="st">"_r"</span></span>
-<span id="cb2-301"><a href="#cb2-301" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-302"><a href="#cb2-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-303"><a href="#cb2-303" aria-hidden="true" tabindex="-1"></a>        df_bench_joined <span class="op">=</span> ldf_bench_joined.collect().with_columns([</span>
-<span id="cb2-304"><a href="#cb2-304" aria-hidden="true" tabindex="-1"></a>            pl.when(</span>
-<span id="cb2-305"><a href="#cb2-305" aria-hidden="true" tabindex="-1"></a>                (pl.col(<span class="st">"bench_price_future"</span>).is_not_null())</span>
-<span id="cb2-306"><a href="#cb2-306" aria-hidden="true" tabindex="-1"></a>                <span class="op">&amp;</span> (pl.col(<span class="st">"bench_price_future"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb2-307"><a href="#cb2-307" aria-hidden="true" tabindex="-1"></a>                <span class="op">&amp;</span> (pl.col(<span class="st">"bench_price"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb2-308"><a href="#cb2-308" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb2-309"><a href="#cb2-309" aria-hidden="true" tabindex="-1"></a>            .then(</span>
-<span id="cb2-310"><a href="#cb2-310" aria-hidden="true" tabindex="-1"></a>                (pl.col(<span class="st">"bench_price_future"</span>) <span class="op">-</span> pl.col(<span class="st">"bench_price"</span>)) <span class="op">/</span> pl.col(<span class="st">"bench_price"</span>)</span>
-<span id="cb2-311"><a href="#cb2-311" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb2-312"><a href="#cb2-312" aria-hidden="true" tabindex="-1"></a>            .otherwise(<span class="va">None</span>)</span>
-<span id="cb2-313"><a href="#cb2-313" aria-hidden="true" tabindex="-1"></a>            .alias(<span class="st">"bench_pct_change"</span>)</span>
-<span id="cb2-314"><a href="#cb2-314" aria-hidden="true" tabindex="-1"></a>        ])</span>
-<span id="cb2-315"><a href="#cb2-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-316"><a href="#cb2-316" aria-hidden="true" tabindex="-1"></a>        df_final_join <span class="op">=</span> (</span>
-<span id="cb2-317"><a href="#cb2-317" aria-hidden="true" tabindex="-1"></a>            df_joined.lazy()</span>
-<span id="cb2-318"><a href="#cb2-318" aria-hidden="true" tabindex="-1"></a>            .join(</span>
-<span id="cb2-319"><a href="#cb2-319" aria-hidden="true" tabindex="-1"></a>                df_bench_joined.select([<span class="st">"ts_minute_bench"</span>, <span class="st">"bench_pct_change"</span>]).lazy(),</span>
-<span id="cb2-320"><a href="#cb2-320" aria-hidden="true" tabindex="-1"></a>                left_on<span class="op">=</span><span class="st">"ts_minute"</span>,</span>
-<span id="cb2-321"><a href="#cb2-321" aria-hidden="true" tabindex="-1"></a>                right_on<span class="op">=</span><span class="st">"ts_minute_bench"</span>,</span>
-<span id="cb2-322"><a href="#cb2-322" aria-hidden="true" tabindex="-1"></a>                how<span class="op">=</span><span class="st">"left"</span></span>
-<span id="cb2-323"><a href="#cb2-323" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb2-324"><a href="#cb2-324" aria-hidden="true" tabindex="-1"></a>            .collect()</span>
-<span id="cb2-325"><a href="#cb2-325" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-326"><a href="#cb2-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-327"><a href="#cb2-327" aria-hidden="true" tabindex="-1"></a>        df_lagging_ <span class="op">=</span> df_final_join.with_columns([</span>
-<span id="cb2-328"><a href="#cb2-328" aria-hidden="true" tabindex="-1"></a>            pl.when(</span>
-<span id="cb2-329"><a href="#cb2-329" aria-hidden="true" tabindex="-1"></a>                (pl.col(<span class="st">"bench_pct_change"</span>).<span class="bu">abs</span>() <span class="op">&gt;</span> lag_threshold)</span>
-<span id="cb2-330"><a href="#cb2-330" aria-hidden="true" tabindex="-1"></a>                <span class="op">&amp;</span> (pl.col(<span class="st">"validator_pct_change"</span>).<span class="bu">abs</span>() <span class="op">&lt;</span> lag_threshold)</span>
-<span id="cb2-331"><a href="#cb2-331" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb2-332"><a href="#cb2-332" aria-hidden="true" tabindex="-1"></a>            .then(pl.lit(<span class="st">"Lagging data vs. real market"</span>))</span>
-<span id="cb2-333"><a href="#cb2-333" aria-hidden="true" tabindex="-1"></a>            .otherwise(pl.lit(<span class="st">""</span>))</span>
-<span id="cb2-334"><a href="#cb2-334" aria-hidden="true" tabindex="-1"></a>            .alias(<span class="st">"lag_reason"</span>)</span>
-<span id="cb2-335"><a href="#cb2-335" aria-hidden="true" tabindex="-1"></a>        ]).<span class="bu">filter</span>(pl.col(<span class="st">"lag_reason"</span>) <span class="op">!=</span> <span class="st">""</span>)</span>
-<span id="cb2-336"><a href="#cb2-336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-337"><a href="#cb2-337" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> df_lagging_.is_empty():</span>
-<span id="cb2-338"><a href="#cb2-338" aria-hidden="true" tabindex="-1"></a>            df_lagging_ <span class="op">=</span> df_lagging_.select([</span>
-<span id="cb2-339"><a href="#cb2-339" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"Validator Address"</span>),</span>
-<span id="cb2-340"><a href="#cb2-340" aria-hidden="true" tabindex="-1"></a>                pl.lit(base_label).alias(<span class="st">"pair_label"</span>),</span>
-<span id="cb2-341"><a href="#cb2-341" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"ts_minute"</span>).alias(<span class="st">"window_start"</span>),</span>
-<span id="cb2-342"><a href="#cb2-342" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"price_now"</span>),</span>
-<span id="cb2-343"><a href="#cb2-343" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"price_decimal_future"</span>).alias(<span class="st">"price_future"</span>),</span>
-<span id="cb2-344"><a href="#cb2-344" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"validator_pct_change"</span>),</span>
-<span id="cb2-345"><a href="#cb2-345" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"bench_pct_change"</span>),</span>
-<span id="cb2-346"><a href="#cb2-346" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"lag_reason"</span>),</span>
-<span id="cb2-347"><a href="#cb2-347" aria-hidden="true" tabindex="-1"></a>            ])</span>
-<span id="cb2-348"><a href="#cb2-348" aria-hidden="true" tabindex="-1"></a>            suspicious_frames.append(df_lagging_)</span>
-<span id="cb2-349"><a href="#cb2-349" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-350"><a href="#cb2-350" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> suspicious_frames:</span>
-<span id="cb2-351"><a href="#cb2-351" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pl.concat(suspicious_frames, how<span class="op">=</span><span class="st">"vertical"</span>)</span>
-<span id="cb2-352"><a href="#cb2-352" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb2-353"><a href="#cb2-353" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pl.DataFrame(</span>
-<span id="cb2-354"><a href="#cb2-354" aria-hidden="true" tabindex="-1"></a>            {</span>
-<span id="cb2-355"><a href="#cb2-355" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Validator Address"</span>: [],</span>
-<span id="cb2-356"><a href="#cb2-356" aria-hidden="true" tabindex="-1"></a>                <span class="st">"pair_label"</span>: [],</span>
-<span id="cb2-357"><a href="#cb2-357" aria-hidden="true" tabindex="-1"></a>                <span class="st">"window_start"</span>: [],</span>
-<span id="cb2-358"><a href="#cb2-358" aria-hidden="true" tabindex="-1"></a>                <span class="st">"price_now"</span>: [],</span>
-<span id="cb2-359"><a href="#cb2-359" aria-hidden="true" tabindex="-1"></a>                <span class="st">"price_future"</span>: [],</span>
-<span id="cb2-360"><a href="#cb2-360" aria-hidden="true" tabindex="-1"></a>                <span class="st">"validator_pct_change"</span>: [],</span>
-<span id="cb2-361"><a href="#cb2-361" aria-hidden="true" tabindex="-1"></a>                <span class="st">"bench_pct_change"</span>: [],</span>
-<span id="cb2-362"><a href="#cb2-362" aria-hidden="true" tabindex="-1"></a>                <span class="st">"lag_reason"</span>: [],</span>
-<span id="cb2-363"><a href="#cb2-363" aria-hidden="true" tabindex="-1"></a>            }</span>
-<span id="cb2-364"><a href="#cb2-364" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-365"><a href="#cb2-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-366"><a href="#cb2-366" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-367"><a href="#cb2-367" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> analyze_stale_lagging_data(</span>
-<span id="cb2-368"><a href="#cb2-368" aria-hidden="true" tabindex="-1"></a>    submission_glob: <span class="bu">str</span>,</span>
-<span id="cb2-369"><a href="#cb2-369" aria-hidden="true" tabindex="-1"></a>    fx_pairs: List[<span class="bu">str</span>],</span>
-<span id="cb2-370"><a href="#cb2-370" aria-hidden="true" tabindex="-1"></a>    autonity_pairs: List[<span class="bu">str</span>],</span>
-<span id="cb2-371"><a href="#cb2-371" aria-hidden="true" tabindex="-1"></a>    yahoo_data_dict: Dict[<span class="bu">str</span>, pl.DataFrame],</span>
-<span id="cb2-372"><a href="#cb2-372" aria-hidden="true" tabindex="-1"></a>    max_consecutive_threshold: <span class="bu">int</span> <span class="op">=</span> <span class="dv">30</span>,</span>
-<span id="cb2-373"><a href="#cb2-373" aria-hidden="true" tabindex="-1"></a>    lag_threshold: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span id="cb2-374"><a href="#cb2-374" aria-hidden="true" tabindex="-1"></a>    lag_window_minutes: <span class="bu">int</span> <span class="op">=</span> <span class="dv">60</span>,</span>
-<span id="cb2-375"><a href="#cb2-375" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb2-376"><a href="#cb2-376" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb2-377"><a href="#cb2-377" aria-hidden="true" tabindex="-1"></a><span class="co">    Main analysis function.</span></span>
-<span id="cb2-378"><a href="#cb2-378" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb2-379"><a href="#cb2-379" aria-hidden="true" tabindex="-1"></a>    df_all <span class="op">=</span> load_and_preprocess_submissions(submission_glob)</span>
-<span id="cb2-380"><a href="#cb2-380" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-381"><a href="#cb2-381" aria-hidden="true" tabindex="-1"></a>    price_cols_all <span class="op">=</span> fx_pairs <span class="op">+</span> autonity_pairs</span>
-<span id="cb2-382"><a href="#cb2-382" aria-hidden="true" tabindex="-1"></a>    df_stale <span class="op">=</span> detect_stale_data(df_all, price_cols_all, max_consecutive_threshold)</span>
-<span id="cb2-383"><a href="#cb2-383" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-384"><a href="#cb2-384" aria-hidden="true" tabindex="-1"></a>    df_lagging <span class="op">=</span> detect_lagging_data(</span>
-<span id="cb2-385"><a href="#cb2-385" aria-hidden="true" tabindex="-1"></a>        df_oracle<span class="op">=</span>df_all,</span>
-<span id="cb2-386"><a href="#cb2-386" aria-hidden="true" tabindex="-1"></a>        fx_benchmarks<span class="op">=</span>yahoo_data_dict,</span>
-<span id="cb2-387"><a href="#cb2-387" aria-hidden="true" tabindex="-1"></a>        fx_pairs<span class="op">=</span>fx_pairs,</span>
-<span id="cb2-388"><a href="#cb2-388" aria-hidden="true" tabindex="-1"></a>        lag_threshold<span class="op">=</span>lag_threshold,</span>
-<span id="cb2-389"><a href="#cb2-389" aria-hidden="true" tabindex="-1"></a>        time_window_minutes<span class="op">=</span>lag_window_minutes,</span>
-<span id="cb2-390"><a href="#cb2-390" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-256"><a href="#cb2-256" aria-hidden="true" tabindex="-1"></a>        df_val_prices <span class="op">=</span> lf_sub.collect().sort([<span class="st">"Validator Address"</span>, <span class="st">"ts_minute"</span>])</span>
+<span id="cb2-257"><a href="#cb2-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-258"><a href="#cb2-258" aria-hidden="true" tabindex="-1"></a>        df_val_prices_future <span class="op">=</span> df_val_prices.with_columns(</span>
+<span id="cb2-259"><a href="#cb2-259" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"ts_minute"</span>) <span class="op">+</span> pl.duration(minutes<span class="op">=</span>time_window_minutes)).alias(<span class="st">"ts_future"</span>)</span>
+<span id="cb2-260"><a href="#cb2-260" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-261"><a href="#cb2-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-262"><a href="#cb2-262" aria-hidden="true" tabindex="-1"></a>        left_lf <span class="op">=</span> df_val_prices_future.lazy().sort([<span class="st">"Validator Address"</span>, <span class="st">"ts_minute"</span>])</span>
+<span id="cb2-263"><a href="#cb2-263" aria-hidden="true" tabindex="-1"></a>        right_lf <span class="op">=</span> (</span>
+<span id="cb2-264"><a href="#cb2-264" aria-hidden="true" tabindex="-1"></a>            df_val_prices_future.lazy()</span>
+<span id="cb2-265"><a href="#cb2-265" aria-hidden="true" tabindex="-1"></a>            .select([</span>
+<span id="cb2-266"><a href="#cb2-266" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"Validator Address"</span>),</span>
+<span id="cb2-267"><a href="#cb2-267" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"ts_minute"</span>).alias(<span class="st">"ts_minute_future"</span>),</span>
+<span id="cb2-268"><a href="#cb2-268" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"price_decimal"</span>).alias(<span class="st">"price_decimal_future"</span>),</span>
+<span id="cb2-269"><a href="#cb2-269" aria-hidden="true" tabindex="-1"></a>            ])</span>
+<span id="cb2-270"><a href="#cb2-270" aria-hidden="true" tabindex="-1"></a>            .sort([<span class="st">"Validator Address"</span>, <span class="st">"ts_minute_future"</span>])</span>
+<span id="cb2-271"><a href="#cb2-271" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-272"><a href="#cb2-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-273"><a href="#cb2-273" aria-hidden="true" tabindex="-1"></a>        joined_lf <span class="op">=</span> left_lf.join_asof(</span>
+<span id="cb2-274"><a href="#cb2-274" aria-hidden="true" tabindex="-1"></a>            right_lf,</span>
+<span id="cb2-275"><a href="#cb2-275" aria-hidden="true" tabindex="-1"></a>            left_on<span class="op">=</span><span class="st">"ts_future"</span>,</span>
+<span id="cb2-276"><a href="#cb2-276" aria-hidden="true" tabindex="-1"></a>            right_on<span class="op">=</span><span class="st">"ts_minute_future"</span>,</span>
+<span id="cb2-277"><a href="#cb2-277" aria-hidden="true" tabindex="-1"></a>            on<span class="op">=</span><span class="st">"Validator Address"</span>,</span>
+<span id="cb2-278"><a href="#cb2-278" aria-hidden="true" tabindex="-1"></a>            strategy<span class="op">=</span><span class="st">"forward"</span>,</span>
+<span id="cb2-279"><a href="#cb2-279" aria-hidden="true" tabindex="-1"></a>            suffix<span class="op">=</span><span class="st">"_r"</span></span>
+<span id="cb2-280"><a href="#cb2-280" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-281"><a href="#cb2-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-282"><a href="#cb2-282" aria-hidden="true" tabindex="-1"></a>        df_joined <span class="op">=</span> joined_lf.collect().with_columns(</span>
+<span id="cb2-283"><a href="#cb2-283" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"price_decimal"</span>).alias(<span class="st">"price_now"</span>)</span>
+<span id="cb2-284"><a href="#cb2-284" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-285"><a href="#cb2-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-286"><a href="#cb2-286" aria-hidden="true" tabindex="-1"></a>        df_joined <span class="op">=</span> df_joined.with_columns(</span>
+<span id="cb2-287"><a href="#cb2-287" aria-hidden="true" tabindex="-1"></a>            pl.when(</span>
+<span id="cb2-288"><a href="#cb2-288" aria-hidden="true" tabindex="-1"></a>                (pl.col(<span class="st">"price_decimal_future"</span>).is_not_null())</span>
+<span id="cb2-289"><a href="#cb2-289" aria-hidden="true" tabindex="-1"></a>                <span class="op">&amp;</span> (pl.col(<span class="st">"price_decimal_future"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb2-290"><a href="#cb2-290" aria-hidden="true" tabindex="-1"></a>                <span class="op">&amp;</span> (pl.col(<span class="st">"price_now"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb2-291"><a href="#cb2-291" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-292"><a href="#cb2-292" aria-hidden="true" tabindex="-1"></a>            .then((pl.col(<span class="st">"price_decimal_future"</span>) <span class="op">-</span> pl.col(<span class="st">"price_now"</span>)) <span class="op">/</span> pl.col(<span class="st">"price_now"</span>))</span>
+<span id="cb2-293"><a href="#cb2-293" aria-hidden="true" tabindex="-1"></a>            .otherwise(<span class="va">None</span>)</span>
+<span id="cb2-294"><a href="#cb2-294" aria-hidden="true" tabindex="-1"></a>            .alias(<span class="st">"validator_pct_change"</span>)</span>
+<span id="cb2-295"><a href="#cb2-295" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-296"><a href="#cb2-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-297"><a href="#cb2-297" aria-hidden="true" tabindex="-1"></a>        df_bench <span class="op">=</span> fx_benchmarks[base_label]</span>
+<span id="cb2-298"><a href="#cb2-298" aria-hidden="true" tabindex="-1"></a>        df_bench <span class="op">=</span> df_bench.with_columns(</span>
+<span id="cb2-299"><a href="#cb2-299" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"timestamp_benchmark"</span>).dt.truncate(<span class="st">"1m"</span>).alias(<span class="st">"ts_minute_bench"</span>)</span>
+<span id="cb2-300"><a href="#cb2-300" aria-hidden="true" tabindex="-1"></a>        ).sort(<span class="st">"ts_minute_bench"</span>)</span>
+<span id="cb2-301"><a href="#cb2-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-302"><a href="#cb2-302" aria-hidden="true" tabindex="-1"></a>        lf_bench_now <span class="op">=</span> (</span>
+<span id="cb2-303"><a href="#cb2-303" aria-hidden="true" tabindex="-1"></a>            df_bench.lazy()</span>
+<span id="cb2-304"><a href="#cb2-304" aria-hidden="true" tabindex="-1"></a>            .group_by(<span class="st">"ts_minute_bench"</span>)</span>
+<span id="cb2-305"><a href="#cb2-305" aria-hidden="true" tabindex="-1"></a>            .agg(pl.col(<span class="st">"benchmark_close"</span>).last().alias(<span class="st">"bench_price"</span>))</span>
+<span id="cb2-306"><a href="#cb2-306" aria-hidden="true" tabindex="-1"></a>            .sort(<span class="st">"ts_minute_bench"</span>)</span>
+<span id="cb2-307"><a href="#cb2-307" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-308"><a href="#cb2-308" aria-hidden="true" tabindex="-1"></a>        df_bench_now <span class="op">=</span> lf_bench_now.collect().with_columns(</span>
+<span id="cb2-309"><a href="#cb2-309" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"ts_minute_bench"</span>) <span class="op">+</span> pl.duration(minutes<span class="op">=</span>time_window_minutes)).alias(<span class="st">"ts_future_bench"</span>)</span>
+<span id="cb2-310"><a href="#cb2-310" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-311"><a href="#cb2-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-312"><a href="#cb2-312" aria-hidden="true" tabindex="-1"></a>        df_bench_future <span class="op">=</span> df_bench_now.select([</span>
+<span id="cb2-313"><a href="#cb2-313" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"ts_minute_bench"</span>).alias(<span class="st">"ts_minute_bench_future"</span>),</span>
+<span id="cb2-314"><a href="#cb2-314" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"bench_price"</span>).alias(<span class="st">"bench_price_future"</span>),</span>
+<span id="cb2-315"><a href="#cb2-315" aria-hidden="true" tabindex="-1"></a>        ]).sort(<span class="st">"ts_minute_bench_future"</span>)</span>
+<span id="cb2-316"><a href="#cb2-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-317"><a href="#cb2-317" aria-hidden="true" tabindex="-1"></a>        ldf_bench_now <span class="op">=</span> df_bench_now.lazy().sort(<span class="st">"ts_minute_bench"</span>)</span>
+<span id="cb2-318"><a href="#cb2-318" aria-hidden="true" tabindex="-1"></a>        ldf_bench_future <span class="op">=</span> df_bench_future.lazy()</span>
+<span id="cb2-319"><a href="#cb2-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-320"><a href="#cb2-320" aria-hidden="true" tabindex="-1"></a>        ldf_bench_joined <span class="op">=</span> ldf_bench_now.join_asof(</span>
+<span id="cb2-321"><a href="#cb2-321" aria-hidden="true" tabindex="-1"></a>            ldf_bench_future,</span>
+<span id="cb2-322"><a href="#cb2-322" aria-hidden="true" tabindex="-1"></a>            left_on<span class="op">=</span><span class="st">"ts_future_bench"</span>,</span>
+<span id="cb2-323"><a href="#cb2-323" aria-hidden="true" tabindex="-1"></a>            right_on<span class="op">=</span><span class="st">"ts_minute_bench_future"</span>,</span>
+<span id="cb2-324"><a href="#cb2-324" aria-hidden="true" tabindex="-1"></a>            strategy<span class="op">=</span><span class="st">"forward"</span>,</span>
+<span id="cb2-325"><a href="#cb2-325" aria-hidden="true" tabindex="-1"></a>            suffix<span class="op">=</span><span class="st">"_r"</span></span>
+<span id="cb2-326"><a href="#cb2-326" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-327"><a href="#cb2-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-328"><a href="#cb2-328" aria-hidden="true" tabindex="-1"></a>        df_bench_joined <span class="op">=</span> ldf_bench_joined.collect().with_columns([</span>
+<span id="cb2-329"><a href="#cb2-329" aria-hidden="true" tabindex="-1"></a>            pl.when(</span>
+<span id="cb2-330"><a href="#cb2-330" aria-hidden="true" tabindex="-1"></a>                (pl.col(<span class="st">"bench_price_future"</span>).is_not_null())</span>
+<span id="cb2-331"><a href="#cb2-331" aria-hidden="true" tabindex="-1"></a>                <span class="op">&amp;</span> (pl.col(<span class="st">"bench_price_future"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb2-332"><a href="#cb2-332" aria-hidden="true" tabindex="-1"></a>                <span class="op">&amp;</span> (pl.col(<span class="st">"bench_price"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb2-333"><a href="#cb2-333" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-334"><a href="#cb2-334" aria-hidden="true" tabindex="-1"></a>            .then(</span>
+<span id="cb2-335"><a href="#cb2-335" aria-hidden="true" tabindex="-1"></a>                (pl.col(<span class="st">"bench_price_future"</span>) <span class="op">-</span> pl.col(<span class="st">"bench_price"</span>)) <span class="op">/</span> pl.col(<span class="st">"bench_price"</span>)</span>
+<span id="cb2-336"><a href="#cb2-336" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-337"><a href="#cb2-337" aria-hidden="true" tabindex="-1"></a>            .otherwise(<span class="va">None</span>)</span>
+<span id="cb2-338"><a href="#cb2-338" aria-hidden="true" tabindex="-1"></a>            .alias(<span class="st">"bench_pct_change"</span>)</span>
+<span id="cb2-339"><a href="#cb2-339" aria-hidden="true" tabindex="-1"></a>        ])</span>
+<span id="cb2-340"><a href="#cb2-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-341"><a href="#cb2-341" aria-hidden="true" tabindex="-1"></a>        df_final_join <span class="op">=</span> (</span>
+<span id="cb2-342"><a href="#cb2-342" aria-hidden="true" tabindex="-1"></a>            df_joined.lazy()</span>
+<span id="cb2-343"><a href="#cb2-343" aria-hidden="true" tabindex="-1"></a>            .join(</span>
+<span id="cb2-344"><a href="#cb2-344" aria-hidden="true" tabindex="-1"></a>                df_bench_joined.select([<span class="st">"ts_minute_bench"</span>, <span class="st">"bench_pct_change"</span>]).lazy(),</span>
+<span id="cb2-345"><a href="#cb2-345" aria-hidden="true" tabindex="-1"></a>                left_on<span class="op">=</span><span class="st">"ts_minute"</span>,</span>
+<span id="cb2-346"><a href="#cb2-346" aria-hidden="true" tabindex="-1"></a>                right_on<span class="op">=</span><span class="st">"ts_minute_bench"</span>,</span>
+<span id="cb2-347"><a href="#cb2-347" aria-hidden="true" tabindex="-1"></a>                how<span class="op">=</span><span class="st">"left"</span></span>
+<span id="cb2-348"><a href="#cb2-348" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-349"><a href="#cb2-349" aria-hidden="true" tabindex="-1"></a>            .collect()</span>
+<span id="cb2-350"><a href="#cb2-350" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-351"><a href="#cb2-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-352"><a href="#cb2-352" aria-hidden="true" tabindex="-1"></a>        df_lagging_ <span class="op">=</span> df_final_join.with_columns([</span>
+<span id="cb2-353"><a href="#cb2-353" aria-hidden="true" tabindex="-1"></a>            pl.when(</span>
+<span id="cb2-354"><a href="#cb2-354" aria-hidden="true" tabindex="-1"></a>                (pl.col(<span class="st">"bench_pct_change"</span>).<span class="bu">abs</span>() <span class="op">&gt;</span> lag_threshold)</span>
+<span id="cb2-355"><a href="#cb2-355" aria-hidden="true" tabindex="-1"></a>                <span class="op">&amp;</span> (pl.col(<span class="st">"validator_pct_change"</span>).<span class="bu">abs</span>() <span class="op">&lt;</span> lag_threshold)</span>
+<span id="cb2-356"><a href="#cb2-356" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-357"><a href="#cb2-357" aria-hidden="true" tabindex="-1"></a>            .then(pl.lit(<span class="st">"Lagging data vs. real market"</span>))</span>
+<span id="cb2-358"><a href="#cb2-358" aria-hidden="true" tabindex="-1"></a>            .otherwise(pl.lit(<span class="st">""</span>))</span>
+<span id="cb2-359"><a href="#cb2-359" aria-hidden="true" tabindex="-1"></a>            .alias(<span class="st">"lag_reason"</span>)</span>
+<span id="cb2-360"><a href="#cb2-360" aria-hidden="true" tabindex="-1"></a>        ]).<span class="bu">filter</span>(pl.col(<span class="st">"lag_reason"</span>) <span class="op">!=</span> <span class="st">""</span>)</span>
+<span id="cb2-361"><a href="#cb2-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-362"><a href="#cb2-362" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> df_lagging_.is_empty():</span>
+<span id="cb2-363"><a href="#cb2-363" aria-hidden="true" tabindex="-1"></a>            df_lagging_ <span class="op">=</span> df_lagging_.select([</span>
+<span id="cb2-364"><a href="#cb2-364" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"Validator Address"</span>),</span>
+<span id="cb2-365"><a href="#cb2-365" aria-hidden="true" tabindex="-1"></a>                pl.lit(base_label).alias(<span class="st">"pair_label"</span>),</span>
+<span id="cb2-366"><a href="#cb2-366" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"ts_minute"</span>).alias(<span class="st">"window_start"</span>),</span>
+<span id="cb2-367"><a href="#cb2-367" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"price_now"</span>),</span>
+<span id="cb2-368"><a href="#cb2-368" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"price_decimal_future"</span>).alias(<span class="st">"price_future"</span>),</span>
+<span id="cb2-369"><a href="#cb2-369" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"validator_pct_change"</span>),</span>
+<span id="cb2-370"><a href="#cb2-370" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"bench_pct_change"</span>),</span>
+<span id="cb2-371"><a href="#cb2-371" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"lag_reason"</span>),</span>
+<span id="cb2-372"><a href="#cb2-372" aria-hidden="true" tabindex="-1"></a>            ])</span>
+<span id="cb2-373"><a href="#cb2-373" aria-hidden="true" tabindex="-1"></a>            suspicious_frames.append(df_lagging_)</span>
+<span id="cb2-374"><a href="#cb2-374" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-375"><a href="#cb2-375" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> suspicious_frames:</span>
+<span id="cb2-376"><a href="#cb2-376" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pl.concat(suspicious_frames, how<span class="op">=</span><span class="st">"vertical"</span>)</span>
+<span id="cb2-377"><a href="#cb2-377" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-378"><a href="#cb2-378" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pl.DataFrame(</span>
+<span id="cb2-379"><a href="#cb2-379" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb2-380"><a href="#cb2-380" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Validator Address"</span>: [],</span>
+<span id="cb2-381"><a href="#cb2-381" aria-hidden="true" tabindex="-1"></a>                <span class="st">"pair_label"</span>: [],</span>
+<span id="cb2-382"><a href="#cb2-382" aria-hidden="true" tabindex="-1"></a>                <span class="st">"window_start"</span>: [],</span>
+<span id="cb2-383"><a href="#cb2-383" aria-hidden="true" tabindex="-1"></a>                <span class="st">"price_now"</span>: [],</span>
+<span id="cb2-384"><a href="#cb2-384" aria-hidden="true" tabindex="-1"></a>                <span class="st">"price_future"</span>: [],</span>
+<span id="cb2-385"><a href="#cb2-385" aria-hidden="true" tabindex="-1"></a>                <span class="st">"validator_pct_change"</span>: [],</span>
+<span id="cb2-386"><a href="#cb2-386" aria-hidden="true" tabindex="-1"></a>                <span class="st">"bench_pct_change"</span>: [],</span>
+<span id="cb2-387"><a href="#cb2-387" aria-hidden="true" tabindex="-1"></a>                <span class="st">"lag_reason"</span>: [],</span>
+<span id="cb2-388"><a href="#cb2-388" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb2-389"><a href="#cb2-389" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-390"><a href="#cb2-390" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-391"><a href="#cb2-391" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-392"><a href="#cb2-392" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
-<span id="cb2-393"><a href="#cb2-393" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_all_data"</span>: df_all,</span>
-<span id="cb2-394"><a href="#cb2-394" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_stale"</span>: df_stale,</span>
-<span id="cb2-395"><a href="#cb2-395" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_lagging"</span>: df_lagging,</span>
-<span id="cb2-396"><a href="#cb2-396" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-392"><a href="#cb2-392" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> analyze_stale_lagging_data(</span>
+<span id="cb2-393"><a href="#cb2-393" aria-hidden="true" tabindex="-1"></a>    submission_glob: <span class="bu">str</span>,</span>
+<span id="cb2-394"><a href="#cb2-394" aria-hidden="true" tabindex="-1"></a>    fx_pairs: List[<span class="bu">str</span>],</span>
+<span id="cb2-395"><a href="#cb2-395" aria-hidden="true" tabindex="-1"></a>    autonity_pairs: List[<span class="bu">str</span>],</span>
+<span id="cb2-396"><a href="#cb2-396" aria-hidden="true" tabindex="-1"></a>    yahoo_data_dict: Dict[<span class="bu">str</span>, pl.DataFrame],</span>
+<span id="cb2-397"><a href="#cb2-397" aria-hidden="true" tabindex="-1"></a>    max_consecutive_threshold: <span class="bu">int</span> <span class="op">=</span> <span class="dv">30</span>,</span>
+<span id="cb2-398"><a href="#cb2-398" aria-hidden="true" tabindex="-1"></a>    lag_threshold: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span id="cb2-399"><a href="#cb2-399" aria-hidden="true" tabindex="-1"></a>    lag_window_minutes: <span class="bu">int</span> <span class="op">=</span> <span class="dv">60</span>,</span>
+<span id="cb2-400"><a href="#cb2-400" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb2-401"><a href="#cb2-401" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-402"><a href="#cb2-402" aria-hidden="true" tabindex="-1"></a><span class="co">    Main analysis function.</span></span>
+<span id="cb2-403"><a href="#cb2-403" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-404"><a href="#cb2-404" aria-hidden="true" tabindex="-1"></a>    df_all <span class="op">=</span> load_and_preprocess_submissions(submission_glob)</span>
+<span id="cb2-405"><a href="#cb2-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-406"><a href="#cb2-406" aria-hidden="true" tabindex="-1"></a>    price_cols_all <span class="op">=</span> fx_pairs <span class="op">+</span> autonity_pairs</span>
+<span id="cb2-407"><a href="#cb2-407" aria-hidden="true" tabindex="-1"></a>    df_stale <span class="op">=</span> detect_stale_data(df_all, price_cols_all, max_consecutive_threshold)</span>
+<span id="cb2-408"><a href="#cb2-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-409"><a href="#cb2-409" aria-hidden="true" tabindex="-1"></a>    df_lagging <span class="op">=</span> detect_lagging_data(</span>
+<span id="cb2-410"><a href="#cb2-410" aria-hidden="true" tabindex="-1"></a>        df_oracle<span class="op">=</span>df_all,</span>
+<span id="cb2-411"><a href="#cb2-411" aria-hidden="true" tabindex="-1"></a>        fx_benchmarks<span class="op">=</span>yahoo_data_dict,</span>
+<span id="cb2-412"><a href="#cb2-412" aria-hidden="true" tabindex="-1"></a>        fx_pairs<span class="op">=</span>fx_pairs,</span>
+<span id="cb2-413"><a href="#cb2-413" aria-hidden="true" tabindex="-1"></a>        lag_threshold<span class="op">=</span>lag_threshold,</span>
+<span id="cb2-414"><a href="#cb2-414" aria-hidden="true" tabindex="-1"></a>        time_window_minutes<span class="op">=</span>lag_window_minutes,</span>
+<span id="cb2-415"><a href="#cb2-415" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-416"><a href="#cb2-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-417"><a href="#cb2-417" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb2-418"><a href="#cb2-418" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_all_data"</span>: df_all,</span>
+<span id="cb2-419"><a href="#cb2-419" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_stale"</span>: df_stale,</span>
+<span id="cb2-420"><a href="#cb2-420" aria-hidden="true" tabindex="-1"></a>        <span class="st">"df_lagging"</span>: df_lagging,</span>
+<span id="cb2-421"><a href="#cb2-421" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2b02b308" class="cell" data-execution_count="3">
+<div id="321063b8" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fx_price_cols <span class="op">=</span> [</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"AUD-USD Price"</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CAD-USD Price"</span>,</span>
@@ -789,7 +838,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="stale-data-analysis" class="level4">
 <h4 class="anchored" data-anchor-id="stale-data-analysis">4.4.1 Stale Data Analysis</h4>
 <p>Identify validators that repeatedly submit the same price data beyond the threshold.</p>
-<div id="3bc14e54" class="cell" data-execution_count="4">
+<div id="ab2bf2ad" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_stale <span class="op">=</span> results[<span class="st">"df_stale"</span>]</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>num_stale <span class="op">=</span> df_stale.height</span>
@@ -933,7 +982,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="lagging-data-analysis" class="level4">
 <h4 class="anchored" data-anchor-id="lagging-data-analysis">4.4.2 Lagging Data Analysis</h4>
 <p>Detect intervals where the validator’s price fails to reflect significant market movements (≥5% within 60 minutes):</p>
-<div id="2d13c54e" class="cell" data-execution_count="5">
+<div id="bd8bd915" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_lagging <span class="op">=</span> results[<span class="st">"df_lagging"</span>]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>num_lagging <span class="op">=</span> df_lagging.height</span>
@@ -972,7 +1021,7 @@ No lagging data intervals exceeding threshold were detected.</code></pre>
 <li><strong>Validators with stale or lagging data</strong>: Indicating possible systemic issues or node misconfigurations.</li>
 <li><strong>Affected currency pairs</strong>: Useful for pinpointing feed-related problems.</li>
 </ul>
-<div id="28d9dcab" class="cell" data-execution_count="6">
+<div id="89d2f9f2" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> num_stale <span class="op">&gt;</span> <span class="dv">0</span>:</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    top_stale_validators <span class="op">=</span> df_stale.group_by(<span class="st">"Validator Address"</span>).agg(</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        pl.<span class="bu">sum</span>(<span class="st">"run_length"</span>).alias(<span class="st">"total_stale_intervals"</span>),</span>
@@ -1016,27 +1065,27 @@ No lagging data intervals exceeding threshold were detected.</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>"0x36142A4f36974e2935192A1111C3…</td>
+<td>"0xF9B38D02959379d43C764064dE20…</td>
 <td>17280</td>
-<td>21</td>
+<td>45</td>
 </tr>
 <tr class="even">
-<td>"0xB5d8be2AB4b6d7E6be7Ea28E91b3…</td>
-<td>17280</td>
-<td>12</td>
-</tr>
-<tr class="odd">
 <td>"0xDCA5DFF3D42f2db3C18dBE823380…</td>
 <td>17280</td>
 <td>12</td>
 </tr>
-<tr class="even">
-<td>"0x3597d2D42f8Fbbc82E8b10460487…</td>
+<tr class="odd">
+<td>"0x527192F3D2408C84087607b7feE1…</td>
 <td>17280</td>
 <td>12</td>
 </tr>
+<tr class="even">
+<td>"0x358488a4EdCA493FCD87610dcd50…</td>
+<td>17280</td>
+<td>57</td>
+</tr>
 <tr class="odd">
-<td>"0xBBf36374eb23968F25aecAEbb97B…</td>
+<td>"0x9d28e40E9Ec4789f9A0D17e421F7…</td>
 <td>17280</td>
 <td>12</td>
 </tr>
@@ -1079,7 +1128,7 @@ No lagging data intervals exceeding threshold were detected.</code></pre>
 </div>
 </div>
 <p><strong>List of all Validators and their Stale Scores</strong></p>
-<div id="e04a0665" class="cell" data-execution_count="7">
+<div id="7076bebb" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df_all <span class="op">=</span> results[<span class="st">"df_all_data"</span>]</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df_stale <span class="op">=</span> results[<span class="st">"df_stale"</span>]</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1114,23 +1163,23 @@ No lagging data intervals exceeding threshold were detected.</code></pre>
 <span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"stale_score=</span><span class="sc">{</span>row[<span class="st">'stale_score'</span>]<span class="sc">:.1f}</span><span class="ss">"</span></span>
 <span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Validator 0xBBf36374eb23968F25aecAEbb97BF3118f3c2fEC: total=2880, sum_stale_intervals=17280, stale_score=6.0
-Validator 0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772: total=2880, sum_stale_intervals=17280, stale_score=6.0
-Validator 0x527192F3D2408C84087607b7feE1d0f907821E17: total=2880, sum_stale_intervals=17280, stale_score=6.0
-Validator 0xF9B38D02959379d43C764064dE201324d5e12931: total=2880, sum_stale_intervals=17280, stale_score=6.0
-Validator 0x791A7F840ac11841cCB0FaA968B2e3a0Db930fCe: total=2880, sum_stale_intervals=17280, stale_score=6.0
-Validator 0xDCA5DFF3D42f2db3C18dBE823380A0A81db49A7E: total=2880, sum_stale_intervals=17280, stale_score=6.0
-Validator 0x36142A4f36974e2935192A1111C39330aA296D3C: total=2880, sum_stale_intervals=17280, stale_score=6.0
-Validator 0x383A3c437d3F12f60E5fC990119468D3561EfBfc: total=2880, sum_stale_intervals=17280, stale_score=6.0
-Validator 0x9d28e40E9Ec4789f9A0D17e421F76D8D0868EA44: total=2880, sum_stale_intervals=17280, stale_score=6.0
-Validator 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f: total=2880, sum_stale_intervals=17280, stale_score=6.0
+<pre><code>Validator 0xB5d8be2AB4b6d7E6be7Ea28E91b370223a06289f: total=2880, sum_stale_intervals=17280, stale_score=6.0
+Validator 0xBBf36374eb23968F25aecAEbb97BF3118f3c2fEC: total=2880, sum_stale_intervals=17280, stale_score=6.0
 Validator 0x358488a4EdCA493FCD87610dcd50c62c8A3Dd658: total=2880, sum_stale_intervals=17280, stale_score=6.0
+Validator 0x94470A842Ea4f44e668EB9C2AB81367b6Ce01772: total=2880, sum_stale_intervals=17280, stale_score=6.0
+Validator 0x383A3c437d3F12f60E5fC990119468D3561EfBfc: total=2880, sum_stale_intervals=17280, stale_score=6.0
+Validator 0xF9B38D02959379d43C764064dE201324d5e12931: total=2880, sum_stale_intervals=17280, stale_score=6.0
 Validator 0x3597d2D42f8Fbbc82E8b1046048773aD6DDB717E: total=2880, sum_stale_intervals=17280, stale_score=6.0
-Validator 0xEf0Ba5e345C2C3937df5667A870Aae5105CAa3a5: total=2879, sum_stale_intervals=17268, stale_score=6.0
+Validator 0x791A7F840ac11841cCB0FaA968B2e3a0Db930fCe: total=2880, sum_stale_intervals=17280, stale_score=6.0
+Validator 0x527192F3D2408C84087607b7feE1d0f907821E17: total=2880, sum_stale_intervals=17280, stale_score=6.0
+Validator 0x36142A4f36974e2935192A1111C39330aA296D3C: total=2880, sum_stale_intervals=17280, stale_score=6.0
+Validator 0xDCA5DFF3D42f2db3C18dBE823380A0A81db49A7E: total=2880, sum_stale_intervals=17280, stale_score=6.0
+Validator 0x9d28e40E9Ec4789f9A0D17e421F76D8D0868EA44: total=2880, sum_stale_intervals=17280, stale_score=6.0
 Validator 0x8f91e0ADF8065C3fFF92297267E02DF32C2978FF: total=2879, sum_stale_intervals=17268, stale_score=6.0
+Validator 0xEf0Ba5e345C2C3937df5667A870Aae5105CAa3a5: total=2879, sum_stale_intervals=17268, stale_score=6.0
 Validator 0x718361fc3637199F24a2437331677D6B89a40519: total=2880, sum_stale_intervals=17263, stale_score=6.0
-Validator 0x5603caFE3313D0cf56Fd4bE4A2f606dD6E43F8Eb: total=2880, sum_stale_intervals=17250, stale_score=6.0
 Validator 0x9C7dAABb5101623340C925CFD6fF74088ff5672e: total=2880, sum_stale_intervals=17250, stale_score=6.0
+Validator 0x5603caFE3313D0cf56Fd4bE4A2f606dD6E43F8Eb: total=2880, sum_stale_intervals=17250, stale_score=6.0
 Validator 0x984A46Ec685Bb41A7BBb2bc39f80C78410ff4057: total=2877, sum_stale_intervals=17232, stale_score=6.0
 Validator 0x197B2c44b887c4aC01243BDE7E4bBa8bd95BC3a8: total=2880, sum_stale_intervals=17245, stale_score=6.0
 Validator 0x6a395dE946c0493157404E2b1947493c633f569E: total=2874, sum_stale_intervals=17208, stale_score=6.0
@@ -1169,11 +1218,11 @@ Validator 0x1476A65D7B5739dE1805d5130441A94022Ee49fe: total=2462, sum_stale_inte
 Validator 0xE9FFF86CAdC3136b3D94948B8Fd23631EDaa2dE3: total=2880, sum_stale_intervals=15873, stale_score=5.5
 Validator 0x551f3300FCFE0e392178b3542c009948008B2a9F: total=2880, sum_stale_intervals=15400, stale_score=5.3
 Validator 0x22A76e194A49c9e5508Cd4A3E1cD555D088ECB08: total=2880, sum_stale_intervals=15356, stale_score=5.3
-Validator 0x26E2724dBD14Fbd52be430B97043AA4c83F05852: total=2880, sum_stale_intervals=0, stale_score=0.0
-Validator 0x3fe573552E14a0FC11Da25E43Fef11e16a785068: total=2880, sum_stale_intervals=0, stale_score=0.0
+Validator 0x100E38f7BCEc53937BDd79ADE46F34362470577B: total=2876, sum_stale_intervals=0, stale_score=0.0
 Validator 0xd625d50B0d087861c286d726eC51Cf4Bd9c54357: total=2856, sum_stale_intervals=0, stale_score=0.0
 Validator 0xdF239e0D5b4E6e820B0cFEF6972A90893c2073AB: total=2880, sum_stale_intervals=0, stale_score=0.0
-Validator 0x100E38f7BCEc53937BDd79ADE46F34362470577B: total=2876, sum_stale_intervals=0, stale_score=0.0</code></pre>
+Validator 0x3fe573552E14a0FC11Da25E43Fef11e16a785068: total=2880, sum_stale_intervals=0, stale_score=0.0
+Validator 0x26E2724dBD14Fbd52be430B97043AA4c83F05852: total=2880, sum_stale_intervals=0, stale_score=0.0</code></pre>
 </div>
 </div>
 <p>Please note, <code>total</code> represents the total number of submissions for this validator. <code>sum_stale_intervals</code> sums all “stale” runs across each price column. For instance, if a validator has several columns remain identical for 30+ consecutive intervals, each column’s run is added. <code>stale_score</code> = <code>sum_stale_intervals</code> / <code>total</code>, which can exceed 1 because a single row (submission) may contribute to multiple stale runs (one per column).</p>
